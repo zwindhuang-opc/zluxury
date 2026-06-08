@@ -18,6 +18,12 @@
     "git:setup": "node scripts/git-push.js setup",
     "git:feature": "node scripts/git-push.js feature",
     "git:init": "git init && git add . && git commit -m \"Initial commit - ZLuxury v1.0.0\"",
+    "github": "node scripts/github.js",
+    "github:backup": "node scripts/github.js backup",
+    "github:push": "node scripts/github.js push",
+    "github:setup": "node scripts/github.js setup",
+    "github:list": "node scripts/github.js list",
+    "github:deploy": "node scripts/github.js deploy",
     "deploy": "npm run build && npm run start"
   },
   "keywords": ["luxury", "auction", "ai", "ecommerce", "premium", "hermes", "openclaw", "unicorn", "sothebys", "christies"],
