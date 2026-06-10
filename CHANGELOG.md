@@ -1,3 +1,8 @@
+## [1.1.0] - 2026-06-10
+
+### MINOR
+Added AI-powered luxury platform with Chinese localization and multi-agent system
+
 # ZLuxury Platform Changelog
 
 All notable changes to the ZLuxury platform will be documented in this file.

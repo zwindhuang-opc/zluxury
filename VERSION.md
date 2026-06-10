@@ -1,24 +1,16 @@
-# ZLuxury Platform Version 1.0.0
+# ZLuxury Platform Version 1.1.0
 
-**Release Date**: 2026-06-07T00:00:00.000Z
-**Version Type**: MAJOR
-**Release Notes**: Initial release of ZLuxury - Professional Online Luxury Commerce Platform with AI-Powered Auction & Marketplace System
+**Release Date**: 2026-06-10T14:54:26.188Z
+**Version Type**: MINOR
+**Release Notes**: Added AI-powered luxury platform with Chinese localization and multi-agent system
 
 ## Version Information
-- **Version**: V.1.0.0
-- **Type**: major
-- **Date**: 2026-06-07T00:00:00.000Z
+- **Version**: V.1.1.0
+- **Type**: minor
+- **Date**: 2026-06-10T14:54:26.188Z
 
 ## Changes
-Initial release featuring:
-- Complete Next.js 14.2 backend architecture with API routes
-- Real product catalog with 17 luxury items
-- Authentication system with JWT tokens
-- Shopping cart functionality with VIP discounts
-- AI assistant integration (Hermes, OpenClaw, Unicorn agents)
-- State management with Zustand
-- Responsive design with Tailwind CSS
-- Comprehensive version control and backup system
+Added AI-powered luxury platform with Chinese localization and multi-agent system
 
 ## Installation
 ```bash
