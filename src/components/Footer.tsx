@@ -1,8 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslation } from '@/i18n/useTranslation'
 
 export default function Footer() {
+    const { t } = useTranslation()
+
     return (
         <footer className="bg-zl-dark-2 border-t border-zl-gray">
             <div className="container">
@@ -22,11 +25,11 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <div className="text-xl font-bold tracking-[0.15em] font-montserrat text-zl-text">ZLUXURY</div>
-                                    <div className="text-[10px] text-zl-accent tracking-[0.2em] uppercase">AI-Powered Excellence</div>
+                                    <div className="text-[10px] text-zl-accent tracking-[0.2em] uppercase">{t('footer.tagline')}</div>
                                 </div>
                             </Link>
                             <p className="text-sm text-zl-text-muted leading-relaxed mb-6">
-                                The future of luxury commerce. Powered by AI agents that understand your preferences and deliver exceptional experiences.
+                                {t('footer.description')}
                             </p>
                             <div className="flex gap-4">
                                 <Link href="#" className="w-10 h-10 rounded-lg bg-zl-dark-3 flex items-center justify-center hover:bg-zl-accent/20 transition">
@@ -126,12 +129,12 @@ export default function Footer() {
                 <div className="py-6 border-t border-zl-gray">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="text-xs text-zl-text-muted">
-                            2024 ZLuxury. All rights reserved.
+                            {t('footer.copyright')} 2024 ZLuxury.
                         </div>
                         <div className="flex items-center gap-6">
-                            <Link href="/privacy" className="text-xs text-zl-text-muted hover:text-zl-accent transition">Privacy Policy</Link>
-                            <Link href="/terms" className="text-xs text-zl-text-muted hover:text-zl-accent transition">Terms of Service</Link>
-                            <Link href="/cookies" className="text-xs text-zl-text-muted hover:text-zl-accent transition">Cookie Policy</Link>
+                            <Link href="/privacy" className="text-xs text-zl-text-muted hover:text-zl-accent transition">{t('footer.privacy')}</Link>
+                            <Link href="/terms" className="text-xs text-zl-text-muted hover:text-zl-accent transition">{t('footer.terms')}</Link>
+                            <Link href="/cookies" className="text-xs text-zl-text-muted hover:text-zl-accent transition">{t('footer.cookies')}</Link>
                         </div>
                     </div>
                 </div>

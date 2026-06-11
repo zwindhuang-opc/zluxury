@@ -54,7 +54,7 @@ function errorResponse(message: string, status: number = 400): NextResponse<ApiR
  * GET /api/categories
  * Get all categories with product counts
  */
-export async function GET(request: NextRequest): NextResponse<ApiResponse<any>> {
+export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<any>>> {
   try {
     // Get all categories from repository
     const categories = CategoryRepository.getAll();

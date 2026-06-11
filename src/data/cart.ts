@@ -209,7 +209,7 @@ export class CartService {
    * @returns Shopping cart or null
    */
   static getCartByUser(userId: string): ShoppingCart | null {
-    for (const cart of carts.values()) {
+    for (const cart of Array.from(carts.values())) {
       if (cart.userId === userId && cart.status === 'active') {
         return cart;
       }

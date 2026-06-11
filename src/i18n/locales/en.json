@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "Home",
+    "collections": "Collections",
+    "products": "Products",
+    "aiAssistant": "AI Assistant",
+    "concierge": "Concierge",
+    "about": "About",
+    "signIn": "Sign In",
+    "vipAccess": "VIP Access",
+    "searchPlaceholder": "Search luxury products, brands, collections..."
+  },
+  "hero": {
+    "badge": "AI-Powered Luxury Platform",
+    "title": "Experience",
+    "titleHighlight": "Extraordinary",
+    "subtitle": "The Future of Luxury Commerce",
+    "description": "Fusing artificial intelligence with supreme luxury, we present a unique shopping experience. Enjoy exclusive concierge service, limited edition collections, and Unicorn AI intelligent recommendations powered by Hermes and OpenClaw technology.",
+    "explore": "Explore Collections",
+    "tryAI": "Try AI Assistant",
+    "stats": {
+      "products": "Premium Products",
+      "brands": "Luxury Brands",
+      "satisfaction": "Client Satisfaction"
+    },
+    "categories": {
+      "watch": "Luxury Watch",
+      "diamond": "Fine Diamond",
+      "bag": "Designer Bag",
+      "jewelry": "High Jewelry"
+    }
+  },
+  "ai": {
+    "badge": "AI Powered",
+    "vipBadge": "VIP",
+    "poweredBy": "Powered by Unicorn AI",
+    "features": {
+      "recommendation": "Smart Recommendation",
+      "priceAnalysis": "Price Analysis",
+      "investment": "Investment Rating",
+      "concierge": "Personal Concierge"
+    }
+  },
+  "products": {
+    "title": "Curated Selection",
+    "subtitle": "Discover Your Exclusive Luxury",
+    "viewDetails": "View Details",
+    "viewAll": "Browse All Products",
+    "addToCart": "Add to Bag",
+    "vipPrice": "VIP Exclusive Price",
+    "limited": "Limited Edition",
+    "newArrival": "New Arrival",
+    "investmentGrade": "Investment Grade",
+    "auction": "Auction Piece"
+  },
+  "categories": {
+    "title": "Luxury Collections",
+    "subtitle": "Explore Premium Brand Collections",
+    "watches": "Luxury Watches",
+    "jewelry": "High Jewelry",
+    "handbags": "Designer Handbags",
+    "diamonds": "Fine Diamonds",
+    "fragrances": "Luxury Fragrances",
+    "accessories": "Fine Accessories"
+  },
+  "vip": {
+    "title": "VIP Membership",
+    "subtitle": "Begin Your Exclusive Luxury Journey",
+    "tiers": {
+      "standard": "Standard Member",
+      "silver": "Silver Member",
+      "gold": "Gold Member",
+      "black": "Black Member",
+      "diamond": "Diamond Member"
+    },
+    "benefits": {
+      "discount": "Exclusive Discount",
+      "concierge": "One-on-One Concierge",
+      "priority": "Priority Purchase",
+      "events": "Private Event Invitations",
+      "investment": "Investment Advisory"
+    },
+    "join": "Become a Member",
+    "upgrade": "Upgrade Membership"
+  },
+  "footer": {
+    "description": "Fusing artificial intelligence with supreme luxury, providing unique shopping experiences for distinguished clients.",
+    "platform": "Platform",
+    "browseProducts": "Browse Products",
+    "aiInsights": "AI Insights",
+    "priceAnalysis": "Price Analysis",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "careers": "Careers",
+    "press": "Press",
+    "blog": "Luxury Blog",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy",
+    "tagline": "Designed for extraordinary luxury experiences",
+    "copyright": "All Rights Reserved"
+  },
+  "language": {
+    "switch": "Language",
+    "zhCN": "简体中文",
+    "en": "English",
+    "zhTW": "繁體中文"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "currency": "¥",
+    "priceFrom": "Starting from"
+  }
+}

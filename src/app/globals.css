@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+/* Professional luxury fonts / 专业奢华字体 */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 
 :root {
+  /* Core colors / 核心颜色 */
   --zl-dark: #050505;
   --zl-dark-2: #0f0f0f;
   --zl-dark-3: #1a1a1a;
   --zl-gray: #2a2a2a;
+  
+  /* Accent colors / 强调色 */
   --zl-accent: #00B4D8;
   --zl-accent-light: #00D4F4;
   --zl-accent-dark: #0096C7;
+  
+  /* Luxury gold colors / 奢华金色 */
   --zl-gold: #D4AF37;
   --zl-gold-light: #E5C158;
+  --zl-gold-dark: #B8962E;
+  
+  /* Text colors / 文字颜色 */
   --zl-text: #f5f5f5;
   --zl-text-muted: #8a8a8a;
+  
+  /* Status colors / 状态颜色 */
   --zl-success: #00D26A;
   --zl-warning: #F57C00;
   --zl-error: #C62828;

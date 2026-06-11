@@ -1,33 +1,63 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getAIAgentOrchestrator, AgentType } from '@/ai/agents'
+import { Logger } from '@/utils/logger'
 
-type AgentType = 'hermes' | 'openclaw' | 'unicorn'
+// ============================================================================
+// TYPE DEFINITIONS / 类型定义
+// ============================================================================
 
+/**
+ * Chat message interface for UI display
+ */
 interface Message {
-  id: string
-  type: 'user' | 'agent'
-  content: string
-  agent?: AgentType
-  timestamp: Date
+  /** Unique message identifier / 消息唯一标识符 */
+  id: string;
+
+  /** Message sender type / 消息发送者类型 */
+  type: 'user' | 'agent';
+
+  /** Message content text / 消息内容文本 */
+  content: string;
+
+  /** Which AI agent generated this response / 哪个AI代理生成了此响应 */
+  agent?: AgentType;
+
+  /** Display timestamp (string to avoid hydration issues) / 显示时间戳（字符串以避免水合问题） */
+  timestamp: string;
+
+  /** Optional suggestions for follow-up actions / 可选的后续操作建议 */
+  suggestions?: string[];
 }
 
+// ============================================================================
+// AGENT CONFIGURATION / 代理配置
+// ============================================================================
+
+/**
+ * Agent information configuration for UI display
+ * Contains metadata about each available AI agent
+ */
 const agentInfo = {
   hermes: {
     name: 'Hermes Agent',
+    nameCn: '赫尔墨斯智能助手',
     description: 'Luxury recommendation specialist',
     color: '#D4AF37',
     capabilities: ['Product recommendations', 'Brand expertise', 'Style matching', 'Trend analysis']
   },
   openclaw: {
-    name: 'OpenClaw',
+    name: 'OpenClaw Engine',
+    nameCn: 'OpenClaw引擎',
     description: 'Skills and automation engine',
     color: '#00B4D8',
     capabilities: ['Price comparison', 'Availability check', 'Order tracking', 'Automated tasks']
   },
   unicorn: {
     name: 'Unicorn Agent',
+    nameCn: '独角兽AI助手',
     description: 'Enhanced AI conversation',
     color: '#9B59B6',
     capabilities: ['Natural conversation', 'Context understanding', 'Multi-turn dialogue', 'Personalized responses']
@@ -43,72 +73,124 @@ const AgentIcon = ({ color }: { color: string }) => (
 )
 
 export default function AIAssistantSection() {
+  // Logger instance for this component / 此组件的记录器实例
+  const logger = Logger.getLogger('AIAssistantSection')
+
+  // State management / 状态管理
   const [selectedAgent, setSelectedAgent] = useState<AgentType>('hermes')
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'agent',
-      content: 'Welcome to ZLuxury AI Assistant. I can help you find the perfect luxury items, compare prices, track orders, and provide personalized recommendations. How may I assist you today?',
-      agent: 'hermes',
-      timestamp: new Date()
-    }
-  ])
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [conversationId, setConversationId] = useState<string>('')
 
+  /**
+   * Initialize component after mount
+   * Sets up conversation context and welcome message
+   * Avoids hydration mismatch by running only on client
+   */
+  useEffect(() => {
+    setMounted(true)
+
+    // Generate unique conversation ID / 生成唯一对话ID
+    setConversationId(`conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
+
+    // Set initial welcome message / 设置初始欢迎消息
+    setMessages([
+      {
+        id: '1',
+        type: 'agent',
+        content: 'Welcome to ZLuxury AI Assistant! 🎩\n\nI\'m your luxury concierge, powered by advanced AI agents:\n\n' +
+          '**Hermes** - Product recommendations & brand expertise\n' +
+          '**OpenClaw** - Price tracking & order management\n' +
+          '**Unicorn** - Creative conversation & styling advice\n\n' +
+          'How may I assist you today?',
+        agent: 'hermes',
+        timestamp: new Date().toLocaleTimeString()
+      }
+    ])
+
+    logger.info('AI Assistant initialized', { selectedAgent: 'hermes' })
+  }, [])
+
+  /**
+   * Handle sending user message to AI system
+   * Routes message to appropriate agent based on selection
+   * Updates UI with response from AI orchestrator
+   */
   const handleSend = async () => {
     if (!input.trim()) return
 
+    const userMessageText = input.trim()
+
+    // Create user message object / 创建用户消息对象
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: input.trim(),
-      timestamp: new Date()
+      content: userMessageText,
+      timestamp: new Date().toLocaleTimeString()
     }
 
+    // Update UI with user message / 使用用户消息更新UI
     setMessages(prev => [...prev, userMessage])
     setInput('')
     setIsTyping(true)
 
-    setTimeout(() => {
+    logger.debug('Sending message to AI agent', {
+      agent: selectedAgent,
+      messageLength: userMessageText.length,
+      conversationId
+    })
+
+    try {
+      // Get AI orchestrator instance / 获取AI编排器实例
+      const orchestrator = getAIAgentOrchestrator()
+
+      // Process message through AI system / 通过AI系统处理消息
+      const response = await orchestrator.processMessage(
+        userMessageText,
+        selectedAgent,
+        conversationId
+      )
+
+      logger.info('Received AI response', {
+        agent: response.agent,
+        confidence: response.metadata.confidence,
+        processingTimeMs: response.metadata.processingTimeMs
+      })
+
+      // Create agent response message / 创建代理响应消息
       const agentResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'agent',
-        content: generateAgentResponse(input.trim(), selectedAgent),
-        agent: selectedAgent,
-        timestamp: new Date()
+        content: response.content,
+        agent: response.agent,
+        timestamp: new Date().toLocaleTimeString(),
+        suggestions: response.suggestions
       }
+
+      // Update UI with agent response / 使用代理响应更新UI
       setMessages(prev => [...prev, agentResponse])
+
+    } catch (error) {
+      logger.error('Failed to get AI response', { error }, error as Error)
+
+      // Show error fallback message / 显示错误回退消息
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'agent',
+        content: 'I apologize, but I encountered an issue processing your request. Please try again or select a different agent.',
+        agent: selectedAgent,
+        timestamp: new Date().toLocaleTimeString()
+      }
+
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsTyping(false)
-    }, 1500)
-  }
-
-  const generateAgentResponse = (query: string, agent: AgentType): string => {
-    const responses = {
-      hermes: [
-        'Based on your preferences, I recommend exploring our Hermès collection. The Birkin and Kelly bags are exceptional choices for discerning collectors.',
-        'For luxury watches, I suggest considering the Rolex Submariner or Patek Philippe Nautilus. Both represent excellent investment pieces.',
-        'I have analyzed current market trends. Luxury jewelry from Cartier and Van Cleef & Arpels shows strong appreciation potential.',
-        'Would you like me to help you discover pieces that match your personal style and budget?'
-      ],
-      openclaw: [
-        'I have checked availability across our partner network. The requested item is available at 3 authorized dealers.',
-        'Price comparison complete: Best price found at authorized retailer with 2-year warranty included.',
-        'Order tracking initiated. Your shipment is in transit with estimated delivery in 3-5 business days.',
-        'Market analysis completed: Current prices show stability with slight upward trend expected.'
-      ],
-      unicorn: [
-        'I understand you are looking for something special. Let me help you discover unique pieces that match your style and preferences.',
-        'That is a wonderful choice! I can provide detailed information about craftsmanship, heritage, and care recommendations.',
-        'I am here to make your luxury shopping experience seamless and enjoyable. Feel free to ask about any product or service.',
-        'Would you like me to guide you through our exclusive collections or assist with a specific request?'
-      ]
     }
-
-    const agentResponses = responses[agent]
-    return agentResponses[Math.floor(Math.random() * agentResponses.length)]
   }
 
+  // Render component / 渲染组件
   return (
     <section className="py-20">
       <div className="container">
@@ -122,29 +204,28 @@ export default function AIAssistantSection() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          <motion.div 
+          <motion.div
             className="glass-card rounded-xl p-8"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
             <h3 className="text-xl font-semibold font-montserrat mb-6">Select AI Agent</h3>
-            
+
             <div className="space-y-4">
               {(Object.keys(agentInfo) as AgentType[]).map((agent) => (
                 <motion.button
                   key={agent}
-                  className={`w-full p-4 rounded-lg border transition-all ${
-                    selectedAgent === agent 
-                      ? 'border-zl-accent bg-zl-accent/10' 
-                      : 'border-zl-gray bg-zl-dark-3 hover:border-zl-accent/50'
-                  }`}
+                  className={`w-full p-4 rounded-lg border transition-all ${selectedAgent === agent
+                    ? 'border-zl-accent bg-zl-accent/10'
+                    : 'border-zl-gray bg-zl-dark-3 hover:border-zl-accent/50'
+                    }`}
                   onClick={() => setSelectedAgent(agent)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center gap-4">
-                    <div 
+                    <div
                       className="w-12 h-12 rounded-lg flex items-center justify-center"
                       style={{ background: `${agentInfo[agent].color}20` }}
                     >
@@ -160,10 +241,10 @@ export default function AIAssistantSection() {
                       </svg>
                     )}
                   </div>
-                  
+
                   <div className="mt-4 flex flex-wrap gap-2">
                     {agentInfo[agent].capabilities.map((cap) => (
-                      <span 
+                      <span
                         key={cap}
                         className="text-xs px-2 py-1 rounded bg-zl-dark text-zl-text-muted"
                       >
@@ -176,14 +257,14 @@ export default function AIAssistantSection() {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="glass-card rounded-xl p-8"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div 
+              <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center"
                 style={{ background: `${agentInfo[selectedAgent].color}20` }}
               >
@@ -205,24 +286,22 @@ export default function AIAssistantSection() {
                     exit={{ opacity: 0 }}
                     className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div 
-                      className={`max-w-[80%] p-4 rounded-lg ${
-                        msg.type === 'user' 
-                          ? 'bg-zl-accent text-zl-dark' 
-                          : 'bg-zl-dark-3 border border-zl-gray'
-                      }`}
+                    <div
+                      className={`max-w-[80%] p-4 rounded-lg ${msg.type === 'user'
+                        ? 'bg-zl-accent text-zl-dark'
+                        : 'bg-zl-dark-3 border border-zl-gray'
+                        }`}
                     >
                       <p className="text-sm">{msg.content}</p>
-                      <div className={`text-xs mt-2 ${
-                        msg.type === 'user' ? 'text-zl-dark/70' : 'text-zl-text-muted'
-                      }`}>
-                        {msg.timestamp.toLocaleTimeString()}
+                      <div className={`text-xs mt-2 ${msg.type === 'user' ? 'text-zl-dark/70' : 'text-zl-text-muted'
+                        }`}>
+                        {msg.timestamp}
                       </div>
                     </div>
                   </motion.div>
                 ))}
               </AnimatePresence>
-              
+
               {isTyping && (
                 <motion.div
                   initial={{ opacity: 0 }}

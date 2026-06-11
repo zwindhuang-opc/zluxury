@@ -25,62 +25,84 @@
 export interface Product {
   // Unique identifier for the product (format: PROD-XXX)
   id: string;
-  
+
   // Product name/title
   name: string;
-  
+
   // Brand/Manufacturer name
   brand: string;
-  
+
+  // Chinese brand name (optional, derived from brand if not provided)
+  brandCn?: string;
+
   // Category classification (Watches, Jewelry, Bags, etc.)
   category: string;
-  
+
   // Base price in USD
   price: number;
-  
+
+  // Price in CNY (Chinese Yuan) - calculated from USD using exchange rate if not provided
+  priceCny?: number;
+
   // Currency code (USD, EUR, GBP, etc.)
   currency: string;
-  
+
   // Detailed product description
   description: string;
-  
+
   // Average customer rating (1.0 - 5.0)
   rating: number;
-  
+
   // Total number of reviews
   reviews: number;
-  
+
   // Flag indicating if product is newly added
   isNew: boolean;
-  
+
   // Flag indicating limited edition/availability
   isLimited: boolean;
-  
+
   // Current stock quantity
   stock: number;
-  
+
   // Product specifications (varies by category)
   specifications: Record<string, string>;
-  
+
   // Verified auction market data
-  auctionData: {
+  auctionData?: {
     // Date of last auction sale
-    lastSold: string;
-    // Price at last auction
-    soldPrice: number;
+    lastSold?: string;
+    // Price at last auction (USD)
+    soldPrice?: number;
+    // Price at last auction (CNY)
+    soldPriceCny?: number;
+    // Price trend (up, down, stable)
+    priceTrend?: 'up' | 'down' | 'stable';
     // Auction house source
-    source: string;
+    source?: string;
   };
-  
+
+  // VIP member prices by level
+  vipPrices?: {
+    standard?: number;
+    silver?: number;
+    gold?: number;
+    black?: number;
+    diamond?: number;
+  };
+
+  // Product reference number (SKU/Serial)
+  reference?: string;
+
   // Product images (URLs)
   images?: string[];
-  
+
   // Product status (active, discontinued, coming_soon)
   status: 'active' | 'discontinued' | 'coming_soon';
-  
+
   // Creation timestamp
   createdAt: string;
-  
+
   // Last update timestamp
   updatedAt: string;
 }
@@ -91,22 +113,22 @@ export interface Product {
 export interface Category {
   // Unique category identifier
   id: string;
-  
+
   // Category display name
   name: string;
-  
+
   // Category description
   description: string;
-  
+
   // Theme color for UI display
   color: string;
-  
+
   // Total product count in category
   count: number;
-  
+
   // Associated luxury brands
   brands: string[];
-  
+
   // Category icon identifier
   icon: string;
 }
@@ -117,36 +139,87 @@ export interface Category {
 export interface ProductSearchParams {
   // Text search query
   query?: string;
-  
+
   // Filter by category
   category?: string;
-  
+
   // Filter by brand
   brand?: string;
-  
+
   // Minimum price filter
   minPrice?: number;
-  
+
   // Maximum price filter
   maxPrice?: number;
-  
+
   // Filter by limited edition status
   isLimited?: boolean;
-  
+
   // Filter by new products
   isNew?: boolean;
-  
+
+
   // Sort field (price, rating, name, date)
   sortBy?: 'price' | 'rating' | 'name' | 'date';
-  
+
   // Sort direction
   sortOrder?: 'asc' | 'desc';
-  
+
   // Pagination limit
   limit?: number;
-  
+
   // Pagination offset
   offset?: number;
+}
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * USD to CNY exchange rate (approximate)
+ */
+const USD_TO_CNY_RATE = 7.2;
+
+/**
+ * Chinese brand name mapping
+ */
+const BRAND_CN_MAP: Record<string, string> = {
+  'Rolex': '劳力士',
+  'Patek Philippe': '百达翡丽',
+  'Audemars Piguet': '爱彼',
+  'Omega': '欧米茄',
+  'Cartier': '卡地亚',
+  'Hermès': '爱马仕',
+  'Louis Vuitton': '路易威登',
+  'Chanel': '香奈儿',
+  'Gucci': '古驰',
+  'Dior': '迪奥',
+  'Prada': '普拉达',
+  'Bulgari': '宝格丽',
+  'Tiffany & Co.': '蒂芙尼',
+  'Van Cleef & Arpels': '梵克雅宝',
+};
+
+/**
+ * Normalize product data with default values
+ * Calculates priceCny and brandCn if not provided
+ * @param product - Raw product data
+ * @returns Normalized product with all required fields
+ */
+function normalizeProduct(product: Product): Product {
+  return {
+    ...product,
+    brandCn: product.brandCn || BRAND_CN_MAP[product.brand] || product.brand,
+    priceCny: product.priceCny || Math.round(product.price * USD_TO_CNY_RATE),
+    vipPrices: product.vipPrices || {
+      standard: Math.round(product.price * USD_TO_CNY_RATE),
+      silver: Math.round(product.price * USD_TO_CNY_RATE * 0.97),
+      gold: Math.round(product.price * USD_TO_CNY_RATE * 0.95),
+      black: Math.round(product.price * USD_TO_CNY_RATE * 0.92),
+      diamond: Math.round(product.price * USD_TO_CNY_RATE * 0.88),
+    },
+  };
 }
 
 // ============================================================================
@@ -156,8 +229,9 @@ export interface ProductSearchParams {
 /**
  * Complete product catalog with real luxury items
  * Data sourced from verified auction houses and authorized dealers
+ * Products are normalized with Chinese brand names and CNY prices
  */
-export const products: Product[] = [
+export const products: Product[] = ([
   // Luxury Watches Category
   {
     id: 'PROD-001',
@@ -277,7 +351,7 @@ export const products: Product[] = [
     createdAt: '2024-01-01',
     updatedAt: '2024-04-10'
   },
-  
+
   // Luxury Bags Category
   {
     id: 'PROD-005',
@@ -395,7 +469,7 @@ export const products: Product[] = [
     createdAt: '2023-05-01',
     updatedAt: '2024-05-01'
   },
-  
+
   // Fine Jewelry Category
   {
     id: 'PROD-009',
@@ -509,7 +583,7 @@ export const products: Product[] = [
     createdAt: '2023-06-01',
     updatedAt: '2024-05-10'
   },
-  
+
   // Designer Fashion Category
   {
     id: 'PROD-013',
@@ -595,7 +669,7 @@ export const products: Product[] = [
     createdAt: '2023-04-01',
     updatedAt: '2024-05-20'
   },
-  
+
   // Fine Art Category
   {
     id: 'PROD-016',
@@ -654,7 +728,7 @@ export const products: Product[] = [
     createdAt: '2024-01-01',
     updatedAt: '2024-05-01'
   }
-];
+] as Product[]).map(normalizeProduct);
 
 // ============================================================================
 // CATEGORY DATABASE
@@ -747,7 +821,7 @@ export const categories: Category[] = [
  * Provides CRUD operations and search functionality
  */
 export class ProductRepository {
-  
+
   /**
    * Get all products with optional filtering
    * @param params - Search parameters for filtering
@@ -755,30 +829,30 @@ export class ProductRepository {
    */
   static getAll(params?: ProductSearchParams): Product[] {
     let result = [...products];
-    
+
     // Apply filters
     if (params) {
       // Text search filter
       if (params.query) {
         const queryLower = params.query.toLowerCase();
-        result = result.filter(p => 
+        result = result.filter(p =>
           p.name.toLowerCase().includes(queryLower) ||
           p.brand.toLowerCase().includes(queryLower) ||
           p.description.toLowerCase().includes(queryLower) ||
           p.category.toLowerCase().includes(queryLower)
         );
       }
-      
+
       // Category filter
       if (params.category) {
         result = result.filter(p => p.category.toLowerCase() === params.category!.toLowerCase());
       }
-      
+
       // Brand filter
       if (params.brand) {
         result = result.filter(p => p.brand.toLowerCase() === params.brand!.toLowerCase());
       }
-      
+
       // Price range filter
       if (params.minPrice !== undefined) {
         result = result.filter(p => p.price >= params.minPrice!);
@@ -786,17 +860,17 @@ export class ProductRepository {
       if (params.maxPrice !== undefined) {
         result = result.filter(p => p.price <= params.maxPrice!);
       }
-      
+
       // Limited edition filter
       if (params.isLimited !== undefined) {
         result = result.filter(p => p.isLimited === params.isLimited);
       }
-      
+
       // New products filter
       if (params.isNew !== undefined) {
         result = result.filter(p => p.isNew === params.isNew);
       }
-      
+
       // Sorting
       if (params.sortBy) {
         result.sort((a, b) => {
@@ -818,7 +892,7 @@ export class ProductRepository {
           return params.sortOrder === 'desc' ? -comparison : comparison;
         });
       }
-      
+
       // Pagination
       if (params.offset !== undefined) {
         result = result.slice(params.offset);
@@ -827,10 +901,10 @@ export class ProductRepository {
         result = result.slice(0, params.limit);
       }
     }
-    
+
     return result;
   }
-  
+
   /**
    * Get a single product by ID
    * @param id - Product ID
@@ -839,7 +913,7 @@ export class ProductRepository {
   static getById(id: string): Product | null {
     return products.find(p => p.id === id) || null;
   }
-  
+
   /**
    * Get products by category
    * @param categoryId - Category ID
@@ -848,7 +922,7 @@ export class ProductRepository {
   static getByCategory(categoryId: string): Product[] {
     return products.filter(p => p.category.toLowerCase() === categoryId.toLowerCase());
   }
-  
+
   /**
    * Get products by brand
    * @param brandName - Brand name
@@ -857,7 +931,7 @@ export class ProductRepository {
   static getByBrand(brandName: string): Product[] {
     return products.filter(p => p.brand.toLowerCase() === brandName.toLowerCase());
   }
-  
+
   /**
    * Get featured products (high rating, limited edition, or new)
    * @param limit - Maximum number of products to return
@@ -869,7 +943,7 @@ export class ProductRepository {
       .sort((a, b) => b.rating - a.rating)
       .slice(0, limit);
   }
-  
+
   /**
    * Search products by text query
    * @param query - Search query
@@ -877,7 +951,7 @@ export class ProductRepository {
    */
   static search(query: string): Product[] {
     const queryLower = query.toLowerCase();
-    return products.filter(p => 
+    return products.filter(p =>
       p.name.toLowerCase().includes(queryLower) ||
       p.brand.toLowerCase().includes(queryLower) ||
       p.description.toLowerCase().includes(queryLower) ||
@@ -885,7 +959,7 @@ export class ProductRepository {
       Object.values(p.specifications).some(v => v.toLowerCase().includes(queryLower))
     );
   }
-  
+
   /**
    * Get total product count
    * @returns Total number of products
@@ -893,7 +967,7 @@ export class ProductRepository {
   static getCount(): number {
     return products.length;
   }
-  
+
   /**
    * Get count by category
    * @param categoryId - Category ID
@@ -902,7 +976,7 @@ export class ProductRepository {
   static getCountByCategory(categoryId: string): number {
     return products.filter(p => p.category.toLowerCase() === categoryId.toLowerCase()).length;
   }
-  
+
   /**
    * Check product availability
    * @param productId - Product ID
@@ -912,7 +986,7 @@ export class ProductRepository {
     const product = this.getById(productId);
     return product !== null && product.stock > 0;
   }
-  
+
   /**
    * Get all unique brands
    * @returns Array of brand names
@@ -920,7 +994,7 @@ export class ProductRepository {
   static getAllBrands(): string[] {
     return [...new Set(products.map(p => p.brand))];
   }
-  
+
   /**
    * Get price range statistics
    * @returns Object with min, max, and average prices
@@ -939,7 +1013,7 @@ export class ProductRepository {
  * CategoryRepository class implementing data access methods for categories
  */
 export class CategoryRepository {
-  
+
   /**
    * Get all categories
    * @returns Array of all categories
@@ -950,7 +1024,7 @@ export class CategoryRepository {
       count: ProductRepository.getCountByCategory(c.id)
     }));
   }
-  
+
   /**
    * Get a single category by ID
    * @param id - Category ID
@@ -966,7 +1040,7 @@ export class CategoryRepository {
     }
     return null;
   }
-  
+
   /**
    * Get category count
    * @returns Total number of categories
@@ -977,6 +1051,99 @@ export class CategoryRepository {
 }
 
 // ============================================================================
+// ============================================================================
+// VIP会员等级定义 / VIP MEMBERSHIP LEVEL DEFINITIONS
+// ============================================================================
+
+/**
+ * VIP会员等级配置
+ * VIP Membership Level Configuration
+ */
+export const VIP_LEVELS = {
+  standard: {
+    name: '标准会员',
+    nameEn: 'Standard',
+    discount: 0,
+    pointsRate: 1,
+    freeShipping: false,
+    prioritySupport: false,
+    exclusiveAccess: false,
+    color: '#94A3B8'
+  },
+  silver: {
+    name: '银卡会员',
+    nameEn: 'Silver',
+    discount: 3,
+    pointsRate: 1.5,
+    freeShipping: true,
+    prioritySupport: false,
+    exclusiveAccess: false,
+    color: '#C0C0C0'
+  },
+  gold: {
+    name: '金卡会员',
+    nameEn: 'Gold',
+    discount: 5,
+    pointsRate: 2,
+    freeShipping: true,
+    prioritySupport: true,
+    exclusiveAccess: true,
+    color: '#FFD700'
+  },
+  black: {
+    name: '黑卡会员',
+    nameEn: 'Black',
+    discount: 8,
+    pointsRate: 3,
+    freeShipping: true,
+    prioritySupport: true,
+    exclusiveAccess: true,
+    color: '#1A1A1A'
+  },
+  diamond: {
+    name: '钻石会员',
+    nameEn: 'Diamond',
+    discount: 12,
+    pointsRate: 5,
+    freeShipping: true,
+    prioritySupport: true,
+    exclusiveAccess: true,
+    color: '#B9F2FF'
+  }
+} as const;
+
+// ============================================================================
+// 便捷导出函数 / CONVENIENCE EXPORT FUNCTIONS
+// ============================================================================
+
+/**
+ * 根据ID获取产品 / Get product by ID
+ */
+export const getProductById = (id: string): Product | null => {
+  return ProductRepository.getById(id);
+};
+
+/**
+ * 搜索产品 / Search products by query
+ */
+export const searchProducts = (query: string): Product[] => {
+  return ProductRepository.getAll({ query });
+};
+
+/**
+ * 按分类获取产品 / Get products by category
+ */
+export const getProductsByCategory = (category: string): Product[] => {
+  return ProductRepository.getByCategory(category);
+};
+
+/**
+ * 按品牌获取产品 / Get products by brand
+ */
+export const getProductsByBrand = (brand: string): Product[] => {
+  return ProductRepository.getAll({ brand });
+};
+
 // EXPORT DEFAULT
 // ============================================================================
 
@@ -984,5 +1151,10 @@ export default {
   products,
   categories,
   ProductRepository,
-  CategoryRepository
+  CategoryRepository,
+  VIP_LEVELS,
+  getProductById,
+  searchProducts,
+  getProductsByCategory,
+  getProductsByBrand
 };

@@ -89,7 +89,7 @@ function generateSuggestions(products: any[]): string[] {
  * - q: Search query (required)
  * - limit: Maximum results (optional, default: 20)
  */
-export async function GET(request: NextRequest): NextResponse<SearchResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse<SearchResponse>> {
   try {
     // Get search query from URL
     const { searchParams } = new URL(request.url);

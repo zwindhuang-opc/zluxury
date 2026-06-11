@@ -59,27 +59,27 @@ function errorResponse(message: string, status: number = 400): NextResponse<ApiR
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
-): NextResponse<ApiResponse<any>> {
+): Promise<NextResponse<ApiResponse<any>>> {
   try {
     // Get product ID from path
     const productId = params.id;
-    
+
     // Validate product ID format
     if (!productId || !productId.startsWith('PROD-')) {
       return errorResponse('Invalid product ID format', 400);
     }
-    
+
     // Get product from repository
     const product = ProductRepository.getById(productId);
-    
+
     // Check if product exists
     if (!product) {
       return errorResponse('Product not found', 404);
     }
-    
+
     // Return success response
     return successResponse(product);
-    
+
   } catch (error) {
     console.error('[API] Product GET error:', error);
     return errorResponse('Failed to retrieve product', 500);
@@ -99,34 +99,34 @@ export async function GET(
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
-): NextResponse<ApiResponse<any>> {
+): Promise<NextResponse<ApiResponse<any>>> {
   try {
     const productId = params.id;
-    
+
     // Validate product ID
     if (!productId) {
       return errorResponse('Product ID is required', 400);
     }
-    
+
     // Check if product exists
     const existingProduct = ProductRepository.getById(productId);
     if (!existingProduct) {
       return errorResponse('Product not found', 404);
     }
-    
+
     // Parse request body
     const body = await request.json();
-    
+
     // Create updated product object
     const updatedProduct = {
       ...existingProduct,
       ...body,
       updatedAt: new Date().toISOString()
     };
-    
+
     // Note: In production, this would update database
     return successResponse(updatedProduct, 'Product updated successfully');
-    
+
   } catch (error) {
     console.error('[API] Product PUT error:', error);
     return errorResponse('Failed to update product', 500);
@@ -143,27 +143,27 @@ export async function PUT(
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
-): NextResponse<ApiResponse<null>> {
+): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const productId = params.id;
-    
+
     // Validate product ID
     if (!productId) {
       return errorResponse('Product ID is required', 400);
     }
-    
+
     // Check if product exists
     const existingProduct = ProductRepository.getById(productId);
     if (!existingProduct) {
       return errorResponse('Product not found', 404);
     }
-    
+
     // Note: In production, this would delete from database
     return NextResponse.json({
       success: true,
       message: 'Product deleted successfully'
     }, { status: 200 });
-    
+
   } catch (error) {
     console.error('[API] Product DELETE error:', error);
     return errorResponse('Failed to delete product', 500);

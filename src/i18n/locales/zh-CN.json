@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "首页",
+    "collections": "臻品系列",
+    "products": "奢华精品",
+    "aiAssistant": "AI顾问",
+    "concierge": "专属服务",
+    "about": "品牌故事",
+    "signIn": "登录",
+    "vipAccess": "VIP尊享",
+    "searchPlaceholder": "搜索奢华精品、品牌、系列..."
+  },
+  "hero": {
+    "badge": "AI智能奢华平台",
+    "title": "臻享奢华",
+    "titleHighlight": "非凡人生",
+    "subtitle": "未来奢华购物体验",
+    "description": "融合人工智能与顶级奢华，为您呈现独一无二的购物体验。独享专属顾问服务、限量臻品收藏，以及基于Hermes与OpenClaw技术的Unicorn AI智能推荐。",
+    "explore": "探索臻品系列",
+    "tryAI": "体验AI顾问",
+    "stats": {
+      "products": "臻品精品",
+      "brands": "顶级品牌",
+      "satisfaction": "客户满意度"
+    },
+    "categories": {
+      "watch": "奢华腕表",
+      "diamond": "璀璨钻石",
+      "bag": "设计师手袋",
+      "jewelry": "高级珠宝"
+    }
+  },
+  "ai": {
+    "badge": "AI驱动",
+    "vipBadge": "VIP",
+    "poweredBy": "Unicorn AI智能驱动",
+    "features": {
+      "recommendation": "智能推荐",
+      "priceAnalysis": "价格分析",
+      "investment": "投资评级",
+      "concierge": "专属顾问"
+    }
+  },
+  "products": {
+    "title": "臻品精选",
+    "subtitle": "发现您的专属奢华",
+    "viewDetails": "查看详情",
+    "viewAll": "浏览全部臻品",
+    "addToCart": "加入购物袋",
+    "vipPrice": "会员专享价",
+    "limited": "限量款",
+    "newArrival": "新品上市",
+    "investmentGrade": "投资级臻品",
+    "auction": "拍卖精品"
+  },
+  "categories": {
+    "title": "奢华系列",
+    "subtitle": "探索顶级品牌臻品",
+    "watches": "奢华腕表",
+    "jewelry": "高级珠宝",
+    "handbags": "设计师手袋",
+    "diamonds": "璀璨钻石",
+    "fragrances": "奢华香氛",
+    "accessories": "精致配饰"
+  },
+  "vip": {
+    "title": "VIP尊享会员",
+    "subtitle": "开启专属奢华之旅",
+    "tiers": {
+      "standard": "普通会员",
+      "silver": "银卡会员",
+      "gold": "金卡会员",
+      "black": "黑卡会员",
+      "diamond": "钻石会员"
+    },
+    "benefits": {
+      "discount": "专属折扣",
+      "concierge": "一对一顾问",
+      "priority": "优先购买权",
+      "events": "私密活动邀请",
+      "investment": "投资建议服务"
+    },
+    "join": "成为会员",
+    "upgrade": "升级会员"
+  },
+  "footer": {
+    "description": "融合人工智能与顶级奢华，为尊贵客户提供独一无二的购物体验平台。",
+    "platform": "平台服务",
+    "browseProducts": "浏览臻品",
+    "aiInsights": "AI洞察",
+    "priceAnalysis": "价格分析",
+    "company": "品牌信息",
+    "aboutUs": "关于我们",
+    "careers": "加入我们",
+    "press": "媒体中心",
+    "blog": "奢华博客",
+    "legal": "法律条款",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "cookies": "Cookie政策",
+    "tagline": "为非凡奢华体验而生",
+    "copyright": "版权所有"
+  },
+  "language": {
+    "switch": "语言切换",
+    "zhCN": "简体中文",
+    "en": "English",
+    "zhTW": "繁體中文"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "close": "关闭",
+    "currency": "¥",
+    "priceFrom": "起售价"
+  }
+}

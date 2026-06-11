@@ -1,0 +1,93 @@
+{
+  "version": "1.3.0",
+  "versionFormat": "V.MAJOR.MINOR.PATCH",
+  "releaseDate": "2024-06-11",
+  "releaseType": "minor",
+  "projectName": "ZLuxury",
+  "projectDescription": "Professional Online Luxury Commerce Platform - AI-Powered Auction & Marketplace System with Multi-language Support",
+  "versionHistory": [
+    {
+      "version": "1.3.0",
+      "date": "2024-06-11",
+      "type": "minor",
+      "changes": [
+        "Added i18n multi-language support (Chinese default)",
+        "Redesigned GUI with professional luxury style (Cartier/Tiffany/Bulgari inspired)",
+        "Added language switcher component",
+        "Implemented professional SVG luxury imagery (no fake images)",
+        "Added elegant serif typography (Cormorant Garamond)",
+        "Added Chinese fonts (Noto Sans SC, Noto Serif SC)",
+        "Redesigned hero section with cinematic layout",
+        "Redesigned header with elegant crown logo",
+        "Added gold accent luxury styling"
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2024-06-07",
+      "type": "minor",
+      "changes": [
+        "Added log4j-style logging system",
+        "Enhanced GUI layout based on ANNA AI reference",
+        "Implemented Hermes+OpenClaw merged Unicorn agent",
+        "Added VIP membership tier system",
+        "Added real product data with authentic pricing"
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2024-06-06",
+      "type": "minor",
+      "changes": [
+        "Added AI service business logic",
+        "Implemented product repository pattern",
+        "Added comprehensive API endpoints",
+        "Fixed TypeScript type errors"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2024-06-05",
+      "type": "major",
+      "changes": [
+        "Initial release",
+        "Core platform architecture",
+        "Basic product catalog",
+        "AI agent framework"
+      ]
+    }
+  ],
+  "branchInfo": {
+    "currentBranch": "main",
+    "defaultBranch": "main",
+    "releaseBranch": "release",
+    "developBranch": "develop"
+  },
+  "buildInfo": {
+    "nodeVersion": "18.x",
+    "nextVersion": "14.2.0",
+    "typescriptVersion": "5.0.0",
+    "tailwindVersion": "3.4.0",
+    "i18nextVersion": "23.x",
+    "reactI18nextVersion": "14.x"
+  },
+  "i18n": {
+    "defaultLanguage": "zh-CN",
+    "supportedLanguages": [
+      "zh-CN",
+      "en",
+      "zh-TW"
+    ],
+    "languageNames": {
+      "zh-CN": "简体中文",
+      "en": "English",
+      "zh-TW": "繁體中文"
+    }
+  },
+  "metadata": {
+    "author": "ZLuxury Team",
+    "email": "vcfhuang@qq.com",
+    "repository": "https://github.com/vcfhuang/zluxury",
+    "license": "MIT"
+  }
+}

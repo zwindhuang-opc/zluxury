@@ -8,17 +8,21 @@
  * - GET /api/ai/history - Get chat history
  * 
  * Architecture: API Layer (Controller Pattern)
- * Version: 1.0.0
- * Last Updated: 2024-06-07
+ * Version: 2.0.0
+ * Last Updated: 2025-06-10
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { AIService, AgentType, AIRequest } from '@/data/ai';
+import { agentConfigs, AgentType } from '@/data/ai';
+import AIService, { AIRequest } from '@/data/ai-service';
 
 // ============================================================================
 // API RESPONSE TYPES
 // ============================================================================
 
+/**
+ * 通用API响应接口 / Generic API response interface
+ */
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -30,6 +34,9 @@ interface ApiResponse<T> {
 // HELPER FUNCTIONS
 // ============================================================================
 
+/**
+ * 创建成功响应 / Create success response
+ */
 function successResponse<T>(data: T, message?: string): NextResponse<ApiResponse<T>> {
   return NextResponse.json({
     success: true,
@@ -38,6 +45,9 @@ function successResponse<T>(data: T, message?: string): NextResponse<ApiResponse
   }, { status: 200 });
 }
 
+/**
+ * 创建错误响应 / Create error response
+ */
 function errorResponse(message: string, status: number = 400): NextResponse<ApiResponse<null>> {
   return NextResponse.json({
     success: false,
@@ -50,8 +60,8 @@ function errorResponse(message: string, status: number = 400): NextResponse<ApiR
 // ============================================================================
 
 /**
- * In-memory chat history storage
- * In production, use database
+ * 内存聊天历史存储 / In-memory chat history storage
+ * 生产环境应使用数据库 / Use database in production
  */
 const chatHistories: Map<string, any[]> = new Map();
 
@@ -61,36 +71,35 @@ const chatHistories: Map<string, any[]> = new Map();
 
 /**
  * GET /api/ai
- * Get agent configurations or chat history
+ * 获取智能体配置或聊天历史
  * 
  * Query Parameters:
  * - action: 'agents' or 'history'
  * - sessionId: Session ID (for history)
  */
-export async function GET(request: NextRequest): NextResponse<ApiResponse<any>> {
+export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<any>>> {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'agents';
-    
+
     if (action === 'agents') {
-      // Return all agent configurations
-      const agents = AIService.getAllAgents();
-      return successResponse(agents);
-      
+      // 返回所有智能体配置 / Return all agent configurations
+      return successResponse(agentConfigs);
+
     } else if (action === 'history') {
       // Return chat history for session
       const sessionId = searchParams.get('sessionId');
-      
+
       if (!sessionId) {
         return errorResponse('sessionId is required for history', 400);
       }
-      
+
       const history = chatHistories.get(sessionId) || [];
       return successResponse(history);
     }
-    
+
     return errorResponse('Invalid action', 400);
-    
+
   } catch (error) {
     console.error('[API] AI GET error:', error);
     return errorResponse('AI service error', 500);
@@ -99,29 +108,29 @@ export async function GET(request: NextRequest): NextResponse<ApiResponse<any>> 
 
 /**
  * POST /api/ai
- * Process chat message
+ * 处理聊天消息 / Process chat message
  * 
  * Request Body:
- * - query: User message
- * - agent: Agent type (hermes, openclaw, unicorn)
- * - sessionId: Session ID
- * - userContext: Optional user context
+ * - query: User message (用户消息)
+ * - agent: Agent type (智能体类型: hermes, openclaw, unicorn)
+ * - sessionId: Session ID (会话ID)
+ * - userContext: Optional user context (可选用户上下文)
  */
-export async function POST(request: NextRequest): NextResponse<ApiResponse<any>> {
+export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<any>>> {
   try {
     const body = await request.json();
-    
+
     // Validate required fields
     if (!body.query || !body.agent) {
       return errorResponse('query and agent are required', 400);
     }
-    
+
     // Validate agent type
     const validAgents: AgentType[] = ['hermes', 'openclaw', 'unicorn'];
     if (!validAgents.includes(body.agent)) {
       return errorResponse('Invalid agent type', 400);
     }
-    
+
     // Create AI request
     const aiRequest: AIRequest = {
       query: body.query,
@@ -129,14 +138,14 @@ export async function POST(request: NextRequest): NextResponse<ApiResponse<any>>
       sessionId: body.sessionId,
       userContext: body.userContext
     };
-    
+
     // Process query
     const response = AIService.processQuery(aiRequest);
-    
+
     // Store in chat history
     if (body.sessionId) {
       const history = chatHistories.get(body.sessionId) || [];
-      
+
       // Add user message
       history.push({
         id: `MSG-${Date.now()}`,
@@ -144,19 +153,19 @@ export async function POST(request: NextRequest): NextResponse<ApiResponse<any>>
         content: body.query,
         timestamp: new Date().toISOString()
       });
-      
+
       // Add agent response
       history.push(response.message);
-      
+
       chatHistories.set(body.sessionId, history);
     }
-    
+
     return successResponse({
       message: response.message,
       suggestions: response.suggestions,
       products: response.products
     });
-    
+
   } catch (error) {
     console.error('[API] AI POST error:', error);
     return errorResponse('AI processing failed', 500);

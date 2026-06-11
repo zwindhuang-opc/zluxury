@@ -74,7 +74,7 @@ function errorResponse(message: string, status: number = 400): NextResponse<ApiR
  */
 function parseQueryParams(request: NextRequest): ProductSearchParams {
   const { searchParams } = new URL(request.url);
-  
+
   return {
     query: searchParams.get('query') || undefined,
     category: searchParams.get('category') || undefined,
@@ -111,32 +111,32 @@ function parseQueryParams(request: NextRequest): ProductSearchParams {
  * - limit: Pagination limit
  * - offset: Pagination offset
  */
-export async function GET(request: NextRequest): NextResponse<ApiResponse<any>> {
+export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<any>>> {
   try {
     // Parse query parameters
     const params = parseQueryParams(request);
-    
+
     // Get products from repository
     const products = ProductRepository.getAll(params);
-    
+
     // Get total count (without pagination)
     const totalParams = { ...params, limit: undefined, offset: undefined };
     const total = ProductRepository.getAll(totalParams).length;
-    
+
     // Calculate pagination info
     const page = params.offset ? Math.floor(params.offset / (params.limit || 10)) + 1 : 1;
-    
+
     // Return success response
     return successResponse(products, {
       total,
       page,
       limit: params.limit || products.length
     });
-    
+
   } catch (error) {
     // Log error for debugging
     console.error('[API] Products GET error:', error);
-    
+
     // Return error response
     return errorResponse('Failed to retrieve products', 500);
   }
@@ -152,22 +152,22 @@ export async function GET(request: NextRequest): NextResponse<ApiResponse<any>> 
  * Note: This endpoint requires admin authentication
  * Implementation pending with auth system
  */
-export async function POST(request: NextRequest): NextResponse<ApiResponse<any>> {
+export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<any>>> {
   try {
     // Parse request body
     const body = await request.json();
-    
+
     // Validate required fields
     const requiredFields = ['name', 'brand', 'category', 'price', 'description'];
     const missingFields = requiredFields.filter(field => !body[field]);
-    
+
     if (missingFields.length > 0) {
       return errorResponse(`Missing required fields: ${missingFields.join(', ')}`, 400);
     }
-    
+
     // Generate product ID
     const productId = `PROD-${Date.now().toString(36).toUpperCase()}`;
-    
+
     // Create product object
     const newProduct = {
       id: productId,
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest): NextResponse<ApiResponse<any>>
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
+
     // Note: In production, this would save to database
     // For now, return the created product
     return NextResponse.json({
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest): NextResponse<ApiResponse<any>>
       data: newProduct,
       message: 'Product created successfully'
     }, { status: 201 });
-    
+
   } catch (error) {
     console.error('[API] Products POST error:', error);
     return errorResponse('Failed to create product', 500);

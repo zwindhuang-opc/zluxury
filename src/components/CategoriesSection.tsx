@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useTranslation } from '@/i18n/useTranslation'
 
 const categories = [
   {
     id: 'watches',
-    name: 'Luxury Watches',
+    nameKey: 'categories.watches',
     description: 'Timepieces from Rolex, Patek Philippe, Omega, and more',
     color: '#00B4D8',
     count: 2500,
@@ -14,7 +15,7 @@ const categories = [
   },
   {
     id: 'jewelry',
-    name: 'Fine Jewelry',
+    nameKey: 'categories.jewelry',
     description: 'Diamonds, gemstones, and precious metals',
     color: '#D4AF37',
     count: 3200,
@@ -22,7 +23,7 @@ const categories = [
   },
   {
     id: 'fashion',
-    name: 'Designer Fashion',
+    nameKey: 'categories.fashion',
     description: 'Haute couture and luxury apparel',
     color: '#00B4D8',
     count: 8000,
@@ -30,7 +31,7 @@ const categories = [
   },
   {
     id: 'bags',
-    name: 'Luxury Bags',
+    nameKey: 'categories.handbags',
     description: 'Handbags and accessories from top designers',
     color: '#D4AF37',
     count: 4500,
@@ -38,7 +39,7 @@ const categories = [
   },
   {
     id: 'art',
-    name: 'Fine Art',
+    nameKey: 'categories.art',
     description: 'Original artworks and limited editions',
     color: '#00B4D8',
     count: 1200,
@@ -46,7 +47,7 @@ const categories = [
   },
   {
     id: 'cars',
-    name: 'Luxury Vehicles',
+    nameKey: 'categories.cars',
     description: 'Premium automobiles and exotic cars',
     color: '#D4AF37',
     count: 800,
@@ -54,7 +55,7 @@ const categories = [
   },
   {
     id: 'real-estate',
-    name: 'Premium Real Estate',
+    nameKey: 'categories.realEstate',
     description: 'Exclusive properties worldwide',
     color: '#00B4D8',
     count: 500,
@@ -62,7 +63,7 @@ const categories = [
   },
   {
     id: 'yachts',
-    name: 'Luxury Yachts',
+    nameKey: 'categories.yachts',
     description: 'Superyachts and sailing vessels',
     color: '#D4AF37',
     count: 150,
@@ -142,15 +143,17 @@ const CategoryIcon = ({ categoryId }: { categoryId: string }) => {
 }
 
 export default function CategoriesSection() {
+  const { t } = useTranslation()
+
   return (
     <section className="py-20">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-            Explore <span className="text-gradient">Categories</span>
+            {t('categories.title')} <span className="text-gradient">{t('categories.subtitle')}</span>
           </h2>
           <p className="text-zl-text-muted max-w-2xl mx-auto">
-            Discover our curated collections across the world's most prestigious luxury categories
+            {t('categories.subtitle')}
           </p>
         </div>
 
@@ -174,7 +177,7 @@ export default function CategoriesSection() {
                   </div>
 
                   <h3 className="text-lg font-semibold font-montserrat mb-2 group-hover:text-zl-accent transition">
-                    {category.name}
+                    {t(category.nameKey)}
                   </h3>
 
                   <p className="text-sm text-zl-text-muted mb-4 line-clamp-2">
