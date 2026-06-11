@@ -23,6 +23,21 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/i18n/useTranslation'
 
+// Helper function to get emoji based on category / 根据分类获取表情符号的辅助函数
+const getCategoryEmoji = (category: string): string => {
+    const emojis: Record<string, string> = {
+        'Watches': '⌚',
+        'Bags': '👜',
+        'Jewelry': '💎',
+        'Fashion': '👔',
+        'Art': '🎨',
+        'Cars': '🏎️',
+        'Real Estate': '🏰',
+        'Yachts': '⛵'
+    }
+    return emojis[category] || '✨'
+}
+
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
@@ -291,6 +306,25 @@ export default function ProductDetailPage() {
                                     src={product.images[selectedImage] || product.images[0]}
                                     alt={`${product.brand} ${product.name} - Luxury ${product.category} / ${product.brand} ${product.name} - 奢华${product.category}`}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    onError={(e) => {
+                                        // Fallback if image blocked by ORB / ORB阻止时的备用方案
+                                        const target = e.target as HTMLImageElement;
+                                        target.style.display = 'none';
+                                        const parent = target.parentElement;
+                                        if (parent) {
+                                            const fallback = document.createElement('div');
+                                            fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-zl-dark-3 to-zl-dark';
+                                            fallback.innerHTML = `
+                                                <div class="text-center p-12">
+                                                    <div class="text-6xl mb-4">${getCategoryEmoji(product.category)}</div>
+                                                    <h3 class="text-3xl font-bold text-zl-gold font-montserrat">${product.brand}</h3>
+                                                    <p class="text-xl text-zl-text-muted mt-2">${product.name}</p>
+                                                    <p class="text-sm text-zl-accent mt-4">$${product.price.toLocaleString()}</p>
+                                                </div>
+                                            `;
+                                            parent.appendChild(fallback);
+                                        }
+                                    }}
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center p-12">

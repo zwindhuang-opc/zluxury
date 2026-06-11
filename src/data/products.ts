@@ -249,10 +249,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 15,
-    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&q=80',
-      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
+      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
+      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
     ],
     specifications: {
       caseSize: '41mm',
@@ -284,10 +284,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80',
-      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
+      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',
+      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
     ],
     specifications: {
       caseSize: '40mm',
@@ -353,10 +353,10 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: false,
     stock: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
-      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
+      'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',
+      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
     ],
     specifications: {
       caseSize: '41mm',

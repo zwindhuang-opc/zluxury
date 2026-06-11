@@ -201,11 +201,29 @@ export default function HeroSection() {
                   alt="Luxury Collection - Watches, Jewelry & Handbags / 奢华系列 - 腕表、珠宝与手袋"
                   className="w-full h-full object-cover"
                   loading="eager"
+                  onError={(e) => {
+                    // Fallback if image blocked by ORB / ORB阻止时的备用方案
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      const fallback = document.createElement('div');
+                      fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-zl-dark-2 to-zl-dark';
+                      fallback.innerHTML = `
+                    <div class="text-center p-8">
+                      <div class="text-6xl mb-4">💎</div>
+                      <h3 class="text-2xl font-bold text-zl-gold font-montserrat">ZLUXURY</h3>
+                      <p class="text-zl-text-muted mt-2">Exclusive Collection</p>
+                    </div>
+                  `;
+                      parent.appendChild(fallback);
+                    }
+                  }}
                 />
-                
+
                 {/* Image overlay gradient for text readability / 图片渐变遮罩 */}
                 <div className="absolute inset-0 bg-gradient-to-t from-zl-dark/60 via-transparent to-transparent"></div>
-                
+
                 {/* Floating product labels / 浮动产品标签 */}
                 <div className="absolute bottom-8 left-8 right-8 space-y-3">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-zl-dark/80 backdrop-blur-sm rounded-full border border-zl-gold/30">

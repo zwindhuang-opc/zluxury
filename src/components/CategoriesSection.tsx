@@ -4,6 +4,21 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/i18n/useTranslation'
 
+// Helper function to get emoji based on category ID / 根据分类ID获取表情符号的辅助函数
+const getCategoryEmoji = (categoryId: string): string => {
+  const emojis: Record<string, string> = {
+    'watches': '⌚',
+    'jewelry': '💎',
+    'fashion': '👔',
+    'bags': '👜',
+    'art': '🎨',
+    'cars': '🏎️',
+    'real-estate': '🏰',
+    'yachts': '⛵'
+  }
+  return emojis[categoryId] || '✨'
+}
+
 const categories = [
   {
     id: 'watches',
@@ -182,6 +197,23 @@ export default function CategoriesSection() {
                       alt={`${t(category.nameKey)} - Luxury ${category.id} / ${t(category.nameKey)} - 奢华${category.id}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => {
+                        // Fallback if image blocked by ORB / ORB阻止时的备用方案
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-zl-dark-3 to-zl-dark';
+                          fallback.innerHTML = `
+                            <div class="text-center">
+                              <div class="text-3xl mb-1">${getCategoryEmoji(category.id)}</div>
+                              <span class="text-xs text-zl-gold font-semibold">${t(category.nameKey)}</span>
+                            </div>
+                          `;
+                          parent.appendChild(fallback);
+                        }
+                      }}
                     />
                     {/* Gradient overlay / 渐变遮罩 */}
                     <div className="absolute inset-0 bg-gradient-to-t from-zl-dark via-zl-dark/50 to-transparent"></div>

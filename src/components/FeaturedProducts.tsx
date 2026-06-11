@@ -3,6 +3,21 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
+// Helper function to get emoji based on category / 根据分类获取表情符号的辅助函数
+const getCategoryEmoji = (category: string): string => {
+  const emojis: Record<string, string> = {
+    'Watches': '⌚',
+    'Bags': '👜',
+    'Jewelry': '💎',
+    'Fashion': '👔',
+    'Art': '🎨',
+    'Cars': '🏎️',
+    'Real Estate': '🏰',
+    'Yachts': '⛵'
+  }
+  return emojis[category] || '✨'
+}
+
 const featuredProducts = [
   {
     id: 'prod-001',
@@ -246,6 +261,24 @@ export default function FeaturedProducts() {
                       alt={`${product.brand} ${product.name} - Luxury ${product.category} / ${product.brand} ${product.name} - 奢华${product.category}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => {
+                        // Fallback if image blocked by ORB / ORB阻止时的备用方案
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'w-full h-full flex items-center justify-center bg-gradient-to-br from-zl-dark-3 to-zl-dark';
+                          fallback.innerHTML = `
+                            <div class="text-center p-6">
+                              <div class="text-4xl mb-2">${getCategoryEmoji(product.category)}</div>
+                              <h4 class="text-lg font-bold text-zl-gold font-montserrat">${product.brand}</h4>
+                              <p class="text-sm text-zl-text-muted mt-1">${product.name}</p>
+                            </div>
+                          `;
+                          parent.appendChild(fallback);
+                        }
+                      }}
                     />
 
                     {/* Image overlay on hover / 悬停遮罩 */}
