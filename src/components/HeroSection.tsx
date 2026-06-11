@@ -181,7 +181,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Right Content - Professional luxury imagery / 右侧视觉 */}
+          {/* Right Content - Real Luxury Product Imagery / 右侧真实产品视觉 */}
           <motion.div
             className="relative"
             initial={{ opacity: 0, x: 30 }}
@@ -194,153 +194,29 @@ export default function HeroSection() {
               <div className="absolute inset-0 border-2 border-zl-gold/20 rounded-lg"></div>
               <div className="absolute inset-4 border border-zl-gold/10 rounded-lg"></div>
 
-              {/* Professional luxury SVG illustration / 专业奢华SVG插图 */}
-              <svg
-                viewBox="0 0 400 400"
-                className="w-full h-full"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Background gradient / 背景渐变 */}
-                <defs>
-                  <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#D4AF37" />
-                    <stop offset="50%" stopColor="#E5C158" />
-                    <stop offset="100%" stopColor="#B8962E" />
-                  </linearGradient>
-                  <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00B4D8" />
-                    <stop offset="100%" stopColor="#0096C7" />
-                  </linearGradient>
-                  <radialGradient id="diamondGradient" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
-                    <stop offset="50%" stopColor="#E5C158" />
-                    <stop offset="100%" stopColor="#D4AF37" />
-                  </radialGradient>
-                </defs>
-
-                {/* Luxury Watch - Rolex inspired / 奢华腕表 */}
-                <g transform="translate(50, 80)">
-                  {/* Watch case / 表壳 */}
-                  <circle cx="60" cy="60" r="55" fill="#0f0f0f" stroke="url(#goldGradient)" strokeWidth="2" />
-                  <circle cx="60" cy="60" r="48" fill="#1a1a1a" stroke="#D4AF37" strokeWidth="0.5" />
-
-                  {/* Watch face / 表盘 */}
-                  <circle cx="60" cy="60" r="40" fill="#0a0a0a" />
-
-                  {/* Hour markers / 时标 */}
-                  {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
-                    <g key={i} transform={`rotate(${angle} 60 60)`}>
-                      {i % 3 === 0 ? (
-                        <rect x="58" y="22" width="4" height="10" fill="#D4AF37" />
-                      ) : (
-                        <circle cx="60" cy="25" r="1.5" fill="#8a8a8a" />
-                      )}
-                    </g>
-                  ))}
-
-                  {/* Watch hands / 表针 */}
-                  <line x1="60" y1="60" x2="60" y2="30" stroke="url(#goldGradient)" strokeWidth="2" strokeLinecap="round" />
-                  <line x1="60" y1="60" x2="85" y2="60" stroke="url(#accentGradient)" strokeWidth="1.5" strokeLinecap="round" />
-
-                  {/* Center jewel / 中央宝石 */}
-                  <circle cx="60" cy="60" r="4" fill="url(#diamondGradient)" />
-
-                  {/* Brand name / 品牌名 */}
-                  <text x="60" y="75" textAnchor="middle" fill="#D4AF37" fontSize="6" fontFamily="Montserrat" letterSpacing="0.1em">
-                    ZLUXURY
-                  </text>
-                </g>
-
-                {/* Diamond Ring - Tiffany inspired / 钻戒 */}
-                <g transform="translate(250, 60)">
-                  {/* Ring band / 戒指环 */}
-                  <ellipse cx="50" cy="80" rx="35" ry="12" fill="none" stroke="url(#goldGradient)" strokeWidth="3" />
-
-                  {/* Diamond / 钻石 */}
-                  <path
-                    d="M50 40 L65 55 L50 70 L35 55 Z"
-                    fill="url(#diamondGradient)"
-                    stroke="#FFFFFF"
-                    strokeWidth="0.5"
-                  />
-
-                  {/* Diamond facets / 钻石切面 */}
-                  <path d="M50 40 L50 70" stroke="#FFFFFF" strokeWidth="0.3" opacity="0.5" />
-                  <path d="M35 55 L65 55" stroke="#FFFFFF" strokeWidth="0.3" opacity="0.5" />
-
-                  {/* Sparkle effects / 闪耀效果 */}
-                  <circle cx="50" cy="55" r="2" fill="#FFFFFF" opacity="0.9" />
-                  <circle cx="45" cy="48" r="1" fill="#FFFFFF" opacity="0.6" />
-                  <circle cx="55" cy="62" r="1" fill="#FFFFFF" opacity="0.6" />
-                </g>
-
-                {/* Designer Handbag - Hermès inspired / 设计师手袋 */}
-                <g transform="translate(240, 200)">
-                  {/* Bag body / 包身 */}
-                  <rect x="20" y="40" width="80" height="60" rx="5" fill="#1a1a1a" stroke="url(#goldGradient)" strokeWidth="1.5" />
-
-                  {/* Bag flap / 包盖 */}
-                  <path d="M20 40 Q60 20 100 40" fill="none" stroke="url(#goldGradient)" strokeWidth="1.5" />
-
-                  {/* Handle / 手柄 */}
-                  <path d="M40 40 Q40 15 60 15 Q80 15 80 40" fill="none" stroke="url(#goldGradient)" strokeWidth="2" />
-
-                  {/* Clasp / 锁扣 */}
-                  <rect x="55" y="35" width="10" height="8" rx="2" fill="#D4AF37" />
-                  <circle cx="60" cy="39" r="2" fill="#0f0f0f" />
-
-                  {/* Brand label / 品牌标签 */}
-                  <text x="60" y="75" textAnchor="middle" fill="#D4AF37" fontSize="5" fontFamily="Montserrat" letterSpacing="0.05em">
-                    ZLUXURY
-                  </text>
-                </g>
-
-                {/* Pearl Necklace - Bulgari inspired / 珍珠项链 */}
-                <g transform="translate(80, 250)">
-                  {/* Necklace chain / 项链链 */}
-                  <path
-                    d="M20 20 Q60 60 100 20"
-                    fill="none"
-                    stroke="url(#goldGradient)"
-                    strokeWidth="1"
-                  />
-
-                  {/* Pearls / 珍珠 */}
-                  {[25, 40, 55, 70, 85].map((x, i) => (
-                    <g key={i}>
-                      <circle cx={x} cy={35 + Math.sin((i - 2) * 0.5) * 15} r="6" fill="#F5F5F5" stroke="#D4AF37" strokeWidth="0.5" />
-                      <circle cx={x - 2} cy={33 + Math.sin((i - 2) * 0.5) * 15} r="1.5" fill="#FFFFFF" opacity="0.8" />
-                    </g>
-                  ))}
-
-                  {/* Center pendant / 中央吊坠 */}
-                  <circle cx="60" cy="50" r="8" fill="url(#diamondGradient)" stroke="#D4AF37" strokeWidth="1" />
-                </g>
-
-                {/* AI Badge - Modern tech indicator / AI标识 */}
-                <g transform="translate(150, 320)">
-                  <rect x="0" y="0" width="100" height="30" rx="15" fill="#00B4D8" opacity="0.15" />
-                  <rect x="0" y="0" width="100" height="30" rx="15" fill="none" stroke="#00B4D8" strokeWidth="1" />
-                  <text x="50" y="20" textAnchor="middle" fill="#00B4D8" fontSize="10" fontFamily="Montserrat" fontWeight="600" letterSpacing="0.1em">
-                    {t('ai.badge')}
-                  </text>
-                </g>
-
-                {/* Category labels / 分类标签 */}
-                <text x="110" y="200" textAnchor="middle" fill="#8a8a8a" fontSize="8" fontFamily="Montserrat" letterSpacing="0.05em">
-                  {t('hero.categories.watch')}
-                </text>
-                <text x="300" y="140" textAnchor="middle" fill="#8a8a8a" fontSize="8" fontFamily="Montserrat" letterSpacing="0.05em">
-                  {t('hero.categories.diamond')}
-                </text>
-                <text x="300" y="280" textAnchor="middle" fill="#8a8a8a" fontSize="8" fontFamily="Montserrat" letterSpacing="0.05em">
-                  {t('hero.categories.bag')}
-                </text>
-                <text x="130" y="330" textAnchor="middle" fill="#8a8a8a" fontSize="8" fontFamily="Montserrat" letterSpacing="0.05em">
-                  {t('hero.categories.jewelry')}
-                </text>
-              </svg>
+              {/* Real luxury product image / 真实奢侈品产品图片 */}
+              <div className="relative w-full h-full overflow-hidden rounded-lg">
+                <img
+                  src="https://images.unsplash.com/photo-1607207927040-0d3e9465f25a?w=800&q=80"
+                  alt="Luxury Collection - Watches, Jewelry & Handbags / 奢华系列 - 腕表、珠宝与手袋"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+                
+                {/* Image overlay gradient for text readability / 图片渐变遮罩 */}
+                <div className="absolute inset-0 bg-gradient-to-t from-zl-dark/60 via-transparent to-transparent"></div>
+                
+                {/* Floating product labels / 浮动产品标签 */}
+                <div className="absolute bottom-8 left-8 right-8 space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-zl-dark/80 backdrop-blur-sm rounded-full border border-zl-gold/30">
+                    <span className="w-2 h-2 bg-zl-gold rounded-full animate-pulse"></span>
+                    <span className="text-xs text-zl-gold uppercase tracking-wider font-medium">Exclusive Collection</span>
+                  </div>
+                  <p className="text-white/90 text-sm leading-relaxed backdrop-blur-sm bg-black/20 p-3 rounded-lg">
+                    Curated selection from Rolex, Hermès, Cartier & more
+                  </p>
+                </div>
+              </div>
 
               {/* Floating AI indicator / 浮动AI标识 */}
               <motion.div

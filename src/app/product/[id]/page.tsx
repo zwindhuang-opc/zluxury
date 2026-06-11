@@ -285,16 +285,25 @@ export default function ProductDetailPage() {
                     >
                         {/* Main image display / 主图显示 */}
                         <div className="aspect-square bg-zl-dark-3 rounded-xl overflow-hidden mb-4 relative group">
-                            <div className="w-full h-full flex items-center justify-center p-12">
-                                {/* Placeholder SVG for luxury products / 奢侈品占位SVG */}
-                                <svg width="300" height="300" viewBox="0 0 200 200" className="opacity-80">
-                                    <circle cx="100" cy="100" r="90" stroke="#D4AF37" strokeWidth="2" fill="none" />
-                                    <path d="M60 100 L85 75 V125 L60 100Z" fill="#00B4D8" />
-                                    <path d="M140 100 L115 125 V75 L140 100Z" fill="#00B4D8" />
-                                    <rect x="88" y="78" width="24" height="44" rx="2" fill="#D4AF37" />
-                                    <circle cx="100" cy="100" r="20" fill="#00B4D8" opacity="0.3" />
-                                </svg>
-                            </div>
+                            {/* Real luxury product image / 真实奢侈品产品图片 */}
+                            {product.images && product.images.length > 0 ? (
+                                <img
+                                    src={product.images[selectedImage] || product.images[0]}
+                                    alt={`${product.brand} ${product.name} - Luxury ${product.category} / ${product.brand} ${product.name} - 奢华${product.category}`}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center p-12">
+                                    {/* Fallback SVG if no images available / 无图片时的备用SVG */}
+                                    <svg width="300" height="300" viewBox="0 0 200 200" className="opacity-80">
+                                        <circle cx="100" cy="100" r="90" stroke="#D4AF37" strokeWidth="2" fill="none" />
+                                        <path d="M60 100 L85 75 V125 L60 100Z" fill="#00B4D8" />
+                                        <path d="M140 100 L115 125 V75 L140 100Z" fill="#00B4D8" />
+                                        <rect x="88" y="78" width="24" height="44" rx="2" fill="#D4AF37" />
+                                        <circle cx="100" cy="100" r="20" fill="#00B4D8" opacity="0.3" />
+                                    </svg>
+                                </div>
+                            )}
 
                             {/* Badges / 标签 */}
                             <div className="absolute top-4 left-4 flex gap-2">
@@ -318,21 +327,39 @@ export default function ProductDetailPage() {
 
                         {/* Thumbnail gallery / 缩略图画廊 */}
                         <div className="flex gap-3">
-                            {[0, 1, 2, 3].map((index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setSelectedImage(index)}
-                                    className={`w-20 h-20 rounded-lg border-2 transition-all ${selectedImage === index ? 'border-zl-accent' : 'border-zl-gray hover:border-zl-accent/50'
-                                        }`}
-                                >
-                                    <div className="w-full h-full bg-zl-dark-3 rounded-md flex items-center justify-center">
-                                        <svg width="40" height="40" viewBox="0 0 50 50" opacity="0.6">
-                                            <circle cx="25" cy="25" r="22" stroke="#D4AF37" strokeWidth="1.5" fill="none" />
-                                            <rect x="20" y="18" width="10" height="14" rx="1" fill="#D4AF37" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            ))}
+                            {product.images && product.images.length > 0 ? (
+                                product.images.slice(0, 4).map((image, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedImage(index)}
+                                        className={`w-20 h-20 rounded-lg border-2 transition-all overflow-hidden ${selectedImage === index ? 'border-zl-accent' : 'border-zl-gray hover:border-zl-accent/50'
+                                            }`}
+                                    >
+                                        <img
+                                            src={image}
+                                            alt={`${product.name} - Image ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </button>
+                                ))
+                            ) : (
+                                /* Fallback thumbnails if no images available / 无图片时的备用缩略图 */
+                                [0, 1, 2, 3].map((index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedImage(index)}
+                                        className={`w-20 h-20 rounded-lg border-2 transition-all ${selectedImage === index ? 'border-zl-accent' : 'border-zl-gray hover:border-zl-accent/50'
+                                            }`}
+                                    >
+                                        <div className="w-full h-full bg-zl-dark-3 rounded-md flex items-center justify-center">
+                                            <svg width="40" height="40" viewBox="0 0 50 50" opacity="0.6">
+                                                <circle cx="25" cy="25" r="22" stroke="#D4AF37" strokeWidth="1.5" fill="none" />
+                                                <rect x="20" y="18" width="10" height="14" rx="1" fill="#D4AF37" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                ))
+                            )}
                         </div>
                     </motion.div>
 
@@ -413,8 +440,8 @@ export default function ProductDetailPage() {
                                             <div className="col-span-2">
                                                 <span className="text-zl-text-muted">Trend:</span>
                                                 <span className={`ml-2 ${product.auctionData.priceTrend === 'up' ? 'text-green-400' :
-                                                        product.auctionData.priceTrend === 'down' ? 'text-red-400' :
-                                                            'text-yellow-400'
+                                                    product.auctionData.priceTrend === 'down' ? 'text-red-400' :
+                                                        'text-yellow-400'
                                                     }`}>
                                                     {product.auctionData.priceTrend === 'up' ? '↑ Rising' :
                                                         product.auctionData.priceTrend === 'down' ? '↓ Falling' :
@@ -517,8 +544,8 @@ export default function ProductDetailPage() {
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
                                     className={`pb-4 capitalize transition-colors ${activeTab === tab
-                                            ? 'text-zl-accent border-b-2 border-zl-accent'
-                                            : 'text-zl-text-muted hover:text-zl-text'
+                                        ? 'text-zl-accent border-b-2 border-zl-accent'
+                                        : 'text-zl-text-muted hover:text-zl-text'
                                         }`}
                                 >
                                     {tab === 'description' ? 'Description' : tab === 'specs' ? 'Specifications' : `Reviews (${product.reviews})`}

@@ -94,8 +94,11 @@ export interface Product {
   // Product reference number (SKU/Serial)
   reference?: string;
 
-  // Product images (URLs)
+  // Product images (URLs) - Real luxury product photography / 真实奢侈品产品摄影
   images?: string[];
+
+  // Primary hero image for featured display / 主要展示图片
+  imageUrl?: string;
 
   // Product status (active, discontinued, coming_soon)
   status: 'active' | 'discontinued' | 'coming_soon';
@@ -246,6 +249,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 15,
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&q=80',
+      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
+    ],
     specifications: {
       caseSize: '41mm',
       material: 'Oystersteel',
@@ -276,6 +284,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 1,
+    imageUrl: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80',
+      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
+    ],
     specifications: {
       caseSize: '40mm',
       material: 'Stainless Steel',
@@ -306,6 +319,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 25,
+    imageUrl: 'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',
+      'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80'
+    ],
     specifications: {
       caseSize: '42mm',
       material: 'Stainless Steel',
@@ -335,6 +353,11 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: false,
     stock: 8,
+    imageUrl: 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
+      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
+    ],
     specifications: {
       caseSize: '41mm',
       material: 'Stainless Steel',
@@ -366,6 +389,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 3,
+    imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
+      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80'
+    ],
     specifications: {
       size: '25cm',
       leather: 'Togo',
@@ -395,6 +423,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 5,
+    imageUrl: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80',
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80'
+    ],
     specifications: {
       size: '28cm',
       leather: 'Epsom',
@@ -424,6 +457,11 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: false,
     stock: 25,
+    imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80'
+    ],
     specifications: {
       size: 'BB',
       leather: 'Taurillon',
@@ -453,6 +491,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 12,
+    imageUrl: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',
+      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80'
+    ],
     specifications: {
       size: 'Medium (23cm)',
       leather: 'Caviar',
@@ -484,6 +527,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 20,
+    imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80'
+    ],
     specifications: {
       metal: '18k Yellow Gold',
       width: '6.3mm',
@@ -512,6 +560,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 18,
+    imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+      'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80'
+    ],
     specifications: {
       metal: '18k Yellow Gold',
       motif: 'Alhambra',
@@ -540,6 +593,11 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: false,
     stock: 30,
+    imageUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80',
+      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80'
+    ],
     specifications: {
       metal: '18k Rose Gold',
       width: '3mm',
@@ -568,6 +626,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 2,
+    imageUrl: 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80'
+    ],
     specifications: {
       metal: '18k White Gold',
       diamonds: '1.5 carats',
@@ -598,6 +661,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 50,
+    imageUrl: 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80'
+    ],
     specifications: {
       material: 'Leather',
       buckle: 'Antique Gold Double G',
@@ -626,6 +693,11 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: false,
     stock: 35,
+    imageUrl: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80',
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80'
+    ],
     specifications: {
       material: 'Re-Nylon',
       size: 'Mini',
@@ -654,6 +726,11 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 15,
+    imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80'
+    ],
     specifications: {
       material: 'Oblique Canvas',
       hardware: 'Gold',
@@ -684,6 +761,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 1,
+    imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80'
+    ],
     specifications: {
       artist: 'Banksy',
       edition: 'Limited',
@@ -713,6 +794,10 @@ export const products: Product[] = ([
     isNew: true,
     isLimited: true,
     stock: 1,
+    imageUrl: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80'
+    ],
     specifications: {
       medium: 'Oil on Canvas',
       size: '100x120cm',

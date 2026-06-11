@@ -11,7 +11,8 @@ const categories = [
     description: 'Timepieces from Rolex, Patek Philippe, Omega, and more',
     color: '#00B4D8',
     count: 2500,
-    brands: ['Rolex', 'Patek Philippe', 'Omega', 'Cartier', 'IWC']
+    brands: ['Rolex', 'Patek Philippe', 'Omega', 'Cartier', 'IWC'],
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&q=80'
   },
   {
     id: 'jewelry',
@@ -19,7 +20,8 @@ const categories = [
     description: 'Diamonds, gemstones, and precious metals',
     color: '#D4AF37',
     count: 3200,
-    brands: ['Tiffany', 'Cartier', 'Van Cleef', 'Bulgari', 'Harry Winston']
+    brands: ['Tiffany', 'Cartier', 'Van Cleef', 'Bulgari', 'Harry Winston'],
+    imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80'
   },
   {
     id: 'fashion',
@@ -27,7 +29,8 @@ const categories = [
     description: 'Haute couture and luxury apparel',
     color: '#00B4D8',
     count: 8000,
-    brands: ['Louis Vuitton', 'Gucci', 'Chanel', 'Dior', 'Prada']
+    brands: ['Louis Vuitton', 'Gucci', 'Chanel', 'Dior', 'Prada'],
+    imageUrl: 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=400&q=80'
   },
   {
     id: 'bags',
@@ -35,7 +38,8 @@ const categories = [
     description: 'Handbags and accessories from top designers',
     color: '#D4AF37',
     count: 4500,
-    brands: ['Hermès', 'Louis Vuitton', 'Chanel', 'Gucci', 'Bottega Veneta']
+    brands: ['Hermès', 'Louis Vuitton', 'Chanel', 'Gucci', 'Bottega Veneta'],
+    imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80'
   },
   {
     id: 'art',
@@ -43,7 +47,8 @@ const categories = [
     description: 'Original artworks and limited editions',
     color: '#00B4D8',
     count: 1200,
-    brands: ["Sotheby's", "Christie's", 'Gallery Partners']
+    brands: ["Sotheby's", "Christie's", 'Gallery Partners'],
+    imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&q=80'
   },
   {
     id: 'cars',
@@ -51,7 +56,8 @@ const categories = [
     description: 'Premium automobiles and exotic cars',
     color: '#D4AF37',
     count: 800,
-    brands: ['Ferrari', 'Lamborghini', 'Porsche', 'Bentley', 'Rolls-Royce']
+    brands: ['Ferrari', 'Lamborghini', 'Porsche', 'Bentley', 'Rolls-Royce'],
+    imageUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80'
   },
   {
     id: 'real-estate',
@@ -59,7 +65,8 @@ const categories = [
     description: 'Exclusive properties worldwide',
     color: '#00B4D8',
     count: 500,
-    brands: ["Sotheby's Realty", "Christie's Realty"]
+    brands: ["Sotheby's Realty", "Christie's Realty"],
+    imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80'
   },
   {
     id: 'yachts',
@@ -67,7 +74,8 @@ const categories = [
     description: 'Superyachts and sailing vessels',
     color: '#D4AF37',
     count: 150,
-    brands: ['Azimut', 'Benetti', 'Sunseeker', 'Feadship']
+    brands: ['Azimut', 'Benetti', 'Sunseeker', 'Feadship'],
+    imageUrl: 'https://images.unsplash.com/photo-1567899378494-00b15b55c073?w=400&q=80'
   }
 ]
 
@@ -166,14 +174,29 @@ export default function CategoriesSection() {
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
               <Link href={`/category/${category.id}`}>
-                <div className="luxury-card rounded-xl p-6 h-full cursor-pointer group">
-                  <div
-                    className="w-14 h-14 rounded-lg flex items-center justify-center mb-4"
-                    style={{ background: `${category.color}20`, border: `1px solid ${category.color}40` }}
-                  >
-                    <span style={{ color: category.color }}>
-                      <CategoryIcon categoryId={category.id} />
-                    </span>
+                <div className="luxury-card rounded-xl p-6 h-full cursor-pointer group overflow-hidden">
+                  {/* Category Image / 分类图片 */}
+                  <div className="relative h-32 -mx-6 -mt-6 mb-4 overflow-hidden">
+                    <img
+                      src={category.imageUrl}
+                      alt={`${t(category.nameKey)} - Luxury ${category.id} / ${t(category.nameKey)} - 奢华${category.id}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    {/* Gradient overlay / 渐变遮罩 */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-zl-dark via-zl-dark/50 to-transparent"></div>
+
+                    {/* Category icon overlay / 分类图标叠加 */}
+                    <div className="absolute bottom-3 left-3">
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center backdrop-blur-sm"
+                        style={{ background: `${category.color}90`, border: `1px solid ${category.color}40` }}
+                      >
+                        <span style={{ color: '#fff' }}>
+                          <CategoryIcon categoryId={category.id} />
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   <h3 className="text-lg font-semibold font-montserrat mb-2 group-hover:text-zl-accent transition">

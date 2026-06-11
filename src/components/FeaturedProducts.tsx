@@ -17,6 +17,7 @@ const featuredProducts = [
     isNew: false,
     isLimited: false,
     stock: 15,
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&q=80',
     specifications: {
       caseSize: '41mm',
       material: 'Oystersteel',
@@ -42,6 +43,7 @@ const featuredProducts = [
     isNew: false,
     isLimited: true,
     stock: 3,
+    imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
     specifications: {
       size: '25cm',
       leather: 'Togo',
@@ -67,6 +69,7 @@ const featuredProducts = [
     isNew: false,
     isLimited: false,
     stock: 20,
+    imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
     specifications: {
       metal: '18k Yellow Gold',
       width: '6.3mm',
@@ -91,6 +94,7 @@ const featuredProducts = [
     isNew: false,
     isLimited: true,
     stock: 1,
+    imageUrl: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&q=80',
     specifications: {
       caseSize: '40mm',
       material: 'Stainless Steel',
@@ -116,6 +120,7 @@ const featuredProducts = [
     isNew: true,
     isLimited: false,
     stock: 25,
+    imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
     specifications: {
       size: 'BB',
       leather: 'Taurillon',
@@ -141,6 +146,7 @@ const featuredProducts = [
     isNew: false,
     isLimited: false,
     stock: 18,
+    imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
     specifications: {
       metal: '18k Yellow Gold',
       motif: 'Alhambra',
@@ -190,7 +196,7 @@ const ProductIcon = ({ category }: { category: string }) => {
       </svg>
     )
   }
-  
+
   return icons[category] || icons.Watches
 }
 
@@ -234,10 +240,17 @@ export default function FeaturedProducts() {
               <Link href={`/product/${product.id}`}>
                 <div className="luxury-card rounded-xl overflow-hidden group cursor-pointer">
                   <div className="relative h-64 bg-gradient-to-br from-zl-dark-3 to-zl-dark overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <ProductIcon category={product.category} />
-                    </div>
-                    
+                    {/* Real luxury product image / 真实奢侈品产品图片 */}
+                    <img
+                      src={product.imageUrl}
+                      alt={`${product.brand} ${product.name} - Luxury ${product.category} / ${product.brand} ${product.name} - 奢华${product.category}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+
+                    {/* Image overlay on hover / 悬停遮罩 */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-zl-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
                     <div className="absolute top-4 left-4 flex gap-2">
                       {product.isNew && (
                         <span className="px-3 py-1 bg-zl-accent text-zl-dark text-xs font-semibold rounded-full uppercase">
@@ -250,31 +263,30 @@ export default function FeaturedProducts() {
                         </span>
                       )}
                     </div>
-                    
+
                     <div className="absolute top-4 right-4">
-                      <span className={`px-2 py-1 text-xs rounded ${
-                        product.stock <= 5 ? 'bg-zl-error/20 text-zl-error' : 'bg-zl-success/20 text-zl-success'
-                      }`}>
+                      <span className={`px-2 py-1 text-xs rounded ${product.stock <= 5 ? 'bg-zl-error/20 text-zl-error' : 'bg-zl-success/20 text-zl-success'
+                        }`}>
                         {product.stock <= 5 ? `Only ${product.stock} left` : 'In Stock'}
                       </span>
                     </div>
-                    
+
                     <div className="absolute inset-0 bg-zl-accent/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
-                  
+
                   <div className="p-6">
                     <span className="text-xs text-zl-accent font-semibold uppercase tracking-wider">
                       {product.brand}
                     </span>
-                    
+
                     <h3 className="text-lg font-semibold font-montserrat mt-2 mb-2 group-hover:text-zl-accent transition">
                       {product.name}
                     </h3>
-                    
+
                     <p className="text-sm text-zl-text-muted mb-4 line-clamp-2">
                       {product.description}
                     </p>
-                    
+
                     <div className="flex flex-wrap gap-2 mb-4">
                       {Object.entries(product.specifications).slice(0, 2).map(([key, value]) => (
                         <span key={key} className="text-xs text-zl-text-muted bg-zl-dark-3 px-2 py-1 rounded">
@@ -282,7 +294,7 @@ export default function FeaturedProducts() {
                         </span>
                       ))}
                     </div>
-                    
+
                     <div className="pt-4 border-t border-zl-gray mb-4">
                       <div className="text-xs text-zl-text-muted mb-1">Verified Auction Data</div>
                       <div className="flex items-center justify-between text-sm">
@@ -290,7 +302,7 @@ export default function FeaturedProducts() {
                         <span className="text-zl-text-muted">Last sold: {formatPrice(product.auctionData.soldPrice, 'USD')}</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-bold font-montserrat text-zl-text">
                         {formatPrice(product.price, product.currency)}
