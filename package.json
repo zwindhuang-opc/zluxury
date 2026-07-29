@@ -4,9 +4,9 @@
   "description": "Professional Online Luxury Commerce Platform - AI-Powered Auction & Marketplace System with Multi-language Support",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev -p 5300",
+    "dev": "next dev -p 13153",
     "build": "next build",
-    "start": "next start -p 5300",
+    "start": "next start -p 13153",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "backup": "node scripts/backup.js",
@@ -24,7 +24,8 @@
     "github:setup": "node scripts/github.js setup",
     "github:list": "node scripts/github.js list",
     "github:deploy": "node scripts/github.js deploy",
-    "deploy": "npm run build && npm run start"
+    "deploy": "next build && echo 'Build complete. Push to main branch to trigger GitHub Pages deploy.'",
+    "export": "next build"
   },
   "keywords": [
     "luxury",

@@ -197,10 +197,11 @@ export default function HeroSection() {
               {/* Real luxury product image / 真实奢侈品产品图片 */}
               <div className="relative w-full h-full overflow-hidden rounded-lg">
                 <img
-                  src="https://images.unsplash.com/photo-1607207927040-0d3e9465f25a?w=800&q=80"
+                  src="https://images.unsplash.com/photo-1603905179762-bbce8f4ab39d?w=800&q=80"
                   alt="Luxury Collection - Watches, Jewelry & Handbags / 奢华系列 - 腕表、珠宝与手袋"
                   className="w-full h-full object-cover"
                   loading="eager"
+                  referrerPolicy="no-referrer"
                   onError={(e) => {
                     // Fallback if image blocked by ORB / ORB阻止时的备用方案
                     const target = e.target as HTMLImageElement;

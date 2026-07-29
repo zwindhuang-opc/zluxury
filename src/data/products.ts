@@ -9,80 +9,98 @@
  * - Auction data integration
  * - Stock management
  * 
+ * Configuration: Uses centralized config-loader (src/lib/config-loader.ts)
+ * Environment: Reads EXCHANGE_RATE settings from .env or defaults
+ * 
  * Architecture: Data Access Layer (Repository Pattern)
- * Version: 1.0.0
- * Last Updated: 2024-06-07
+ * Version: 2.0.0
+ * Last Updated: 2025-06-13
+ * Author: ZLuxury Development Team
  */
 
+// Import configuration loader to eliminate hardcoding
+// Using dynamic import with fallback for safety
+let appConfig: any = null;
+try {
+  // Dynamic import to avoid issues if module not available
+  const configModule = require('@/lib/config-loader');
+  appConfig = configModule.config || configModule.getConfig?.();
+} catch (e) {
+  // Config loader not available yet, will use fallback values
+  console.warn('⚠️  Config loader not available, using fallback exchange rate');
+}
+
 // ============================================================================
-// TYPE DEFINITIONS
+// TYPE DEFINITIONS / 类型定义
 // ============================================================================
 
 /**
  * Product interface defining the structure of a luxury product
  * Includes all necessary fields for catalog display, pricing, and inventory
+ * 
+ * @interface Product
  */
 export interface Product {
-  // Unique identifier for the product (format: PROD-XXX)
+  /** Unique identifier for the product (format: PROD-XXX) / 产品唯一标识符 */
   id: string;
 
-  // Product name/title
+  /** Product name/title / 产品名称 */
   name: string;
 
-  // Brand/Manufacturer name
+  /** Brand/Manufacturer name / 品牌 */
   brand: string;
 
-  // Chinese brand name (optional, derived from brand if not provided)
+  /** Chinese brand name (optional, derived from BRAND_CN_MAP if not provided) / 中文名称 */
   brandCn?: string;
 
-  // Category classification (Watches, Jewelry, Bags, etc.)
+  /** Category classification (Watches, Jewelry, Bags, etc.) / 产品分类 */
   category: string;
 
-  // Base price in USD
+  /** Base price in USD / 美元基础价格 */
   price: number;
 
-  // Price in CNY (Chinese Yuan) - calculated from USD using exchange rate if not provided
+  /** Price in CNY (Chinese Yuan) - calculated from USD using exchange rate / 人民币价格 */
   priceCny?: number;
 
-  // Currency code (USD, EUR, GBP, etc.)
+  /** Currency code (USD, EUR, GBP, etc.) / 货币代码 */
   currency: string;
 
-  // Detailed product description
+  /** Detailed product description / 详细描述 */
   description: string;
 
-  // Average customer rating (1.0 - 5.0)
+  /** Average customer rating (1.0 - 5.0) / 客户评分 */
   rating: number;
 
-  // Total number of reviews
+  /** Total number of reviews / 评论数量 */
   reviews: number;
 
-  // Flag indicating if product is newly added
+  /** Flag indicating if product is newly added / 是否新品 */
   isNew: boolean;
 
-  // Flag indicating limited edition/availability
+  /** Flag indicating limited edition/availability / 是否限量版 */
   isLimited: boolean;
 
-  // Current stock quantity
+  /** Current stock quantity / 当前库存 */
   stock: number;
 
-  // Product specifications (varies by category)
+  /** Product specifications (varies by category) / 产品规格 */
   specifications: Record<string, string>;
 
-  // Verified auction market data
+  /** Verified auction market data / 拍卖市场数据 */
   auctionData?: {
-    // Date of last auction sale
+    /** Date of last auction sale / 最后拍卖日期 */
     lastSold?: string;
-    // Price at last auction (USD)
+    /** Price at last auction (USD) / 最后拍卖价格(美元) */
     soldPrice?: number;
-    // Price at last auction (CNY)
+    /** Price at last auction (CNY) / 最后拍卖价格(人民币) */
     soldPriceCny?: number;
-    // Price trend (up, down, stable)
+    /** Price trend (up, down, stable) / 价格趋势 */
     priceTrend?: 'up' | 'down' | 'stable';
-    // Auction house source
+    /** Auction house source / 拍卖行来源 */
     source?: string;
   };
 
-  // VIP member prices by level
+  /** VIP member prices by level / VIP会员价格 */
   vipPrices?: {
     standard?: number;
     silver?: number;
@@ -91,22 +109,22 @@ export interface Product {
     diamond?: number;
   };
 
-  // Product reference number (SKU/Serial)
+  /** Product reference number (SKU/Serial) / 产品参考号 */
   reference?: string;
 
-  // Product images (URLs) - Real luxury product photography / 真实奢侈品产品摄影
+  /** Product images (URLs) - Real luxury product photography / 产品图片URL列表 */
   images?: string[];
 
-  // Primary hero image for featured display / 主要展示图片
+  /** Primary hero image for featured display / 主要展示图片 */
   imageUrl?: string;
 
-  // Product status (active, discontinued, coming_soon)
+  /** Product status (active, discontinued, coming_soon) / 产品状态 */
   status: 'active' | 'discontinued' | 'coming_soon';
 
-  // Creation timestamp
+  /** Creation timestamp / 创建时间 */
   createdAt: string;
 
-  // Last update timestamp
+  /** Last update timestamp / 更新时间 */
   updatedAt: string;
 }
 
@@ -176,16 +194,37 @@ export interface ProductSearchParams {
 }
 
 // ============================================================================
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS / 辅助函数
 // ============================================================================
 
 /**
- * USD to CNY exchange rate (approximate)
+ * USD to CNY exchange rate - loaded from config (not hardcoded!)
+ * Falls back to 7.24 if config not available
+ * Config source: .env FALLBACK_EXCHANGE_RATE_USD_CNY or EXCHANGE_RATE_API
  */
-const USD_TO_CNY_RATE = 7.2;
+const getExchangeRate = (): number => {
+  try {
+    // Try to get rate from config module
+    if (appConfig?.exchangeRate?.currentUsdToCny) {
+      return appConfig.exchangeRate.currentUsdToCny;
+    }
+
+    // Fallback to environment variable or default
+    const envRate = process.env.FALLBACK_EXCHANGE_RATE_USD_CNY;
+    if (envRate) {
+      return parseFloat(envRate);
+    }
+
+    // Ultimate fallback
+    return 7.24;
+  } catch {
+    return 7.24; // Safety fallback
+  }
+};
 
 /**
- * Chinese brand name mapping
+ * Chinese brand name mapping / 品牌中文名映射表
+ * Maps English brand names to their Chinese equivalents
  */
 const BRAND_CN_MAP: Record<string, string> = {
   'Rolex': '劳力士',
@@ -207,20 +246,29 @@ const BRAND_CN_MAP: Record<string, string> = {
 /**
  * Normalize product data with default values
  * Calculates priceCny and brandCn if not provided
- * @param product - Raw product data
- * @returns Normalized product with all required fields
+ * Uses dynamic exchange rate from config (not hardcoded)
+ * 
+ * @param product - Raw product data from database or API
+ * @returns Normalized product with all required fields populated
+ * 
+ * @example
+ * const normalized = normalizeProduct({ id: 'PROD-001', name: 'Watch', price: 1000, ... })
+ * // Returns: { ..., priceCny: 7240, brandCn: '...', vipPrices: {...} }
  */
 function normalizeProduct(product: Product): Product {
+  // Get current exchange rate from config
+  const rate = getExchangeRate();
+
   return {
     ...product,
     brandCn: product.brandCn || BRAND_CN_MAP[product.brand] || product.brand,
-    priceCny: product.priceCny || Math.round(product.price * USD_TO_CNY_RATE),
+    priceCny: product.priceCny || Math.round(product.price * rate),
     vipPrices: product.vipPrices || {
-      standard: Math.round(product.price * USD_TO_CNY_RATE),
-      silver: Math.round(product.price * USD_TO_CNY_RATE * 0.97),
-      gold: Math.round(product.price * USD_TO_CNY_RATE * 0.95),
-      black: Math.round(product.price * USD_TO_CNY_RATE * 0.92),
-      diamond: Math.round(product.price * USD_TO_CNY_RATE * 0.88),
+      standard: Math.round(product.price * rate),
+      silver: Math.round(product.price * rate * 0.97),      // Silver: 3% discount
+      gold: Math.round(product.price * rate * 0.95),        // Gold: 5% discount
+      black: Math.round(product.price * rate * 0.92),       // Black: 8% discount
+      diamond: Math.round(product.price * rate * 0.88),     // Diamond: 12% discount
     },
   };
 }
@@ -252,7 +300,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
-      'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80'
+      'https://images.unsplash.com/photo-1622434645641-9e65a0d95667?w=800&q=80'
     ],
     specifications: {
       caseSize: '41mm',
@@ -287,7 +335,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',
-      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
+      'https://images.unsplash.com/photo-1547996168-6c780f4ef8d3?w=800&q=80'
     ],
     specifications: {
       caseSize: '40mm',
@@ -322,7 +370,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',
-      'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80'
+      'https://images.unsplash.com/photo-1622434645641-9e65a0d95667?w=800&q=80'
     ],
     specifications: {
       caseSize: '42mm',
@@ -356,7 +404,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',
-      'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80'
+      'https://images.unsplash.com/photo-1547996158-e2e38dbbd6f2?w=800&q=80'
     ],
     specifications: {
       caseSize: '41mm',
@@ -389,10 +437,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: true,
     stock: 3,
-    imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1566168541886-d06c0873b11f?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80',
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80'
+      'https://images.unsplash.com/photo-1566168541886-d06c0873b11f?w=800&q=80',
+      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80'
     ],
     specifications: {
       size: '25cm',
@@ -423,10 +471,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 5,
-    imageUrl: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1594224424497-4c0fbd81d5e5?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80',
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80'
+      'https://images.unsplash.com/photo-1594224424497-4c0fbd81d5e5?w=800&q=80',
+      'https://images.unsplash.com/photo-1566168541886-d06c0873b11f?w=800&q=80'
     ],
     specifications: {
       size: '28cm',
@@ -460,7 +508,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80'
+      'https://images.unsplash.com/photo-1594224424497-4c0fbd81d5e5?w=800&q=80'
     ],
     specifications: {
       size: 'BB',
@@ -494,7 +542,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',
-      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80'
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80'
     ],
     specifications: {
       size: 'Medium (23cm)',
@@ -530,7 +578,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80'
+      'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80'
     ],
     specifications: {
       metal: '18k Yellow Gold',
@@ -563,7 +611,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
-      'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80'
+      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80'
     ],
     specifications: {
       metal: '18k Yellow Gold',
@@ -596,7 +644,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80',
-      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80'
+      'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80'
     ],
     specifications: {
       metal: '18k Rose Gold',
@@ -663,7 +711,8 @@ export const products: Product[] = ([
     stock: 50,
     imageUrl: 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80'
+      'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80',
+      'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=800&q=80'
     ],
     specifications: {
       material: 'Leather',
@@ -696,7 +745,7 @@ export const products: Product[] = ([
     imageUrl: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80',
     images: [
       'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80',
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80'
+      'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=800&q=80'
     ],
     specifications: {
       material: 'Re-Nylon',
@@ -726,10 +775,10 @@ export const products: Product[] = ([
     isNew: false,
     isLimited: false,
     stock: 15,
-    imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=80'
+      'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=800&q=80',
+      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80'
     ],
     specifications: {
       material: 'Oblique Canvas',
@@ -1077,7 +1126,7 @@ export class ProductRepository {
    * @returns Array of brand names
    */
   static getAllBrands(): string[] {
-    return [...new Set(products.map(p => p.brand))];
+    return Array.from(new Set(products.map(p => p.brand)));
   }
 
   /**

@@ -19,6 +19,7 @@ import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/i18n/useTranslation'
+import { ProductRepository } from '@/data/products'
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -182,18 +183,22 @@ export default function CollectionsPage() {
    * Retrieves products belonging to selected collection's brands/categories
    */
   useEffect(() => {
-    const fetchCollectionProducts = async () => {
+    const loadCollectionProducts = () => {
       if (selectedCategory === 'all') return
-      
+
       setLoadingProducts(true)
       try {
-        // Fetch products based on selected collection
-        const response = await fetch(`/api/products?category=${selectedCategory}`)
-        const result = await response.json()
-        
-        if (result.success && result.data?.products) {
-          setProducts(result.data.products)
-        }
+        const productsData = ProductRepository.getAll({ category: selectedCategory })
+        const mapped = productsData.map(p => ({
+          id: p.id,
+          name: p.name,
+          brand: p.brand,
+          price: p.price,
+          priceCny: p.priceCny,
+          image: p.imageUrl,
+          category: p.category
+        }))
+        setProducts(mapped)
       } catch (error) {
         console.error('[CollectionsPage] Error fetching products:', error)
       } finally {
@@ -201,7 +206,7 @@ export default function CollectionsPage() {
       }
     }
 
-    fetchCollectionProducts()
+    loadCollectionProducts()
   }, [selectedCategory])
 
   /**
@@ -211,7 +216,7 @@ export default function CollectionsPage() {
    */
   const handleCollectionSelect = (collectionId: string) => {
     setSelectedCategory(collectionId === selectedCategory ? 'all' : collectionId)
-    
+
     // Scroll to products section after selection
     setTimeout(() => {
       document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })
@@ -227,48 +232,48 @@ export default function CollectionsPage() {
     const icons: Record<string, React.ReactNode> = {
       'timeless-elegance': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <path d="M24 4L6 14v20l18 10 18-10V14L24 4z" stroke="#D4AF37" strokeWidth="2"/>
-          <path d="M24 20v8m-4-4h8" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M24 4L6 14v20l18 10 18-10V14L24 4z" stroke="#D4AF37" strokeWidth="2" />
+          <path d="M24 20v8m-4-4h8" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" />
         </svg>
       ),
       'modern-luxe': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <rect x="12" y="12" width="24" height="24" rx="4" stroke="#00B4D8" strokeWidth="2"/>
-          <circle cx="24" cy="24" r="6" fill="#00B4D8" opacity="0.3"/>
+          <rect x="12" y="12" width="24" height="24" rx="4" stroke="#00B4D8" strokeWidth="2" />
+          <circle cx="24" cy="24" r="6" fill="#00B4D8" opacity="0.3" />
         </svg>
       ),
       'haute-horlogerie': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="24" r="16" stroke="#D4AF37" strokeWidth="2"/>
-          <path d="M24 16v8l5 3" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round"/>
-          <line x1="24" y1="6" x2="24" y2="10" stroke="#D4AF37" strokeWidth="2"/>
-          <line x1="38" y1="24" x2="42" y2="24" stroke="#D4AF37" strokeWidth="2"/>
-          <line x1="24" y1="38" x2="24" y2="42" stroke="#D4AF37" strokeWidth="2"/>
-          <line x1="10" y1="24" x2="6" y2="24" stroke="#D4AF37" strokeWidth="2"/>
+          <circle cx="24" cy="24" r="16" stroke="#D4AF37" strokeWidth="2" />
+          <path d="M24 16v8l5 3" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" />
+          <line x1="24" y1="6" x2="24" y2="10" stroke="#D4AF37" strokeWidth="2" />
+          <line x1="38" y1="24" x2="42" y2="24" stroke="#D4AF37" strokeWidth="2" />
+          <line x1="24" y1="38" x2="24" y2="42" stroke="#D4AF37" strokeWidth="2" />
+          <line x1="10" y1="24" x2="6" y2="24" stroke="#D4AF37" strokeWidth="2" />
         </svg>
       ),
       'rare-gems': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <polygon points="24,8 40,20 32,40 16,40 8,20" stroke="#9B59B6" strokeWidth="2" fill="#9B59B6" opacity="0.2"/>
-          <line x1="24" y1="8" x2="24" y2="40" stroke="#9B59B6" strokeWidth="1"/>
-          <line x1="8" y1="20" x2="40" y2="20" stroke="#9B59B6" strokeWidth="1"/>
+          <polygon points="24,8 40,20 32,40 16,40 8,20" stroke="#9B59B6" strokeWidth="2" fill="#9B59B6" opacity="0.2" />
+          <line x1="24" y1="8" x2="24" y2="40" stroke="#9B59B6" strokeWidth="1" />
+          <line x1="8" y1="20" x2="40" y2="20" stroke="#9B59B6" strokeWidth="1" />
         </svg>
       ),
       'leather-craftsmanship': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <rect x="10" y="16" width="28" height="22" rx="2" stroke="#D4AF37" strokeWidth="2"/>
-          <path d="M10 16l7-8h14l7 8" stroke="#D4AF37" strokeWidth="2"/>
-          <line x1="10" y1="27" x2="38" y2="27" stroke="#D4AF37" strokeWidth="1"/>
+          <rect x="10" y="16" width="28" height="22" rx="2" stroke="#D4AF37" strokeWidth="2" />
+          <path d="M10 16l7-8h14l7 8" stroke="#D4AF37" strokeWidth="2" />
+          <line x1="10" y1="27" x2="38" y2="27" stroke="#D4AF37" strokeWidth="1" />
         </svg>
       ),
       'limited-editions': (
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="24" r="16" stroke="#e74c3c" strokeWidth="2"/>
+          <circle cx="24" cy="24" r="16" stroke="#e74c3c" strokeWidth="2" />
           <text x="24" y="29" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#e74c3c">✦</text>
         </svg>
       )
     }
-    
+
     return icons[collectionId] || icons['timeless-elegance']
   }
 
@@ -304,10 +309,10 @@ export default function CollectionsPage() {
                 placeholder="Search collections, brands, or styles..."
                 className="input-luxury w-full pl-12"
               />
-              <svg 
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zl-text-muted" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zl-text-muted"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -333,10 +338,10 @@ export default function CollectionsPage() {
                   className={`px-3 py-2 ${viewMode === 'grid' ? 'bg-zl-accent text-zl-dark' : 'hover:bg-zl-dark-3'}`}
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <rect x="1" y="1" width="6" height="6" rx="1"/>
-                    <rect x="9" y="1" width="6" height="6" rx="1"/>
-                    <rect x="1" y="9" width="6" height="6" rx="1"/>
-                    <rect x="9" y="9" width="6" height="6" rx="1"/>
+                    <rect x="1" y="1" width="6" height="6" rx="1" />
+                    <rect x="9" y="1" width="6" height="6" rx="1" />
+                    <rect x="1" y="9" width="6" height="6" rx="1" />
+                    <rect x="9" y="9" width="6" height="6" rx="1" />
                   </svg>
                 </button>
                 <button
@@ -344,9 +349,9 @@ export default function CollectionsPage() {
                   className={`px-3 py-2 ${viewMode === 'list' ? 'bg-zl-accent text-zl-dark' : 'hover:bg-zl-dark-3'}`}
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <rect x="1" y="2" width="14" height="3" rx="1"/>
-                    <rect x="1" y="7" width="14" height="3" rx="1"/>
-                    <rect x="1" y="12" width="14" height="3" rx="1"/>
+                    <rect x="1" y="2" width="14" height="3" rx="1" />
+                    <rect x="1" y="7" width="14" height="3" rx="1" />
+                    <rect x="1" y="12" width="14" height="3" rx="1" />
                   </svg>
                 </button>
               </div>
@@ -363,7 +368,7 @@ export default function CollectionsPage() {
       {/* Collections Grid / 收藏系列网格 */}
       <section className="container mb-16">
         <div className={
-          viewMode === 'grid' 
+          viewMode === 'grid'
             ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
             : 'space-y-6'
         }>
@@ -377,21 +382,19 @@ export default function CollectionsPage() {
               {/* Collection Card / 收藏卡片 */}
               <div
                 onClick={() => handleCollectionSelect(collection.id)}
-                className={`luxury-card rounded-xl overflow-hidden cursor-pointer group ${
-                  selectedCategory === collection.id ? 'ring-2 ring-zl-accent' : ''
-                } ${viewMode === 'list' ? 'flex' : ''}`}
+                className={`luxury-card rounded-xl overflow-hidden cursor-pointer group ${selectedCategory === collection.id ? 'ring-2 ring-zl-accent' : ''
+                  } ${viewMode === 'list' ? 'flex' : ''}`}
               >
                 {/* Collection Image / 收藏图片 */}
-                <div className={`bg-gradient-to-br from-zl-dark-3 to-zl-dark relative overflow-hidden ${
-                  viewMode === 'list' ? 'w-64 flex-shrink-0' : 'aspect-[4/3]'
-                }`}>
+                <div className={`bg-gradient-to-br from-zl-dark-3 to-zl-dark relative overflow-hidden ${viewMode === 'list' ? 'w-64 flex-shrink-0' : 'aspect-[4/3]'
+                  }`}>
                   <div className="absolute inset-0 flex items-center justify-center p-8 group-hover:scale-110 transition-transform duration-500">
                     {getCollectionIcon(collection.id)}
                   </div>
-                  
+
                   {/* Overlay gradient / 覆盖渐变 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-zl-dark via-transparent to-transparent opacity-60" />
-                  
+
                   {/* Product count badge / 产品数量徽章 */}
                   <div className="absolute top-4 right-4 bg-zl-accent/90 text-zl-dark px-3 py-1 rounded-full text-xs font-semibold">
                     {collection.productCount} Items
@@ -403,7 +406,7 @@ export default function CollectionsPage() {
                   <h3 className="text-xl font-semibold font-montserrat mb-2 group-hover:text-zl-accent transition-colors">
                     {collection.name}
                   </h3>
-                  
+
                   <p className="text-sm text-zl-text-muted mb-4 line-clamp-2">
                     {collection.description}
                   </p>
@@ -462,7 +465,7 @@ export default function CollectionsPage() {
             <h2 className="text-2xl font-bold font-montserrat mb-8">
               Products in Selected Collection
             </h2>
-            
+
             {loadingProducts ? (
               <div className="flex justify-center py-12">
                 <div className="w-12 h-12 border-4 border-zl-accent border-t-transparent rounded-full animate-spin" />
@@ -504,7 +507,7 @@ export default function CollectionsPage() {
             <div className="absolute top-10 left-10 w-32 h-32 bg-zl-accent rounded-full blur-3xl" />
             <div className="absolute bottom-10 right-10 w-40 h-40 bg-blue-500 rounded-full blur-3xl" />
           </div>
-          
+
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
               Can&apos;t Find What You&apos;re Looking For?

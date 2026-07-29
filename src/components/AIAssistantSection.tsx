@@ -93,7 +93,7 @@ export default function AIAssistantSection() {
     setMounted(true)
 
     // Generate unique conversation ID / 生成唯一对话ID
-    setConversationId(`conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
+    setConversationId(`conv-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`)
 
     // Set initial welcome message / 设置初始欢迎消息
     setMessages([

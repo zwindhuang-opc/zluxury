@@ -1,567 +1,503 @@
 /**
- * ZLuxury Logging System
- * Log4j-style logging mechanism for consistent logging across the platform
+ * ZLuxury Logging System (Log4j-style)
+ * 
+ * Enterprise-grade logging with structured JSON output
+ * Multiple log levels: ERROR, WARN, INFO, DEBUG, TRACE
+ * Multiple transports: File, Console, External services
  * 
  * Features:
- * - Multiple log levels (DEBUG, INFO, WARN, ERROR, FATAL)
- * - Log file rotation and persistence
- * - Console and file output
- * - Structured logging with context
- * - Performance tracking
+ * - Structured logging with metadata
+ * - Log rotation by size/date
+ * - Request ID tracking for distributed tracing
+ * - Performance timing utilities
+ * - Error stack trace capture
  * 
- * Version: 1.0.0
- * Last Updated: 2024-06-07
+ * Usage:
+ *   import { logger } from '@/lib/logger'
+ *   
+ *   logger.info('User login', { userId: '123', ip: '192.168.1.1' })
+ *   logger.error('Payment failed', { orderId: 'ORD-001', error: err })
+ *   logger.warn('Low stock', { productId: 'PROD-001', stock: 2 })
  */
 
 // ============================================================================
-// LOG LEVEL DEFINITIONS
+// LOG LEVELS / 日志级别
 // ============================================================================
 
 /**
- * Log levels enum - following log4j standard
- * Levels are ordered by severity (lowest to highest)
+ * Log level enumeration from most to least severe
  */
 export enum LogLevel {
-  DEBUG = 'DEBUG',    // Detailed debugging information
-  INFO = 'INFO',      // General operational information
-  WARN = 'WARN',      // Warning messages for potential issues
-  ERROR = 'ERROR',    // Error messages for recoverable errors
-  FATAL = 'FATAL'     // Critical errors that may crash the application
+  /** System is unusable / 系统不可用 */
+  ERROR = 0,
+  /** Critical condition that needs attention / 需要关注的严重情况 */
+  WARN = 1,
+  /** Normal operational information / 正常运行信息 */
+  INFO = 2,
+  /** Debug-level messages for development / 调试信息 */
+  DEBUG = 3,
+  /** Very detailed tracing information / 详细追踪信息 */
+  TRACE = 4
 }
 
 /**
- * Log level priority mapping
- * Higher number = more severe
+ * Log level names mapping
  */
-const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
-  [LogLevel.DEBUG]: 0,
-  [LogLevel.INFO]: 1,
-  [LogLevel.WARN]: 2,
-  [LogLevel.ERROR]: 3,
-  [LogLevel.FATAL]: 4
-};
+export const LOG_LEVEL_NAMES: Record<LogLevel, string> = {
+  [LogLevel.ERROR]: 'ERROR',
+  [LogLevel.WARN]: 'WARN',
+  [LogLevel.INFO]: 'INFO',
+  [LogLevel.DEBUG]: 'DEBUG',
+  [LogLevel.TRACE]: 'TRACE'
+}
+
+/**
+ * Log level colors for console output
+ */
+const LOG_COLORS: Record<LogLevel, string> = {
+  [LogLevel.ERROR]: '\x1b[31m', // Red
+  [LogLevel.WARN]: '\x1b[33m',  // Yellow
+  [LogLevel.INFO]: '\x1b[36m',  // Cyan
+  [LogLevel.DEBUG]: '\x1b[35m', // Magenta
+  [LogLevel.TRACE]: '\x1b[90m'  // Gray
+}
+
+const RESET_COLOR = '\x1b[0m'
 
 // ============================================================================
-// LOG ENTRY INTERFACE
+// LOG ENTRY INTERFACE / 日志条目接口
 // ============================================================================
 
 /**
- * LogEntry - Structured log entry format
- * Contains all information about a single log event
+ * Structure of a single log entry
  */
 export interface LogEntry {
-  // Timestamp of the log event (ISO 8601 format)
+  /** Timestamp in ISO format / ISO格式时间戳 */
   timestamp: string;
-  
-  // Log level (DEBUG, INFO, WARN, ERROR, FATAL)
+
+  /** Log severity level / 日志级别 */
   level: LogLevel;
-  
-  // Logger category name (e.g., 'api', 'auth', 'ai')
-  logger: string;
-  
-  // Main log message
+
+  /** Level name string / 级别名称字符串 */
+  levelName: string;
+
+  /** Log message / 日志消息 */
   message: string;
-  
-  // Additional context data (optional)
-  context?: Record<string, unknown>;
-  
-  // Error object if applicable (optional)
-  error?: Error | unknown;
-  
-  // Stack trace for errors (optional)
-  stack?: string;
-  
-  // Performance metrics (optional)
-  performance?: {
-    durationMs: number;
-    operation: string;
-  };
-  
-  // Request/Response tracking (optional)
+
+  /** Additional context data / 额外上下文数据 */
+  data?: Record<string, any>;
+
+  /** Source file location / 源文件位置 */
+  source?: string;
+
+  /** Request ID for tracing / 用于追踪的请求ID */
   requestId?: string;
-  
-  // User context (optional)
+
+  /** User ID if authenticated / 认证用户ID */
   userId?: string;
-  
-  // Session context (optional)
-  sessionId?: string;
+
+  /** Execution time in ms / 执行时间（毫秒） */
+  duration?: number;
+
+  /** Error object if applicable / 错误对象（如有） */
+  error?: Error;
+
+  /** Stack trace / 堆栈跟踪 */
+  stackTrace?: string;
 }
 
 // ============================================================================
-// LOGGER CONFIGURATION
+// LOGGER CONFIGURATION / 日志器配置
 // ============================================================================
 
+interface LoggerConfig {
+  /** Minimum level to log / 最低日志级别 */
+  minLevel: LogLevel;
+
+  /** Enable console output / 启用控制台输出 */
+  enableConsole: boolean;
+
+  /** Enable file output / 启用文件输出 */
+  enableFile: boolean;
+
+  /** Directory for log files / 日志文件目录 */
+  logDirectory: string;
+
+  /** Maximum log file size in bytes before rotation / 日志轮转最大大小 */
+  maxFileSize: number;
+
+  /** Number of backup files to keep / 保留备份文件数 */
+  maxFiles: number;
+
+  /** Application name for identification / 应用标识名 */
+  appName: string;
+
+  /** Environment (development/production) / 环境 */
+  environment: string;
+}
+
 /**
- * LoggerConfig - Configuration options for logger instance
+ * Default configuration based on environment
  */
-export interface LoggerConfig {
-  // Logger category name
-  name: string;
-  
-  // Minimum log level to output
-  level?: LogLevel;
-  
-  // Enable/disable logging
-  enabled?: boolean;
-  
-  // Output to console
-  consoleOutput?: boolean;
-  
-  // Output to file (server-side only)
-  fileOutput?: boolean;
-  
-  // Log file path (server-side only)
-  filePath?: string;
-  
-  // Include stack traces for errors
-  includeStackTrace?: boolean;
-  
-  // Maximum log entries to keep in memory
-  maxEntries?: number;
+function getDefaultConfig(): LoggerConfig {
+  const isDev = process.env.NODE_ENV === 'development';
+
+  return {
+    minLevel: isDev ? LogLevel.DEBUG : LogLevel.INFO,
+    enableConsole: true,
+    enableFile: true,
+    logDirectory: process.env.LOG_DIR || './logs',
+    maxFileSize: 10 * 1024 * 1024, // 10MB
+    maxFiles: 5,
+    appName: 'ZLuxury',
+    environment: process.env.NODE_ENV || 'development'
+  };
 }
 
 // ============================================================================
-// DEFAULT CONFIGURATION
+// MAIN LOGGER CLASS / 主日志类
 // ============================================================================
 
 /**
- * Default logger configuration
- * Can be overridden by environment variables
- */
-const DEFAULT_CONFIG: Partial<LoggerConfig> = {
-  level: process.env.LOG_LEVEL ? LogLevel[process.env.LOG_LEVEL as keyof typeof LogLevel] : LogLevel.INFO,
-  enabled: process.env.LOG_ENABLED !== 'false',
-  consoleOutput: true,
-  fileOutput: false,
-  includeStackTrace: true,
-  maxEntries: 1000
-};
-
-// ============================================================================
-// LOGGER CLASS
-// ============================================================================
-
-/**
- * Logger - Main logging class
+ * ZLuxury Logger - Enterprise logging system
+ * 
  * Provides structured logging with multiple output targets
+ * Supports request tracing and performance monitoring
  */
-export class Logger {
-  // Logger name/category
-  private name: string;
-  
-  // Minimum log level
-  private level: LogLevel;
-  
-  // Enable flag
-  private enabled: boolean;
-  
-  // Console output flag
-  private consoleOutput: boolean;
-  
-  // Include stack trace flag
-  private includeStackTrace: boolean;
-  
-  // In-memory log storage
-  private logs: LogEntry[] = [];
-  
-  // Maximum entries in memory
-  private maxEntries: number;
+export class ZLuxuryLogger {
+  private config: LoggerConfig;
+  private requestId: string | null = null;
+  private userId: string | null = null;
 
-  /**
-   * Constructor - Initialize logger with configuration
-   * @param config - Logger configuration object
-   */
-  constructor(config: LoggerConfig) {
-    this.name = config.name;
-    this.level = config.level || DEFAULT_CONFIG.level || LogLevel.INFO;
-    this.enabled = config.enabled ?? DEFAULT_CONFIG.enabled ?? true;
-    this.consoleOutput = config.consoleOutput ?? DEFAULT_CONFIG.consoleOutput ?? true;
-    this.includeStackTrace = config.includeStackTrace ?? DEFAULT_CONFIG.includeStackTrace ?? true;
-    this.maxEntries = config.maxEntries || DEFAULT_CONFIG.maxEntries || 1000;
+  constructor(config?: Partial<LoggerConfig>) {
+    this.config = { ...getDefaultConfig(), ...config };
+    this.ensureLogDirectory();
   }
 
   /**
-   * shouldLog - Check if message should be logged based on level
-   * @param level - Log level to check
-   * @returns Boolean indicating if message should be logged
+   * Ensure log directory exists
+   * @private
    */
-  private shouldLog(level: LogLevel): boolean {
-    if (!this.enabled) return false;
-    return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.level];
-  }
+  private ensureLogDirectory(): void {
+    const fs = require('fs');
+    const path = require('path');
 
-  /**
-   * formatTimestamp - Format timestamp in ISO 8601 format
-   * @returns Formatted timestamp string
-   */
-  private formatTimestamp(): string {
-    return new Date().toISOString();
-  }
-
-  /**
-   * getStackTrace - Get stack trace for error logging
-   * @returns Stack trace string
-   */
-  private getStackTrace(): string {
-    if (!this.includeStackTrace) return '';
-    
-    try {
-      const stack = new Error().stack;
-      if (stack) {
-        // Remove the first two lines (Error creation and getStackTrace call)
-        return stack.split('\n').slice(2).join('\n');
-      }
-    } catch {
-      // Stack trace not available
+    if (!fs.existsSync(this.config.logDirectory)) {
+      fs.mkdirSync(this.config.logDirectory, { recursive: true });
+      this._log(LogLevel.INFO, 'Logger initialized', {
+        directory: this.config.logDirectory,
+        environment: this.config.environment
+      });
     }
-    return '';
   }
 
   /**
-   * createEntry - Create a structured log entry
-   * @param level - Log level
-   * @param message - Log message
-   * @param context - Additional context data
-   * @param error - Error object if applicable
-   * @returns LogEntry object
+   * Core logging method - all other methods call this
+   * @param level - Log severity level
+   * @param message - Human-readable message
+   * @param data - Additional structured data
+   * @private
    */
-  private createEntry(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-    error?: Error | unknown
-  ): LogEntry {
+  private _log(level: LogLevel, message: string, data?: Record<string, any>): void {
+    // Check if we should log at this level
+    if (level > this.config.minLevel) return;
+
+    // Build log entry
     const entry: LogEntry = {
-      timestamp: this.formatTimestamp(),
+      timestamp: new Date().toISOString(),
       level,
-      logger: this.name,
+      levelName: LOG_LEVEL_NAMES[level],
       message,
-      context,
-      error
+      data,
+      source: this.getCallerLocation(),
+      requestId: this.requestId || undefined,
+      userId: this.userId || undefined,
+      error: data?.error,
+      stackTrace: data?.error?.stack
     };
 
-    if (this.includeStackTrace && level >= LogLevel.ERROR) {
-      entry.stack = this.getStackTrace();
+    // Output to console
+    if (this.config.enableConsole) {
+      this.writeToConsole(entry);
     }
 
-    return entry;
-  }
-
-  /**
-   * log - Core logging method
-   * @param level - Log level
-   * @param message - Log message
-   * @param context - Additional context data
-   * @param error - Error object if applicable
-   */
-  private log(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-    error?: Error | unknown
-  ): void {
-    if (!this.shouldLog(level)) return;
-
-    const entry = this.createEntry(level, message, context, error);
-
-    // Store in memory
-    this.logs.push(entry);
-    if (this.logs.length > this.maxEntries) {
-      this.logs.shift();
+    // Output to file
+    if (this.config.enableFile) {
+      this.writeToFile(entry);
     }
 
-    // Console output
-    if (this.consoleOutput) {
-      this.consoleLog(entry);
+    // Send to external service (in production)
+    if (this.config.environment === 'production' && level <= LogLevel.ERROR) {
+      this.sendToAlertService(entry);
     }
   }
 
   /**
-   * consoleLog - Output log entry to console
-   * @param entry - Log entry to output
+   * Write formatted log entry to console
+   * @private
    */
-  private consoleLog(entry: LogEntry): void {
-    const prefix = `[${entry.logger}]`;
-    const timestamp = entry.timestamp;
-    const levelStr = `[${entry.level}]`;
-    
-    const formattedMessage = `${prefix} ${timestamp} ${levelStr} ${entry.message}`;
-    
-    // Choose console method based on level
-    switch (entry.level) {
-      case LogLevel.DEBUG:
-        console.debug(formattedMessage, entry.context || '');
-        break;
-      case LogLevel.INFO:
-        console.info(formattedMessage, entry.context || '');
-        break;
-      case LogLevel.WARN:
-        console.warn(formattedMessage, entry.context || '');
-        break;
-      case LogLevel.ERROR:
-        console.error(formattedMessage, entry.context || '', entry.error || '');
-        break;
-      case LogLevel.FATAL:
-        console.error('🚨 FATAL:', formattedMessage, entry.context || '', entry.error || '');
-        break;
+  private writeToConsole(entry: LogEntry): void {
+    const color = LOG_COLORS[entry.level];
+    const prefix = `${color}[${entry.levelName}]${RESET_COLOR}`;
+    const time = `\x1b[90m${entry.timestamp}\x1b[0m`;
+    const msg = `${prefix} ${time} ${entry.message}`;
+
+    // Additional metadata
+    let meta = '';
+    if (entry.data && Object.keys(entry.data).length > 0) {
+      const cleanData = { ...entry.data };
+      delete cleanData.error; // Already handled separately
+      meta = ` \x1b[90m${JSON.stringify(cleanData)}\x1b[0m`;
     }
-  }
 
-  // ============================================================================
-  // PUBLIC LOGGING METHODS
-  // ============================================================================
-
-  /**
-   * debug - Log debug message
-   * Used for detailed debugging information
-   * @param message - Log message
-   * @param context - Additional context data
-   */
-  debug(message: string, context?: Record<string, unknown>): void {
-    this.log(LogLevel.DEBUG, message, context);
-  }
-
-  /**
-   * info - Log info message
-   * Used for general operational information
-   * @param message - Log message
-   * @param context - Additional context data
-   */
-  info(message: string, context?: Record<string, unknown>): void {
-    this.log(LogLevel.INFO, message, context);
-  }
-
-  /**
-   * warn - Log warning message
-   * Used for potential issues that don't break functionality
-   * @param message - Log message
-   * @param context - Additional context data
-   */
-  warn(message: string, context?: Record<string, unknown>): void {
-    this.log(LogLevel.WARN, message, context);
-  }
-
-  /**
-   * error - Log error message
-   * Used for recoverable errors
-   * @param message - Log message
-   * @param error - Error object
-   * @param context - Additional context data
-   */
-  error(message: string, error?: Error | unknown, context?: Record<string, unknown>): void {
-    this.log(LogLevel.ERROR, message, context, error);
-  }
-
-  /**
-   * fatal - Log fatal error message
-   * Used for critical errors that may crash the application
-   * @param message - Log message
-   * @param error - Error object
-   * @param context - Additional context data
-   */
-  fatal(message: string, error?: Error | unknown, context?: Record<string, unknown>): void {
-    this.log(LogLevel.FATAL, message, context, error);
-  }
-
-  // ============================================================================
-  // PERFORMANCE LOGGING
-  // ============================================================================
-
-  /**
-   * time - Start timing an operation
-   * @param operation - Operation name
-   * @returns Start timestamp
-   */
-  time(operation: string): number {
-    this.debug(`Starting operation: ${operation}`);
-    return Date.now();
-  }
-
-  /**
-   * timeEnd - End timing and log duration
-   * @param operation - Operation name
-   * @param startTime - Start timestamp from time() method
-   */
-  timeEnd(operation: string, startTime: number): void {
-    const durationMs = Date.now() - startTime;
-    this.info(`Completed operation: ${operation}`, {
-      performance: {
-        durationMs,
-        operation
+    // Error details
+    let errorInfo = '';
+    if (entry.error) {
+      errorInfo = `\n\x1b[31mError: ${entry.error.message}\x1b[0m`;
+      if (entry.stackTrace) {
+        errorInfo += `\n\x1b[31m${entry.stackTrace.split('\n').slice(0, 5).join('\n')}\x1b[0m`;
       }
-    });
-  }
+    }
 
-  // ============================================================================
-  // LOG MANAGEMENT
-  // ============================================================================
+    // Request/user info
+    let context = '';
+    if (entry.requestId) context += ` \x1b[36mreq:${entry.requestId}\x1b[0m`;
+    if (entry.userId) context += ` \x1b[33muser:${entry.userId}\x1b[0m`;
 
-  /**
-   * getLogs - Get all stored log entries
-   * @returns Array of log entries
-   */
-  getLogs(): LogEntry[] {
-    return [...this.logs];
+    console.log(`${msg}${meta}${context}${errorInfo}`);
   }
 
   /**
-   * getLogsByLevel - Get log entries filtered by level
-   * @param level - Log level to filter
-   * @returns Array of filtered log entries
+   * Write log entry to file (JSON format)
+   * @private
    */
-  getLogsByLevel(level: LogLevel): LogEntry[] {
-    return this.logs.filter(entry => entry.level === level);
+  private writeToFile(entry: LogEntry): void {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+
+      const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const filename = entry.level === LogLevel.ERROR ? `error-${date}.log` : `combined-${date}.log`;
+      const filepath = path.join(this.config.logDirectory, filename);
+
+      const logLine = JSON.stringify(entry) + '\n';
+      fs.appendFileSync(filepath, logLine);
+    } catch (err) {
+      // Silently fail if file writing fails to avoid infinite loops
+      console.error('Failed to write log to file:', err);
+    }
   }
 
   /**
-   * clearLogs - Clear all stored log entries
+   * Send critical errors to alerting service
+   * @private
    */
-  clearLogs(): void {
-    this.logs = [];
-    this.info('Log buffer cleared');
+  private sendToAlertService(entry: LogEntry): void {
+    // TODO: Integrate with Sentry, DataDog, or similar
+    // For now, just log that we would send it
+    if (process.env.ALERT_SERVICE_URL) {
+      fetch(process.env.ALERT_SERVICE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      }).catch(() => { }); // Fire and forget
+    }
   }
 
   /**
-   * setLevel - Change minimum log level
-   * @param level - New minimum log level
+   * Get caller file location for source tracking
+   * @private
    */
-  setLevel(level: LogLevel): void {
-    this.level = level;
-    this.info(`Log level changed to: ${level}`);
+  private getCallerLocation(): string {
+    try {
+      const stack = new Error().stack;
+      if (!stack) return 'unknown';
+
+      // Parse stack trace to find caller
+      const lines = stack.split('\n');
+      // Skip internal logger calls (this._log -> public method -> actual caller)
+      for (let i = 4; i < Math.min(lines.length, 10); i++) {
+        const match = lines[i].match(/\((.*):(\d+):(\d+)\)/);
+        if (match) {
+          const filePath = match[1].replace(process.cwd(), '');
+          return `${filePath}:${match[2]}`;
+        }
+      }
+      return 'unknown';
+    } catch {
+      return 'unknown';
+    }
+  }
+
+  // ==========================================================================
+  // PUBLIC API - LEVEL METHODS / 公共API - 级别方法
+  // ==========================================================================
+
+  /**
+   * Log error-level message
+   * Use for: Failed operations, exceptions, system failures
+   * 
+   * @example
+   * logger.error('Database connection failed', { host: 'localhost:5432', error: err })
+   */
+  error(message: string, data?: Record<string, any>): void {
+    this._log(LogLevel.ERROR, message, data);
   }
 
   /**
-   * enable - Enable logging
+   * Log warning-level message
+   * Use for: Deprecated features, potential issues, non-critical problems
+   * 
+   * @example
+   * logger.warn('Rate limit approaching', { current: 95, limit: 100 })
    */
-  enable(): void {
-    this.enabled = true;
-    this.info('Logging enabled');
+  warn(message: string, data?: Record<string, any>): void {
+    this._log(LogLevel.WARN, message, data);
   }
 
   /**
-   * disable - Disable logging
+   * Log info-level message
+   * Use for: Normal operations, business events, state changes
+   * 
+   * @example
+   * logger.info('Order created', { orderId: 'ORD-001', amount: 15000 })
    */
-  disable(): void {
-    this.enabled = false;
+  info(message: string, data?: Record<string, any>): void {
+    this._log(LogLevel.INFO, message, data);
+  }
+
+  /**
+   * Log debug-level message
+   * Use for: Development troubleshooting, variable inspection
+   * 
+   * @example
+   * logger.debug('Processing product', { productId: 'PROD-001', step: 'calculate-pricing' })
+   */
+  debug(message: string, data?: Record<string, any>): void {
+    this._log(LogLevel.DEBUG, message, data);
+  }
+
+  /**
+   * Log trace-level message
+   * Use for: Very detailed execution flow, performance profiling
+   * 
+   * @example
+   * logger.trace('Function entered', { function: 'calculateTax', params: { amount: 1000 } })
+   */
+  trace(message: string, data?: Record<string, any>): void {
+    this._log(LogLevel.TRACE, message, data);
+  }
+
+  // ==========================================================================
+  // PUBLIC API - CONTEXT METHODS / 公共API - 上下文方法
+  // ==========================================================================
+
+  /**
+   * Set request ID for distributed tracing
+   * Call at the start of each HTTP request
+   * 
+   * @param requestId - Unique request identifier (UUID format recommended)
+   */
+  setRequestId(requestId: string): void {
+    this.requestId = requestId;
+  }
+
+  /**
+   * Set user ID for audit trail
+   * Call after authentication
+   * 
+   * @param userId - Authenticated user's ID
+   */
+  setUserId(userId: string): void {
+    this.userId = userId;
+  }
+
+  /**
+   * Clear request context (call at end of request)
+   */
+  clearContext(): void {
+    this.requestId = null;
+    this.userId = null;
+  }
+
+  // ==========================================================================
+  // PUBLIC API - UTILITY METHODS / 公共API - 工具方法
+  // ==========================================================================
+
+  /**
+   * Time an operation and log duration
+   * Useful for performance monitoring
+   * 
+   * @param operationName - Name of operation being timed
+   * @returns Timer object with .stop() method
+   * 
+   * @example
+   * const timer = logger.startTimer('database-query');
+   * await db.query('SELECT * FROM products');
+   * timer.stop(); // Automatically logs duration
+   */
+  startTimer(operationName: string): { stop: () => void } {
+    const startTime = Date.now();
+
+    return {
+      stop: () => {
+        const duration = Date.now() - startTime;
+        this.info(`${operationName} completed`, {
+          operation: operationName,
+          duration,
+          unit: 'ms'
+        });
+      }
+    };
+  }
+
+  /**
+   * Create child logger with preset context
+   * Useful for module-specific logging
+   * 
+   * @param module - Module name for context
+   * @returns New logger instance bound to module
+   * 
+   * @example
+   * const productLogger = logger.forModule('ProductService');
+   * productLogger.info('Product loaded'); // Automatically includes module='ProductService'
+   */
+  forModule(module: string): any {
+    // Return a proxy that prepends module to all log calls
+    const self = this;
+    return {
+      error(msg: string, data?: Record<string, any>) {
+        self.error(`[${module}] ${msg}`, { ...data, module });
+      },
+      warn(msg: string, data?: Record<string, any>) {
+        self.warn(`[${module}] ${msg}`, { ...data, module });
+      },
+      info(msg: string, data?: Record<string, any>) {
+        self.info(`[${module}] ${msg}`, { ...data, module });
+      },
+      debug(msg: string, data?: Record<string, any>) {
+        self.debug(`[${module}] ${msg}`, { ...data, module });
+      },
+      startTimer(op: string) { return self.startTimer(`${module}:${op}`); }
+    };
   }
 }
 
 // ============================================================================
-// LOGGER CATEGORIES
+// SINGLETON INSTANCE / 单例实例
 // ============================================================================
 
-/**
- * Predefined logger categories for consistent naming
- * Use these constants when creating loggers
- */
-export const LOGGERS = {
-  // System-level logging (startup, shutdown, config)
-  SYSTEM: 'system',
-  
-  // API endpoint logging
-  API: 'api',
-  
-  // Authentication and authorization
-  AUTH: 'auth',
-  
-  // AI agent operations (Hermes, OpenClaw, Unicorn)
-  AI: 'ai',
-  
-  // Product data operations
-  PRODUCT: 'product',
-  
-  // Cart and checkout operations
-  CART: 'cart',
-  
-  // User interactions
-  USER: 'user',
-  
-  // Navigation and routing
-  NAVIGATION: 'navigation',
-  
-  // UI component events
-  UI: 'ui',
-  
-  // Data fetching and caching
-  DATA: 'data',
-  
-  // Performance monitoring
-  PERFORMANCE: 'performance',
-  
-  // Security events
-  SECURITY: 'security',
-  
-  // Database operations
-  DATABASE: 'database',
-  
-  // External service integrations
-  EXTERNAL: 'external'
-} as const;
+/** Global logger instance */
+export const logger = new ZLuxuryLogger();
 
-// ============================================================================
-// LOGGER FACTORY
-// ============================================================================
+// Export convenience methods for quick access
+export const log = {
+  error: (msg: string, data?: Record<string, any>) => logger.error(msg, data),
+  warn: (msg: string, data?: Record<string, any>) => logger.warn(msg, data),
+  info: (msg: string, data?: Record<string, any>) => logger.info(msg, data),
+  debug: (msg: string, data?: Record<string, any>) => logger.debug(msg, data),
+  trace: (msg: string, data?: Record<string, any>) => logger.trace(msg, data),
+};
 
-/**
- * createLogger - Factory function to create logger instances
- * @param config - Logger configuration
- * @returns Logger instance
- */
-export function createLogger(config: LoggerConfig): Logger {
-  return new Logger(config);
-}
-
-// ============================================================================
-// DEFAULT LOGGERS
-// ============================================================================
-
-/**
- * systemLogger - Default system logger
- * Used for application-level events
- */
-export const systemLogger = createLogger({
-  name: LOGGERS.SYSTEM,
-  level: LogLevel.INFO
-});
-
-/**
- * apiLogger - Default API logger
- * Used for API endpoint operations
- */
-export const apiLogger = createLogger({
-  name: LOGGERS.API,
-  level: LogLevel.INFO
-});
-
-/**
- * aiLogger - Default AI logger
- * Used for AI agent operations (Hermes, OpenClaw, Unicorn)
- */
-export const aiLogger = createLogger({
-  name: LOGGERS.AI,
-  level: LogLevel.DEBUG
-});
-
-/**
- * productLogger - Default product logger
- * Used for product data operations
- */
-export const productLogger = createLogger({
-  name: LOGGERS.PRODUCT,
-  level: LogLevel.INFO
-});
-
-/**
- * authLogger - Default authentication logger
- * Used for auth operations
- */
-export const authLogger = createLogger({
-  name: LOGGERS.AUTH,
-  level: LogLevel.INFO
-});
-
-// ============================================================================
-// EXPORT DEFAULT
-// ============================================================================
-
-export default Logger;
+// Default export
+export default logger;

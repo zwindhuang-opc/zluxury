@@ -23,28 +23,28 @@
 export interface User {
   // Unique user identifier
   id: string;
-  
+
   // User email address (unique)
   email: string;
-  
+
   // User display name
   name: string;
-  
+
   // User role (guest, member, vip, admin)
   role: UserRole;
-  
+
   // VIP membership tier
   vipTier?: VipTier;
-  
+
   // Account creation timestamp
   createdAt: string;
-  
+
   // Last login timestamp
   lastLogin?: string;
-  
+
   // User preferences
   preferences: UserPreferences;
-  
+
   // Account status
   status: 'active' | 'suspended' | 'pending';
 }
@@ -56,8 +56,9 @@ export type UserRole = 'guest' | 'member' | 'vip' | 'admin';
 
 /**
  * VIP membership tier enumeration
+ * Extended for luxury cross-border commerce with HKID optimization
  */
-export type VipTier = 'silver' | 'gold' | 'platinum';
+export type VipTier = 'standard' | 'silver' | 'gold' | 'platinum' | 'black' | 'diamond';
 
 /**
  * User preferences interface
@@ -65,20 +66,20 @@ export type VipTier = 'silver' | 'gold' | 'platinum';
 export interface UserPreferences {
   // Preferred currency
   currency: string;
-  
+
   // Preferred language
   language: string;
-  
+
   // Notification preferences
   notifications: {
     email: boolean;
     push: boolean;
     sms: boolean;
   };
-  
+
   // Favorite categories
   favoriteCategories: string[];
-  
+
   // Favorite brands
   favoriteBrands: string[];
 }
@@ -89,19 +90,19 @@ export interface UserPreferences {
 export interface AuthSession {
   // Session ID
   sessionId: string;
-  
+
   // User ID
   userId: string;
-  
+
   // Session token
   token: string;
-  
+
   // Session expiration timestamp
   expiresAt: string;
-  
+
   // Session creation timestamp
   createdAt: string;
-  
+
   // IP address of session
   ipAddress?: string;
 }
@@ -201,7 +202,7 @@ export const users: User[] = [
  * UserRepository class implementing user data access methods
  */
 export class UserRepository {
-  
+
   /**
    * Get all users
    * @returns Array of all users
@@ -209,7 +210,7 @@ export class UserRepository {
   static getAll(): User[] {
     return users;
   }
-  
+
   /**
    * Get user by ID
    * @param id - User ID
@@ -218,7 +219,7 @@ export class UserRepository {
   static getById(id: string): User | null {
     return users.find(u => u.id === id) || null;
   }
-  
+
   /**
    * Get user by email
    * @param email - User email
@@ -227,7 +228,7 @@ export class UserRepository {
   static getByEmail(email: string): User | null {
     return users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
   }
-  
+
   /**
    * Create a new user
    * @param data - Registration data
@@ -235,7 +236,7 @@ export class UserRepository {
    */
   static create(data: RegistrationData): User {
     const userId = `USER-${Date.now().toString(36).toUpperCase()}`;
-    
+
     const newUser: User = {
       id: userId,
       email: data.email,
@@ -251,13 +252,13 @@ export class UserRepository {
       },
       status: 'active'
     };
-    
+
     // Note: In production, this would save to database
     users.push(newUser);
-    
+
     return newUser;
   }
-  
+
   /**
    * Update user
    * @param id - User ID
@@ -267,11 +268,11 @@ export class UserRepository {
   static update(id: string, data: Partial<User>): User | null {
     const user = this.getById(id);
     if (!user) return null;
-    
+
     Object.assign(user, data);
     return user;
   }
-  
+
   /**
    * Check if user has specific role
    * @param userId - User ID
@@ -281,11 +282,11 @@ export class UserRepository {
   static hasRole(userId: string, role: UserRole): boolean {
     const user = this.getById(userId);
     if (!user) return false;
-    
+
     const roleHierarchy: UserRole[] = ['guest', 'member', 'vip', 'admin'];
     const userRoleIndex = roleHierarchy.indexOf(user.role);
     const requiredRoleIndex = roleHierarchy.indexOf(role);
-    
+
     return userRoleIndex >= requiredRoleIndex;
   }
 }
@@ -294,26 +295,28 @@ export class UserRepository {
  * AuthService class implementing authentication logic
  */
 export class AuthService {
-  
+
   // Session storage (in production, use Redis or database)
   private static sessions: Map<string, AuthSession> = new Map();
-  
+
   /**
-   * Generate a session token
+   * Generate a cryptographically secure session token
+   * Uses crypto.randomUUID() instead of Math.random() for security
    * @returns Random token string
    */
   private static generateToken(): string {
-    return `TOKEN-${Date.now().toString(36)}-${Math.random().toString(36).substring(2)}`;
+    return `TOKEN-${crypto.randomUUID()}`;
   }
-  
+
   /**
-   * Generate a session ID
+   * Generate a cryptographically secure session ID
+   * Uses crypto.randomUUID() instead of Math.random() for security
    * @returns Random session ID string
    */
   private static generateSessionId(): string {
-    return `SESSION-${Date.now().toString(36)}-${Math.random().toString(36).substring(2)}`;
+    return `SESSION-${crypto.randomUUID()}`;
   }
-  
+
   /**
    * Login user with credentials
    * @param credentials - Login credentials
@@ -322,7 +325,7 @@ export class AuthService {
   static login(credentials: LoginCredentials): AuthResponse {
     // Find user by email
     const user = UserRepository.getByEmail(credentials.email);
-    
+
     // Check if user exists
     if (!user) {
       return {
@@ -330,7 +333,7 @@ export class AuthService {
         error: 'Invalid email or password'
       };
     }
-    
+
     // Check if account is active
     if (user.status !== 'active') {
       return {
@@ -338,15 +341,33 @@ export class AuthService {
         error: 'Account is not active'
       };
     }
-    
-    // Note: In production, verify password hash
-    // For demo, accept any password for existing users
-    
+
+    // Verify password hash
+    // In production: use bcrypt.compare(credentials.password, user.passwordHash)
+    // Demo: verify against stored mock password (SHA-256 hash for basic security)
+    const crypto = require('crypto');
+    const hashedInput = crypto.createHash('sha256').update(credentials.password).digest('hex');
+
+    // Mock users have pre-computed password hashes
+    const mockPasswordHashes: Record<string, string> = {
+      'USER-001': crypto.createHash('sha256').update('admin123456').digest('hex'),   // admin@zluxury.com
+      'USER-002': crypto.createHash('sha256').update('vip123456').digest('hex'),      // vip@zluxury.com
+      'USER-003': crypto.createHash('sha256').update('member123').digest('hex'),     // member@zluxury.com
+    };
+
+    const expectedHash = mockPasswordHashes[user.id];
+    if (!expectedHash || hashedInput !== expectedHash) {
+      return {
+        success: false,
+        error: 'Invalid email or password'
+      };
+    }
+
     // Generate session
     const sessionId = this.generateSessionId();
     const token = this.generateToken();
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
-    
+
     // Create session
     const session: AuthSession = {
       sessionId,
@@ -355,20 +376,20 @@ export class AuthService {
       expiresAt,
       createdAt: new Date().toISOString()
     };
-    
+
     // Store session
     this.sessions.set(token, session);
-    
+
     // Update last login
     UserRepository.update(user.id, { lastLogin: new Date().toISOString() });
-    
+
     return {
       success: true,
       user,
       token
     };
   }
-  
+
   /**
    * Register new user
    * @param data - Registration data
@@ -377,14 +398,14 @@ export class AuthService {
   static register(data: RegistrationData): AuthResponse {
     // Check if email already exists
     const existingUser = UserRepository.getByEmail(data.email);
-    
+
     if (existingUser) {
       return {
         success: false,
         error: 'Email already registered'
       };
     }
-    
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
@@ -393,7 +414,7 @@ export class AuthService {
         error: 'Invalid email format'
       };
     }
-    
+
     // Validate password length
     if (data.password.length < 8) {
       return {
@@ -401,14 +422,14 @@ export class AuthService {
         error: 'Password must be at least 8 characters'
       };
     }
-    
+
     // Create user
     const user = UserRepository.create(data);
-    
+
     // Auto-login after registration
     return this.login({ email: data.email, password: data.password });
   }
-  
+
   /**
    * Validate session token
    * @param token - Session token
@@ -417,21 +438,21 @@ export class AuthService {
   static validateToken(token: string): User | null {
     // Get session
     const session = this.sessions.get(token);
-    
+
     if (!session) {
       return null;
     }
-    
+
     // Check if session is expired
     if (new Date(session.expiresAt) < new Date()) {
       this.sessions.delete(token);
       return null;
     }
-    
+
     // Get user
     return UserRepository.getById(session.userId);
   }
-  
+
   /**
    * Logout user (invalidate session)
    * @param token - Session token
@@ -440,7 +461,7 @@ export class AuthService {
   static logout(token: string): boolean {
     return this.sessions.delete(token);
   }
-  
+
   /**
    * Get active sessions for user
    * @param userId - User ID

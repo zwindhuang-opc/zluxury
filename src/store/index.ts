@@ -411,7 +411,7 @@ export const useZLuxuryStore = create<ZLuxuryStore>()(
         const totals = get().cartItems.reduce(
           (acc, item) => ({
             usd: acc.usd + item.price * item.quantity,
-            cny: acc.cny + (item.priceCny || item.price * 7.2) * item.quantity
+            cny: acc.cny + (item.priceCny || item.price * 7.24) * item.quantity
           }),
           { usd: 0, cny: 0 }
         )
@@ -573,7 +573,7 @@ export const useZLuxuryStore = create<ZLuxuryStore>()(
 
       showNotification: (type, message, duration = 3000) => {
         const notification: Notification = {
-          id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
           type,
           message,
           duration,

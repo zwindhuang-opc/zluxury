@@ -197,6 +197,7 @@ export default function CategoriesSection() {
                       alt={`${t(category.nameKey)} - Luxury ${category.id} / ${t(category.nameKey)} - 奢华${category.id}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         // Fallback if image blocked by ORB / ORB阻止时的备用方案
                         const target = e.target as HTMLImageElement;

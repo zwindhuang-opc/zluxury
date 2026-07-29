@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Professional luxury fonts / 专业奢华字体 */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+/* Fonts loaded via <link> tags in layout.tsx with preconnect for performance */
+/* Font families configured in tailwind.config.js */
 
 :root {
   /* Core colors / 核心颜色 */

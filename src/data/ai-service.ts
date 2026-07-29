@@ -886,11 +886,12 @@ class AIService {
    * @returns 佣金金额（CNY）
    */
   static calculateCommission(product: Product, vipLevel: VipLevel = 'standard'): number {
-    // 根据商品价格确定佣金类别
+    // 根据商品价格确定佣金类别，使用回退值以防priceCny未定义
+    const priceCny = product.priceCny ?? Math.round(product.price * 7.24);
     let commissionRate: number;
-    if (product.priceCny >= 1000000) {
+    if (priceCny >= 1000000) {
       commissionRate = MONETIZATION_CONFIG.commission.luxury;
-    } else if (product.priceCny >= 100000) {
+    } else if (priceCny >= 100000) {
       commissionRate = MONETIZATION_CONFIG.commission.premium;
     } else {
       commissionRate = MONETIZATION_CONFIG.commission.standard;
@@ -901,7 +902,7 @@ class AIService {
     const effectiveRate = commissionRate - vipDiscount;
 
     // 计算佣金金额
-    return Math.round(product.priceCny * (effectiveRate / 100));
+    return Math.round(priceCny * (effectiveRate / 100));
   }
 
   /**
@@ -914,7 +915,8 @@ class AIService {
    */
   static calculateVipPrice(product: Product, vipLevel: VipLevel): number {
     const discount = VIP_LEVELS[vipLevel].discount;
-    return Math.round(product.priceCny * (1 - discount / 100));
+    const priceCny = product.priceCny ?? Math.round(product.price * 7.24);
+    return Math.round(priceCny * (1 - discount / 100));
   }
 
   /**
@@ -1003,7 +1005,7 @@ class AIService {
 
     // 根据产品价值调整预估订单金额
     if (product) {
-      estimatedOrderValue = product.priceCny;
+      estimatedOrderValue = product.priceCny ?? Math.round(product.price * 7.24);
 
       // 根据VIP等级调整转化概率
       if (userContext?.vipLevel) {
@@ -1287,7 +1289,7 @@ class AIService {
     // 投资级产品：高价限量款 / Investment-grade products: high-price limited editions
     const allProducts = searchProducts(query);
     const investmentGrade = allProducts.filter(p =>
-      p.priceCny >= 500000 || p.isLimited || p.auctionData?.priceTrend === 'up'
+      (p.priceCny ?? 0) >= 500000 || p.isLimited || p.auctionData?.priceTrend === 'up'
     );
 
     // 按拍卖价格趋势排序 / Sort by auction price trend
@@ -1325,7 +1327,7 @@ class AIService {
     products.forEach((product, index) => {
       response += `${index + 1}. 【${product.brandCn}${product.name}】\n`;
       response += `   品牌：${product.brandCn} (${product.brand})\n`;
-      response += `   价格：¥${product.priceCny.toLocaleString()}\n`;
+      response += `   价格：¥${(product.priceCny ?? Math.round(product.price * 7.24)).toLocaleString()}\n`;
       response += `   评分：${'★'.repeat(Math.floor(product.rating))}${product.rating}/5\n\n`;
     });
 
@@ -1359,7 +1361,7 @@ class AIService {
         // VIP会员专属优惠 / VIP member exclusive discount
         products = products.filter(p => {
           const vipPrice = p.vipPrices?.[userContext.vipLevel!];
-          return vipPrice !== undefined && vipPrice < p.priceCny;
+          return vipPrice !== undefined && vipPrice < (p.priceCny ?? 0);
         });
       }
     }
@@ -1390,9 +1392,9 @@ class AIService {
     let response = `根据您的需求，我为您推荐这款${topProduct.brandCn}${topProduct.name}。\n\n`;
     response += `【${topProduct.name}】\n`;
     response += `• 品牌：${topProduct.brandCn} (${topProduct.brand})\n`;
-    response += `• 价格：¥${topProduct.priceCny.toLocaleString()}`;
+    response += `• 价格：¥${(topProduct.priceCny ?? 0).toLocaleString()}`;
 
-    if (vipLevel !== 'standard' && vipPrice < topProduct.priceCny) {
+    if (vipLevel !== 'standard' && vipPrice < (topProduct.priceCny ?? 0)) {
       response += ` → 会员价：¥${vipPrice.toLocaleString()}`;
     }
 
@@ -1403,7 +1405,7 @@ class AIService {
     if (products.length > 1) {
       response += `此外，还有其他不错的选择：\n`;
       products.slice(1, 3).forEach((p, i) => {
-        response += `${i + 2}. ${p.brandCn}${p.name} - ¥${p.priceCny.toLocaleString()}\n`;
+        response += `${i + 2}. ${p.brandCn}${p.name} - ¥${(p.priceCny ?? Math.round(p.price * 7.24)).toLocaleString()}\n`;
       });
     }
 
@@ -1482,12 +1484,12 @@ class AIService {
 
       const trend = p.auctionData.priceTrend === 'up' ? '📈 上涨' :
         p.auctionData.priceTrend === 'down' ? '📉 下跌' : '➡️ 稳定';
-      const priceDiff = (p.auctionData.soldPriceCny || p.priceCny) - p.priceCny;
-      const trendPercent = ((priceDiff / p.priceCny) * 100).toFixed(1);
+      const priceDiff = (p.auctionData.soldPriceCny || (p.priceCny ?? 0)) - (p.priceCny ?? 0);
+      const trendPercent = ((priceDiff / (p.priceCny ?? 0)) * 100).toFixed(1);
 
       response += `【${p.brandCn}${p.name}】\n`;
-      response += `• 当前价格：¥${p.priceCny.toLocaleString()}\n`;
-      response += `• 最近拍卖价：¥${(p.auctionData.soldPriceCny || p.priceCny).toLocaleString()}\n`;
+      response += `• 当前价格：¥${(p.priceCny ?? 0).toLocaleString()}\n`;
+      response += `• 最近拍卖价：¥${(p.auctionData.soldPriceCny || (p.priceCny ?? 0)).toLocaleString()}\n`;
       response += `• 市场趋势：${trend} (${priceDiff >= 0 ? '+' : ''}${trendPercent}%)\n`;
       response += `• 拍卖来源：${p.auctionData.source || '未知'}\n\n`;
     });
@@ -1514,8 +1516,9 @@ class AIService {
     let response = '根据当前市场数据，以下是值得关注的投资级奢侈品推荐：\n\n';
     response += `【首选推荐】${topProduct.brandCn}${topProduct.name}\n`;
     response += `• 参考编号：${topProduct.reference || 'N/A'}\n`;
-    response += `• 当前价格：¥${topProduct.priceCny.toLocaleString()}\n`;
-    response += `• 最近拍卖成交价：¥${(topProduct.auctionData?.soldPriceCny || topProduct.priceCny).toLocaleString()}\n`;
+    const topPrice = topProduct.priceCny ?? Math.round(topProduct.price * 7.24);
+    response += `• 当前价格：¥${topPrice.toLocaleString()}\n`;
+    response += `• 最近拍卖成交价：¥${(topProduct.auctionData?.soldPriceCny || topPrice).toLocaleString()}\n`;
     response += `• 过去表现：${topProduct.auctionData?.priceTrend === 'up' ? '优秀（持续上涨）' : '良好'}\n`;
     response += `• 稀缺性：${topProduct.isLimited ? '限量版，极具收藏价值' : '常规款，流通性好'}\n\n`;
 
@@ -1597,7 +1600,7 @@ class AIService {
 
     const message = `【${product.brandCn}${product.name}】\n` +
       `• 库存状态：${status}\n` +
-      `• 价格：¥${product.priceCny.toLocaleString()}\n`;
+      `• 价格：¥${(product.priceCny ?? Math.round(product.price * 7.24)).toLocaleString()}\n`;
 
     return { message, products: [product] };
   }
@@ -1620,7 +1623,7 @@ class AIService {
     let message = '价格对比分析：\n\n';
     products.forEach((p, i) => {
       message += `${i + 1}. ${p.brandCn}${p.name}\n`;
-      message += `   官方价格：¥${p.priceCny.toLocaleString()}\n`;
+      message += `   官方价格：¥${(p.priceCny ?? 0).toLocaleString()}\n`;
       if (p.auctionData && p.auctionData.soldPriceCny) {
         message += `   拍卖价格：¥${p.auctionData.soldPriceCny.toLocaleString()}\n`;
       }
@@ -1664,8 +1667,8 @@ class AIService {
 
     let response = '当前优惠活动：\n\n';
     products.forEach((p, i) => {
-      const originalPrice = p.priceCny;
-      const vipGoldPrice = p.vipPrices?.gold || p.priceCny;
+      const originalPrice = p.priceCny ?? Math.round(p.price * 7.24);
+      const vipGoldPrice = p.vipPrices?.gold ?? (p.priceCny ?? Math.round(p.price * 7.24));
       const saving = originalPrice - vipGoldPrice;
 
       response += `${i + 1}. ${p.brandCn}${p.name}\n`;

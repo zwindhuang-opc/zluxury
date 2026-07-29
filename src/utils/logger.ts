@@ -114,7 +114,7 @@ const DEFAULT_CONFIG: Required<LoggerConfig> = {
   enableColors: process.env.NODE_ENV !== 'production',
   enableTimestamps: true,
   includeStackTrace: true,
-  onLog: undefined
+  onLog: () => {}
 }
 
 // ============================================================================

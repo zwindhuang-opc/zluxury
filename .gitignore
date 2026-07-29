@@ -106,3 +106,14 @@ Thumbs.db
 # ============================================================================
 yarn.lock
 pnpm-lock.yaml
+
+# ============================================================================
+# Build artifacts & temp files
+# ============================================================================
+build-output*.txt
+screenshots/
+start.js
+start-logging.js
+test-server.js
+scripts/
+references/

@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  output: 'export',
   images: {
-    domains: ['images.unsplash.com', 'cdn.luxury.com', 'api.zluxury.com', 'sothebys.com', 'christies.com'],
+    unoptimized: true,
     remotePatterns: [
-      { protocol: 'https', hostname: '**.unsplash.com' },
-      { protocol: 'https', hostname: '**.sothebys.com' },
-      { protocol: 'https', hostname: '**.christies.com' },
-      { protocol: 'https', hostname: '**.farfetch.com' },
-    ],
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'trae-api-cn.mchost.guru' }
+    ]
   },
-}
-
-module.exports = nextConfig
+  basePath: process.env.NODE_ENV === 'production' ? '/zluxury' : '',
+  trailingSlash: true,
+  reactStrictMode: true
+};
+module.exports = nextConfig;
