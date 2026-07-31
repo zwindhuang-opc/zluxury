@@ -1,8 +1,34 @@
+/**
+ * Footer Component - Professional luxury footer with navigation and contact
+ * 
+ * Design inspired by:
+ * - Cartier: Brand storytelling in footer, heritage links
+ * - Tiffany & Co.: Clean layout, elegant typography
+ * - Bulgari: Social media integration, newsletter signup
+ * 
+ * Features:
+ * - Multi-column layout: Brand, Quick Links, Services, Contact
+ * - Social media links with hover effects
+ * - Newsletter signup form
+ * - Quick navigation to all major pages
+ * - Contact information with icons
+ * 
+ * @module Footer
+ * @version 1.3.0
+ */
+
 'use client'
 
 import Link from 'next/link'
 import { useTranslation } from '@/i18n/useTranslation'
 
+/**
+ * Footer Component
+ * Professional luxury footer with brand information, navigation links,
+ * social media integration, and newsletter signup functionality.
+ * 
+ * @returns {JSX.Element} Footer component
+ */
 export default function Footer() {
     const { t } = useTranslation()
 

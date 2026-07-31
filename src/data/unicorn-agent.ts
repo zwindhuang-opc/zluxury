@@ -276,9 +276,9 @@ export class UnicornAgent {
     // Calculate savings
     let savings = 0;
     if (discount > 0 && product.vipPrices && product.vipPrices[vipLevel]) {
-      savings = (product.priceCny ?? Math.round(product.price * 7.24)) - product.vipPrices[vipLevel]!;
+      savings = (product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))) - product.vipPrices[vipLevel]!;
     } else if (discount > 0) {
-      savings = Math.round((product.priceCny ?? Math.round(product.price * 7.24)) * (discount / 100));
+      savings = Math.round((product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))) * (discount / 100));
     }
 
     return {
@@ -306,7 +306,7 @@ export class UnicornAgent {
 
     // Analyze price trends
     products.forEach(product => {
-      const safePrice = product.priceCny ?? Math.round(product.price * 7.24);
+      const safePrice = product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
       if (product.auctionData) {
         // Price trend insight
         if (product.auctionData.priceTrend) {
@@ -364,7 +364,7 @@ export class UnicornAgent {
     trend: 'up' | 'down' | 'stable';
     confidence: number;
   } {
-    const safePrice = product.priceCny ?? Math.round(product.price * 7.24);
+    const safePrice = product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
 
     // Base prediction on auction data if available
     if (product.auctionData && product.auctionData.priceTrend) {
@@ -612,7 +612,7 @@ export class UnicornAgent {
     totalValue: number;
   } {
     // Calculate commission
-    const vipPrice = product.vipPrices?.[userProfile.vipLevel] ?? (product.priceCny ?? Math.round(product.price * 7.24));
+    const vipPrice = product.vipPrices?.[userProfile.vipLevel] ?? (product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24')));
     const commission = Math.round(vipPrice * (this.config.commissionRate / 100));
 
     // Calculate subscription value (monthly)

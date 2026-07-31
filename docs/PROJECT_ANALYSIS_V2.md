@@ -185,10 +185,10 @@ imageUrl: `${CDN_URL}/products/${product.id}/hero.jpg`
 #### 4. Port Number (next.config.js)
 ```typescript
 // ❌ HARDCODED in multiple places
-port: 13153
+port: 19000
 
 // ✅ FIX: Environment variable
-port: process.env.PORT || 3000
+port: process.env.PORT || 19000
 ```
 
 #### 5. API Endpoints (multiple files)

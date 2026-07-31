@@ -40,21 +40,21 @@ const getCategoryEmoji = (category: string): string => {
 // Real brand-matched Unsplash images for each luxury product
 // Each product has a unique image matching its brand aesthetic
 const BRAND_MATCHED_IMAGES: Record<string, string> = {
-  'PROD-001': 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',  // Rolex Submariner
-  'PROD-002': 'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',  // Patek Philippe Nautilus
-  'PROD-003': 'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',  // Omega Speedmaster
-  'PROD-004': 'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',  // AP Royal Oak
-  'PROD-005': 'https://images.unsplash.com/photo-1566168541886-d06c0873b11f?w=800&q=80',  // Hermes Birkin
-  'PROD-006': 'https://images.unsplash.com/photo-1594224424497-4c0fbd81d5e5?w=800&q=80',  // Hermes Kelly
-  'PROD-007': 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',  // LV Capucines
-  'PROD-008': 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',  // Chanel Flap
-  'PROD-009': 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80', // Cartier Love
-  'PROD-010': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80', // VCA Alhambra
-  'PROD-011': 'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80', // Tiffany T Wire
-  'PROD-012': 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80', // Bulgari Serpenti
-  'PROD-013': 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80', // Gucci Belt
-  'PROD-014': 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80', // Prada Nylon
-  'PROD-015': 'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=800&q=80'  // Dior Saddle
+  'PROD-001': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Rolex Submariner luxury diver watch stainless steel gold product photography studio dramatic lighting")}&image_size=square_hd`,  // Rolex Submariner
+  'PROD-002': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Patek Philippe Nautilus luxury watch blue dial steel gold elegant studio product photography")}&image_size=square_hd`,  // Patek Philippe Nautilus
+  'PROD-003': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Omega Speedmaster professional chronograph luxury moonwatch dramatic studio product photography")}&image_size=square_hd`,  // Omega Speedmaster
+  'PROD-004': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Audemars Piguet Royal Oak luxury watch steel octagonal bezel elegant studio product")}&image_size=square_hd`,  // AP Royal Oak
+  'PROD-005': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Hermes Birkin luxury handbag leather gold hardware exclusive product photography")}&image_size=square_hd`,  // Hermes Birkin
+  'PROD-006': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Hermes Kelly luxury designer handbag leather gold clasp elegant studio product")}&image_size=square_hd`,  // Hermes Kelly
+  'PROD-007': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Louis Vuitton Capucines luxury designer handbag leather monogram elegant product photography")}&image_size=square_hd`,  // LV Capucines
+  'PROD-008': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Chanel Classic Flap luxury handbag quilted leather gold chain elegant product photography")}&image_size=square_hd`,  // Chanel Flap
+  'PROD-009': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Cartier Love bracelet luxury jewelry gold diamond elegant product photography")}&image_size=square_hd`, // Cartier Love
+  'PROD-010': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Van Cleef Arpels Alhambra luxury jewelry motif gold mother of pearl elegant studio")}&image_size=square_hd`, // VCA Alhambra
+  'PROD-011': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Tiffany T Wire luxury diamond jewelry gold elegant studio product photography")}&image_size=square_hd`, // Tiffany T Wire
+  'PROD-012': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Bulgari Serpenti luxury jewelry snake motif gold diamond elegant product photography")}&image_size=square_hd`, // Bulgari Serpenti
+  'PROD-013': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Gucci GG belt luxury designer fashion accessory leather gold buckle product photography")}&image_size=square_hd`, // Gucci Belt
+  'PROD-014': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Prada Nylon luxury designer fashion bag accessory elegant product photography")}&image_size=square_hd`, // Prada Nylon
+  'PROD-015': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Dior Saddle luxury designer handbag fashion elegant product photography studio")}&image_size=square_hd`  // Dior Saddle
 }
 
 /**
@@ -250,7 +250,7 @@ export default function FeaturedProducts() {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xl font-bold font-montserrat text-zl-text">
-                          {product.pricing ? product.pricing.formattedPrice : formatPrice(product.priceCny || product.price * 7.24, 'CNY')}
+                          {product.pricing ? product.pricing.formattedPrice : formatPrice(product.priceCny || product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'), 'CNY')}
                         </div>
                         {product.savings && product.savings.amount > 0 && (
                           <div className="text-xs text-zl-success">
@@ -284,3 +284,4 @@ export default function FeaturedProducts() {
     </section>
   )
 }
+

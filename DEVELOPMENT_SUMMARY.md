@@ -4,7 +4,7 @@
 
 **Last Updated:** 2025-06-13  
 **Version:** V2.0.0  
-**Environment:** Development (Port 13153)
+**Environment:** Development (Port 19000)
 
 ---
 
@@ -216,7 +216,7 @@ Sprint 6: Go-Live (Week 12) ░░░░░░░░░░░░░░░░░ 
 ## Remaining Tasks for Sprint 0 / Sprint 0剩余任务
 
 ### In Progress:
-1. **Server Running on Port 13153** 
+1. **Server Running on Port 19000** 
    - Need to verify server startup
    - Take screenshots of all pages
 
@@ -306,7 +306,7 @@ Sprint 6: Go-Live (Week 12) ░░░░░░░░░░░░░░░░░ 
 ## Next Steps / 下一步行动
 
 ### Immediate (This Week):
-1. ✅ Start dev server on port 13153
+1. ✅ Start dev server on port 19000
 2. 📸 Capture screenshots of all pages
 3. 📝 Complete JSDoc commenting for core files
 4. 🔧 Remove critical hardcoded values (exchange rates, taxes)
@@ -339,7 +339,7 @@ Sprint 6: Go-Live (Week 12) ░░░░░░░░░░░░░░░░░ 
 npm run dev
 
 # Run on specific port
-PORT=13153 npm run dev
+PORT=19000 npm run dev
 
 # Version control operations
 node scripts/version.js status
@@ -365,8 +365,8 @@ npm start
 - **Scripts:** `scripts/version.js`
 
 ### Ports:
-- **Dev Server:** http://localhost:13153
-- **API Base:** http://localhost:13153/api
+- **Dev Server:** http://localhost:19000
+- **API Base:** http://localhost:19000/api
 - **Database:** 5432 (PostgreSQL) - *Not yet configured*
 - **Redis:** 6379 - *Not yet configured*
 

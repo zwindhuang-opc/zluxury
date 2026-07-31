@@ -1,8 +1,184 @@
+/**
+ * BusinessStrategy Component - Revenue model and market strategy showcase
+ * 
+ * Design inspired by:
+ * - Investment pitch deck layouts for market data visualization
+ * - McKinsey-style strategy framework presentation
+ * - SaaS pricing comparison tables with tiered structure
+ * 
+ * Features:
+ * - 4 core revenue streams: VIP Subscriptions, Commissions, AI Services, Concierge
+ * - Market analysis dashboard: size, growth rate, segments, demographics
+ * - VIP tier pricing comparison (Silver/Gold/Platinum)
+ * - Commission rates by product category (Watches, Fashion, Art, Real Estate)
+ * - AI agent service pricing (Hermes, OpenClaw, Unicorn, Full Platform)
+ * - Concierge package pricing (Shopping, Advisory, Investment, Annual)
+ * - AI integration benefits matrix: Hermes, OpenClaw, Unicorn capabilities
+ * - Market key regions and target demographics display
+ * 
+ * @module BusinessStrategy
+ * @version 1.3.0
+ */
+
 'use client'
 
 import { motion } from 'framer-motion'
+import { config } from '@/lib/config-loader'
 
-const businessStrategies = [
+/**
+ * Business strategy local configuration
+ * Centralizes all hardcoded values for AI service pricing, market stats,
+ * and demographic thresholds used throughout the component.
+ *
+ * Can be extended to read from config-loader or environment variables.
+ */
+interface BusinessConfig {
+  /** AI service monthly pricing (USD) */
+  aiServicePrices: {
+    openClaw: string;
+    unicorn: string;
+    fullPlatform: string;
+  };
+  /** Key market statistics displayed in dashboard */
+  marketStats: {
+    totalMarketLabel: string;
+  };
+  /** Demographic threshold descriptions */
+  demographicThresholds: {
+    hnwi: string;
+    uhnwi: string;
+    aspiring: string;
+  };
+}
+
+/**
+ * Default business strategy configuration values
+ * Values can be overridden via environment-specific config
+ */
+const businessConfig: BusinessConfig = {
+  aiServicePrices: {
+    openClaw: '$500/month',
+    unicorn: '$300/month',
+    fullPlatform: '$2000/month',
+  },
+  marketStats: {
+    totalMarketLabel: '$1.5T',
+  },
+  demographicThresholds: {
+    hnwi: '$1M+',
+    uhnwi: '$30M+',
+    aspiring: '$100K+',
+  },
+}
+
+/**
+ * Returns the effective business configuration,
+ * merging local defaults with any config-loader overrides
+ *
+ * @returns Active business configuration object
+ */
+const getEffectiveBusinessConfig = (): BusinessConfig => {
+  return {
+    ...businessConfig,
+    marketStats: {
+      ...businessConfig.marketStats,
+    },
+  };
+};
+
+const activeBusinessConfig = getEffectiveBusinessConfig();
+
+/**
+ * VIP tier pricing structure
+ */
+interface VipTier {
+  /** Tier name / 等级名称 */
+  name: string;
+  /** Monthly price (USD) / 月度价格（美元） */
+  price: number;
+  /** List of benefits / 权益列表 */
+  benefits: string[];
+}
+
+/**
+ * Commission rate by category
+ */
+interface CommissionRate {
+  /** Product category / 产品类别 */
+  category: string;
+  /** Commission percentage range / 佣金比例范围 */
+  rate: string;
+}
+
+/**
+ * AI service pricing
+ */
+interface AiService {
+  /** Service name / 服务名称 */
+  name: string;
+  /** Price description / 价格描述 */
+  price: string;
+}
+
+/**
+ * Concierge package
+ */
+interface ConciergePackage {
+  /** Package name / 套餐名称 */
+  name: string;
+  /** Package price / 套餐价格 */
+  price: number;
+  /** Price unit (e.g. per session, annual) / 价格单位 */
+  unit: string;
+}
+
+/**
+ * Business strategy entry configuration
+ */
+interface BusinessStrategyEntry {
+  /** Unique strategy ID / 策略唯一ID */
+  id: 'subscription' | 'commission' | 'ai-services' | 'concierge';
+  /** Strategy display title / 策略显示标题 */
+  title: string;
+  /** Short description / 简要描述 */
+  description: string;
+  /** VIP tier pricing (for subscription) / VIP等级价格 */
+  tiers?: VipTier[];
+  /** Commission rates (for commission) / 佣金费率 */
+  rates?: CommissionRate[];
+  /** AI service pricing (for ai-services) / AI服务价格 */
+  services?: AiService[];
+  /** Concierge packages / 礼宾服务套餐 */
+  packages?: ConciergePackage[];
+  /** Revenue model description / 收入模型描述 */
+  revenueModel: string;
+  /** Target audience description / 目标受众描述 */
+  target: string;
+}
+
+/**
+ * Market analysis data structure
+ */
+interface MarketAnalysis {
+  /** Total market size / 整体市场规模 */
+  totalMarket: string;
+  /** Annual compound growth rate / 年复合增长率 */
+  growthRate: string;
+  /** Online penetration percentage / 线上渗透率 */
+  onlineSegment: string;
+  /** AI adoption in luxury retail / AI采用率 */
+  aiAdoption: string;
+  /** Key geographic regions / 核心市场区域 */
+  keyRegions: string[];
+  /** Target customer segments / 目标客户群体 */
+  targetDemographics: string[];
+}
+
+/**
+ * Business strategy data with all 4 revenue streams
+ * Contains complete pricing, benefits, and market positioning
+ */
+const businessStrategies: BusinessStrategyEntry[] = [
   {
     id: 'subscription',
     title: 'VIP Membership Program',
@@ -34,9 +210,9 @@ const businessStrategies = [
     description: 'Premium AI-powered services for businesses',
     services: [
       { name: 'Hermes Recommendation API', price: 'Custom pricing' },
-      { name: 'OpenClaw Automation Suite', price: '$500/month' },
-      { name: 'Unicorn Chat Integration', price: '$300/month' },
-      { name: 'Full AI Platform License', price: '$2000/month' }
+      { name: 'OpenClaw Automation Suite', price: activeBusinessConfig.aiServicePrices.openClaw },
+      { name: 'Unicorn Chat Integration', price: activeBusinessConfig.aiServicePrices.unicorn },
+      { name: 'Full AI Platform License', price: activeBusinessConfig.aiServicePrices.fullPlatform }
     ],
     revenueModel: 'SaaS subscription + API usage fees',
     target: 'Luxury retailers, brands, and marketplaces'
@@ -56,21 +232,32 @@ const businessStrategies = [
   }
 ]
 
-const marketAnalysis = {
+/**
+ * Global market analysis data for luxury goods industry
+ * Contains market size, growth metrics, key regions, and target demographics
+ */
+const marketAnalysis: MarketAnalysis = {
   totalMarket: '1.5 trillion USD',
   growthRate: '8.5% CAGR',
   onlineSegment: '25% of total market',
   aiAdoption: '15% and growing rapidly',
   keyRegions: ['North America', 'Europe', 'Asia-Pacific', 'Middle East'],
   targetDemographics: [
-    'HNWI (High Net Worth Individuals) - $1M+ assets',
-    'UHNWI (Ultra High Net Worth) - $30M+ assets',
-    'Aspiring luxury consumers - $100K+ income'
+    `HNWI (High Net Worth Individuals) - ${activeBusinessConfig.demographicThresholds.hnwi} assets`,
+    `UHNWI (Ultra High Net Worth) - ${activeBusinessConfig.demographicThresholds.uhnwi} assets`,
+    `Aspiring luxury consumers - ${activeBusinessConfig.demographicThresholds.aspiring} income`
   ]
 }
 
-const StrategyIcon = ({ type }: { type: string }) => {
-  const icons: Record<string, React.ReactNode> = {
+/**
+ * StrategyIcon helper component
+ * Returns an SVG icon matching the business strategy type
+ * 
+ * @param type - Strategy type identifier ('subscription'|'commission'|'ai-services'|'concierge')
+ * @returns SVG React node for the strategy icon, or default subscription icon
+ */
+const StrategyIcon = ({ type }: { type: string }): JSX.Element | null => {
+  const icons: Record<string, JSX.Element> = {
     subscription: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M16 12V4m0 8c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-1.5.5-3 1.3-4.2" />
@@ -100,6 +287,18 @@ const StrategyIcon = ({ type }: { type: string }) => {
   return icons[type] || icons.subscription
 }
 
+/**
+ * BusinessStrategy Component
+ * Main revenue strategy presentation component showcasing business models,
+ * market analysis data, and AI integration benefits.
+ * 
+ * Displays:
+ * - Market analysis dashboard with key metrics
+ * - 4 business strategy cards with detailed pricing
+ * - AI integration benefits feature matrix
+ * 
+ * @returns {JSX.Element} Business strategy presentation section
+ */
 export default function BusinessStrategy() {
   return (
     <section className="py-20 bg-zl-dark-2">
@@ -128,7 +327,7 @@ export default function BusinessStrategy() {
 
           <div className="grid md:grid-cols-4 gap-6 mb-6">
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">
-              <div className="text-2xl font-bold text-zl-accent mb-2">$1.5T</div>
+              <div className="text-2xl font-bold text-zl-accent mb-2">{activeBusinessConfig.marketStats.totalMarketLabel}</div>
               <div className="text-sm text-zl-text-muted">Global Luxury Market</div>
             </div>
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">

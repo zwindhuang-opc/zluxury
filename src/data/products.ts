@@ -247,6 +247,8 @@ const BRAND_CN_MAP: Record<string, string> = {
  * Normalize product data with default values
  * Calculates priceCny and brandCn if not provided
  * Uses dynamic exchange rate from config (not hardcoded)
+ * Rewrites external image URLs to the internal text-to-image endpoint
+ * to prevent ERR_BLOCKED_BY_ORB / CORS network errors.
  * 
  * @param product - Raw product data from database or API
  * @returns Normalized product with all required fields populated
@@ -259,10 +261,38 @@ function normalizeProduct(product: Product): Product {
   // Get current exchange rate from config
   const rate = getExchangeRate();
 
+  // Build a product-specific image prompt for the text-to-image endpoint
+  const buildImageUrl = (variantIndex?: number): string => {
+    const tokens = [
+      product.brand || 'Luxury',
+      product.name || 'Product',
+      product.category || '',
+      'premium product photography',
+      'dark elegant background',
+      'gold accent lighting',
+      'high end commercial studio shot',
+    ].filter(Boolean);
+
+    if (typeof variantIndex === 'number' && variantIndex > 0) {
+      tokens.push(`view angle ${variantIndex + 1}`);
+    }
+
+    const prompt = tokens.join(', ');
+    const params = new URLSearchParams({
+      prompt,
+      image_size: 'square_hd',
+    });
+    return `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?${params.toString()}`;
+  };
+
   return {
     ...product,
     brandCn: product.brandCn || BRAND_CN_MAP[product.brand] || product.brand,
     priceCny: product.priceCny || Math.round(product.price * rate),
+    imageUrl: buildImageUrl(0),
+    images: Array.isArray(product.images) && product.images.length > 0
+      ? product.images.map((_, idx) => buildImageUrl(idx))
+      : [buildImageUrl(0), buildImageUrl(1)],
     vipPrices: product.vipPrices || {
       standard: Math.round(product.price * rate),
       silver: Math.round(product.price * rate * 0.97),      // Silver: 3% discount
@@ -1278,6 +1308,17 @@ export const getProductsByBrand = (brand: string): Product[] => {
   return ProductRepository.getAll({ brand });
 };
 
+/**
+ * 获取所有产品 / Get all products
+ * Returns complete product catalog with optional filtering
+ *
+ * @param params - Optional search/filter parameters
+ * @returns Array of products
+ */
+export const getProducts = (params?: ProductSearchParams): Product[] => {
+  return ProductRepository.getAll(params);
+};
+
 // EXPORT DEFAULT
 // ============================================================================
 
@@ -1288,6 +1329,7 @@ export default {
   CategoryRepository,
   VIP_LEVELS,
   getProductById,
+  getProducts,
   searchProducts,
   getProductsByCategory,
   getProductsByBrand

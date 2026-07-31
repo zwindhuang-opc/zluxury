@@ -4,9 +4,9 @@
   "description": "Professional Online Luxury Commerce Platform - AI-Powered Auction & Marketplace System with Multi-language Support",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev -p 13153",
+    "dev": "next dev -p 19000",
     "build": "next build",
-    "start": "next start -p 13153",
+    "start": "next start -p 19000",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "backup": "node scripts/backup.js",

@@ -472,7 +472,7 @@ export const PRODUCT_SOURCING: ProductSourcing[] = [
  * Used when config-loader values are unavailable
  */
 const FALLBACK_EXCHANGE_RATES = {
-    USD: 7.24,
+    USD: parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'),
     EUR: 7.78,
     GBP: 9.32,
     JPY: 0.047,
@@ -682,3 +682,4 @@ export default {
     EXCHANGE_RATES,
     SourcingService
 };
+

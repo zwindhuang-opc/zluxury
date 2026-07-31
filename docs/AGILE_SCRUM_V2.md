@@ -43,7 +43,7 @@ This document outlines the Agile/Scrum methodology for developing the ZLuxury cr
 - [x] Version control scripts created
 - [x] Screenshots folder structure established
 - [x] Project analysis document completed (~500 lines)
-- [ ] Server running on port 13153 for screenshot capture
+- [ ] Server running on port 19000 for screenshot capture
 - [ ] Hardcoded values identified and documented
 
 ---

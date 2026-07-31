@@ -3,7 +3,7 @@
 ## Overview / 概述
 
 RESTful API for ZLuxury cross-border luxury e-commerce platform.
-Base URL: `http://localhost:13153/api`
+Base URL: `http://localhost:19000/api`
 
 **Authentication:** Bearer Token (JWT) - *Coming in Sprint 1*
 **Rate Limit:** 100 requests/minute per IP
@@ -643,4 +643,4 @@ const order = await client.orders.create({
 
 *Last Updated: 2025-06-13*
 *API Version: 2.0.0*
-*Base URL: http://localhost:13153/api*
+*Base URL: http://localhost:19000/api*

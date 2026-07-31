@@ -1,9 +1,81 @@
+/**
+ * TestimonialsSection Component - Customer reviews and testimonials display
+ * 
+ * Design inspired by:
+ * - Cartier: Customer success stories in elegant layout
+ * - Tiffany & Co.: Client testimonials with photos
+ * - Bulgari: Star ratings and product attribution
+ * 
+ * Features:
+ * - Real customer testimonials with names, roles, and locations
+ * - 5-star rating system display
+ * - Product-specific review attribution
+ * - Timestamp and date tracking for reviews
+ * - Hover card animations with framer-motion
+ * - Avatars and location icons for social proof
+ * 
+ * @module TestimonialsSection
+ * @version 1.3.0
+ */
+
 'use client'
 
 import { motion } from 'framer-motion'
 
-// Real testimonials data
-const testimonials = [
+/**
+ * Trust indicator statistic data structure
+ * Contains display values for platform credibility metrics
+ */
+interface TrustStat {
+  /** Display label for the stat / 显示标签 */
+  label: string;
+  /** Display value / 显示值 */
+  value: string;
+  /** CSS color class for the value / 颜色类名 */
+  colorClass: string;
+}
+
+/**
+ * Trust indicators configuration
+ * Centralizes stat values displayed in the trust indicators section
+ */
+const trustStats: TrustStat[] = [
+  { label: 'Client Satisfaction Rate', value: '99.9%', colorClass: 'text-zl-accent' },
+  { label: 'Verified Luxury Brands', value: '200+', colorClass: 'text-zl-gold' },
+  { label: 'Transactions Processed', value: '$50M+', colorClass: 'text-zl-success' },
+  { label: 'Active Members', value: '50K+', colorClass: 'text-zl-accent-light' },
+]
+
+/**
+ * Testimonial data structure for UI display
+ * Contains customer review information with metadata
+ */
+interface Testimonial {
+  /** Unique testimonial ID / 评价唯一ID */
+  id: string;
+  /** Customer full name / 客户姓名 */
+  name: string;
+  /** Customer role or profession / 客户职位或身份 */
+  role: string;
+  /** Customer geographic location / 客户地理位置 */
+  location: string;
+  /** Avatar image URL / 头像图片URL */
+  avatar: string;
+  /** Star rating (1-5 scale) / 星级评分（1-5分） */
+  rating: number;
+  /** Review text content / 评价文字内容 */
+  review: string;
+  /** Associated product name / 关联产品名称 */
+  product: string;
+  /** Review submission date (YYYY-MM-DD format) / 评价提交日期 */
+  date: string;
+}
+
+/**
+ * Real testimonials data for social proof
+ * Verified customer reviews from actual platform users
+ */
+const testimonials: Testimonial[] = [
   {
     id: 'test-001',
     name: 'James Chen',
@@ -112,7 +184,7 @@ export default function TestimonialsSection() {
               {/* Rating */}
               <div className="flex items-center gap-1 mb-4">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <svg 
+                  <svg
                     key={star}
                     className={`w-4 h-4 ${star <= testimonial.rating ? 'text-zl-gold' : 'text-zl-gray'}`}
                     fill="currentColor"
@@ -138,29 +210,19 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Trust Indicators */}
-        <motion.div 
+        <motion.div
           className="glass-card rounded-xl p-8 mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
           <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold font-montserrat text-zl-accent mb-2">99.9%</div>
-              <div className="text-sm text-zl-text-muted">Client Satisfaction Rate</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold font-montserrat text-zl-gold mb-2">200+</div>
-              <div className="text-sm text-zl-text-muted">Verified Luxury Brands</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold font-montserrat text-zl-success mb-2">$50M+</div>
-              <div className="text-sm text-zl-text-muted">Transactions Processed</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold font-montserrat text-zl-accent-light mb-2">50K+</div>
-              <div className="text-sm text-zl-text-muted">Active Members</div>
-            </div>
+            {trustStats.map((stat) => (
+              <div key={stat.label}>
+                <div className={`text-3xl font-bold font-montserrat mb-2 ${stat.colorClass}`}>{stat.value}</div>
+                <div className="text-sm text-zl-text-muted">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

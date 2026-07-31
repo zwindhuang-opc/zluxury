@@ -1,225 +1,179 @@
-/**
- * Version Management Script for ZLuxury Platform
- * Handles semantic versioning: MAJOR.MINOR.PATCH (e.g., 1.0.0)
- * 
- * Version Format: V.MAJOR.MINOR.PATCH
- * - MAJOR: Breaking changes or major feature releases
- * - MINOR: New features, backward compatible
- * - PATCH: Bug fixes, backward compatible
- */
+#!/usr/bin/env node
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Configuration
-const PACKAGE_JSON_PATH = path.join(__dirname, '..', 'package.json');
-const VERSION_FILE_PATH = path.join(__dirname, '..', 'VERSION.md');
-const CHANGELOG_PATH = path.join(__dirname, '..', 'CHANGELOG.md');
-
 /**
- * Read current version from package.json
+ * Reads and parses a JSON file, returning its contents as an object.
+ * @param {string} filePath - Absolute or relative path to the JSON file.
+ * @returns {object} Parsed JSON content.
+ * @throws {Error} If the file cannot be read or parsed.
  */
-function getCurrentVersion() {
-  const packageJson = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, 'utf8'));
-  return packageJson.version;
+function readJSON(filePath) {
+  try {
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Failed to read or parse ${filePath}: ${err.message}`);
+  }
 }
 
 /**
- * Parse version string into components
+ * Writes an object to a JSON file with pretty-printing (2-space indent).
+ * @param {string} filePath - Absolute or relative path to the output file.
+ * @param {object} data - Object to serialize and write.
+ * @throws {Error} If the file cannot be written.
  */
-function parseVersion(version) {
-  const parts = version.split('.').map(Number);
-  return {
-    major: parts[0] || 0,
-    minor: parts[1] || 0,
-    patch: parts[2] || 0,
-    toString: function() {
-      return `${this.major}.${this.minor}.${this.patch}`;
-    }
-  };
+function writeJSON(filePath, data) {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n', 'utf-8');
+  } catch (err) {
+    throw new Error(`Failed to write ${filePath}: ${err.message}`);
+  }
 }
 
 /**
- * Increment version based on type
+ * Bumps a semantic version string by the given type.
+ * @param {string} currentVersion - Current version in "major.minor.patch" format.
+ * @param {"major"|"minor"|"patch"} type - The version component to bump.
+ * @returns {string} New version string in "major.minor.patch" format.
+ * @throws {Error} If the version format is invalid or the type is unrecognized.
  */
-function incrementVersion(currentVersion, type) {
-  const version = parseVersion(currentVersion);
-  
-  switch(type) {
+function bumpVersion(currentVersion, type) {
+  const parts = currentVersion.split('.');
+  if (parts.length !== 3) {
+    throw new Error(`Invalid version format: "${currentVersion}". Expected "major.minor.patch".`);
+  }
+
+  const major = parseInt(parts[0], 10);
+  const minor = parseInt(parts[1], 10);
+  const patch = parseInt(parts[2], 10);
+
+  if (isNaN(major) || isNaN(minor) || isNaN(patch)) {
+    throw new Error(`Invalid version components in "${currentVersion}". All parts must be integers.`);
+  }
+
+  let newMajor = major;
+  let newMinor = minor;
+  let newPatch = patch;
+
+  switch (type) {
     case 'major':
-      version.major++;
-      version.minor = 0;
-      version.patch = 0;
+      newMajor += 1;
+      newMinor = 0;
+      newPatch = 0;
       break;
     case 'minor':
-      version.minor++;
-      version.patch = 0;
+      newMinor += 1;
+      newPatch = 0;
       break;
     case 'patch':
-      version.patch++;
+      newPatch += 1;
       break;
     default:
-      throw new Error(`Invalid version type: ${type}. Use 'major', 'minor', or 'patch'`);
-  }
-  
-  return version.toString();
-}
-
-/**
- * Update version in package.json
- */
-function updatePackageJson(newVersion) {
-  const packageJson = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, 'utf8'));
-  packageJson.version = newVersion;
-  fs.writeFileSync(PACKAGE_JSON_PATH, JSON.stringify(packageJson, null, 2));
-  console.log(`✓ Updated package.json to version ${newVersion}`);
-}
-
-/**
- * Create VERSION.md file
- */
-function createVersionFile(version, type, message) {
-  const timestamp = new Date().toISOString();
-  const content = `# ZLuxury Platform Version ${version}
-
-**Release Date**: ${timestamp}
-**Version Type**: ${type.toUpperCase()}
-**Release Notes**: ${message}
-
-## Version Information
-- **Version**: V.${version}
-- **Type**: ${type}
-- **Date**: ${timestamp}
-
-## Changes
-${message}
-
-## Installation
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Documentation
-See [CHANGELOG.md](./CHANGELOG.md) for detailed change history.
-`;
-
-  fs.writeFileSync(VERSION_FILE_PATH, content);
-  console.log(`✓ Created VERSION.md for version ${version}`);
-}
-
-/**
- * Update CHANGELOG.md
- */
-function updateChangelog(version, type, message) {
-  const timestamp = new Date().toISOString().split('T')[0];
-  const entry = `## [${version}] - ${timestamp}
-
-### ${type.toUpperCase()}
-${message}
-
-`;
-
-  let changelogContent = '';
-  if (fs.existsSync(CHANGELOG_PATH)) {
-    changelogContent = fs.readFileSync(CHANGELOG_PATH, 'utf8');
-  } else {
-    changelogContent = `# ZLuxury Platform Changelog
-
-All notable changes to the ZLuxury platform will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-`;
+      throw new Error(`Unknown bump type: "${type}". Use "major", "minor", or "patch".`);
   }
 
-  fs.writeFileSync(CHANGELOG_PATH, entry + changelogContent);
-  console.log(`✓ Updated CHANGELOG.md for version ${version}`);
+  return `${newMajor}.${newMinor}.${newPatch}`;
 }
 
 /**
- * Create git tag and commit
+ * Updates the version field inside package.json.
+ * @param {string} projectRoot - Absolute path to the project root.
+ * @param {string} newVersion - The new version string to write.
+ * @throws {Error} If the file cannot be updated.
  */
-function createGitCommit(version, type, message) {
+function updatePackageJSON(projectRoot, newVersion) {
+  const pkgPath = path.join(projectRoot, 'package.json');
+  const pkg = readJSON(pkgPath);
+  const oldVersion = pkg.version;
+  pkg.version = newVersion;
+  writeJSON(pkgPath, pkg);
+  console.log(`  package.json: ${oldVersion} -> ${newVersion}`);
+}
+
+/**
+ * Updates the version field inside VERSION.json and refreshes the updatedAt timestamp.
+ * @param {string} projectRoot - Absolute path to the project root.
+ * @param {string} newVersion - The new version string to write.
+ * @throws {Error} If the file cannot be updated.
+ */
+function updateVersionJSON(projectRoot, newVersion) {
+  const versionPath = path.join(projectRoot, 'VERSION.json');
+  const versionData = readJSON(versionPath);
+  versionData.version = newVersion;
+  versionData.updatedAt = new Date().toISOString().split('T')[0];
+  writeJSON(versionPath, versionData);
+  console.log(`  VERSION.json: updated to ${newVersion}`);
+}
+
+/**
+ * Creates an annotated git tag for the given version.
+ * @param {string} newVersion - The version string used as the tag name (prefixed with "v").
+ * @throws {Error} If git commands fail or git is not available.
+ */
+function createGitTag(newVersion) {
   try {
-    // Check if there are changes to commit
-    const status = execSync('git status --porcelain', { encoding: 'utf8' });
-    
-    if (status.trim()) {
-      // Stage all changes
-      execSync('git add .', { encoding: 'utf8' });
-      
-      // Create commit
-      const commitMessage = `Release V.${version} - ${type.toUpperCase()}: ${message}`;
-      execSync(`git commit -m "${commitMessage}"`, { encoding: 'utf8' });
-      console.log(`✓ Created git commit for version ${version}`);
-      
-      // Create tag
-      const tagName = `V.${version}`;
-      execSync(`git tag -a ${tagName} -m "Release ${tagName}"`, { encoding: 'utf8' });
-      console.log(`✓ Created git tag ${tagName}`);
-    } else {
-      console.log('No changes to commit');
-    }
-  } catch (error) {
-    console.error('Git operations failed:', error.message);
+    const tagName = `v${newVersion}`;
+    execSync(`git tag -a ${tagName} -m "Release ${tagName}"`, { stdio: 'inherit' });
+    console.log(`  Git tag created: ${tagName}`);
+  } catch (err) {
+    console.warn(`  Warning: Failed to create git tag: ${err.message}`);
+    console.warn('  You may need to commit changes first or run: git tag -a v' + newVersion);
   }
 }
 
 /**
- * Main version bump function
+ * Main entry point for the version-bump script.
+ * Parses command-line arguments, reads current version, bumps it,
+ * updates both package.json and VERSION.json, and creates a git tag.
  */
-function bumpVersion(type, message) {
-  console.log(`\n=== ZLuxury Version Management ===`);
-  console.log(`Version Type: ${type.toUpperCase()}`);
-  console.log(`Message: ${message}\n`);
+function main() {
+  const projectRoot = process.cwd();
+  const args = process.argv.slice(2);
+  const bumpType = args[0] || 'patch';
 
-  try {
-    // Get current version
-    const currentVersion = getCurrentVersion();
-    console.log(`Current Version: V.${currentVersion}`);
-
-    // Calculate new version
-    const newVersion = incrementVersion(currentVersion, type);
-    console.log(`New Version: V.${newVersion}`);
-
-    // Update files
-    updatePackageJson(newVersion);
-    createVersionFile(newVersion, type, message);
-    updateChangelog(newVersion, type, message);
-
-    // Create git commit and tag
-    createGitCommit(newVersion, type, message);
-
-    console.log(`\n✅ Version bump completed successfully!`);
-    console.log(`📦 New Version: V.${newVersion}`);
-    console.log(`🏷️  Git Tag: V.${newVersion}`);
-    console.log(`\nNext steps:`);
-    console.log(`  1. Review changes: git status`);
-    console.log(`  2. Push to remote: npm run git:push`);
-    console.log(`  3. Create release on GitHub`);
-
-  } catch (error) {
-    console.error('❌ Version bump failed:', error.message);
+  const validTypes = ['major', 'minor', 'patch'];
+  if (!validTypes.includes(bumpType)) {
+    console.error('Usage: node scripts/version-bump.js [major|minor|patch]');
+    console.error(`  Current bump type argument: "${bumpType}"`);
     process.exit(1);
   }
+
+  console.log(`\nZLuxury Version Bump`);
+  console.log('====================');
+
+  // Read current version from package.json
+  let currentVersion;
+  try {
+    const pkg = readJSON(path.join(projectRoot, 'package.json'));
+    currentVersion = pkg.version;
+  } catch (err) {
+    console.error(`Error reading package.json: ${err.message}`);
+    process.exit(1);
+  }
+
+  console.log(`Current version: ${currentVersion}`);
+  console.log(`Bump type:       ${bumpType}`);
+
+  const newVersion = bumpVersion(currentVersion, bumpType);
+  console.log(`New version:     ${newVersion}\n`);
+
+  // Update both files
+  try {
+    updatePackageJSON(projectRoot, newVersion);
+    updateVersionJSON(projectRoot, newVersion);
+  } catch (err) {
+    console.error(`Error updating version files: ${err.message}`);
+    process.exit(1);
+  }
+
+  // Create git tag
+  createGitTag(newVersion);
+
+  console.log(`\nVersion successfully bumped to ${newVersion}`);
+  console.log(`Remember to push the tag with: git push origin v${newVersion}\n`);
 }
 
-// Command line interface
-const args = process.argv.slice(2);
-const type = args[0] || 'patch';
-const message = args[1] || 'Version update';
-
-// Validate version type
-const validTypes = ['major', 'minor', 'patch'];
-if (!validTypes.includes(type)) {
-  console.error(`Invalid version type: ${type}`);
-  console.error(`Usage: npm run version:bump [major|minor|patch] "message"`);
-  console.error(`Example: npm run version:bump minor "Added new AI agent integration"`);
-  process.exit(1);
-}
-
-// Execute version bump
-bumpVersion(type, message);
+main();

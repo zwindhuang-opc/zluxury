@@ -306,7 +306,7 @@ export class OrderService {
         const pricing = PricingEngine.calculatePrice(
           product.id,
           product.name,
-          product.priceCny || Math.round(product.price * 7.24),
+          product.priceCny || Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24')),
           product.category,
           item.sourcingChannel,
           request.vipTier
@@ -558,3 +558,4 @@ export default {
   OrderService,
   ORDER_STATUS_CONFIG
 };
+

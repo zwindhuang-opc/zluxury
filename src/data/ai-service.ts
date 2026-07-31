@@ -887,7 +887,7 @@ class AIService {
    */
   static calculateCommission(product: Product, vipLevel: VipLevel = 'standard'): number {
     // 根据商品价格确定佣金类别，使用回退值以防priceCny未定义
-    const priceCny = product.priceCny ?? Math.round(product.price * 7.24);
+    const priceCny = product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
     let commissionRate: number;
     if (priceCny >= 1000000) {
       commissionRate = MONETIZATION_CONFIG.commission.luxury;
@@ -915,7 +915,7 @@ class AIService {
    */
   static calculateVipPrice(product: Product, vipLevel: VipLevel): number {
     const discount = VIP_LEVELS[vipLevel].discount;
-    const priceCny = product.priceCny ?? Math.round(product.price * 7.24);
+    const priceCny = product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
     return Math.round(priceCny * (1 - discount / 100));
   }
 
@@ -1005,7 +1005,7 @@ class AIService {
 
     // 根据产品价值调整预估订单金额
     if (product) {
-      estimatedOrderValue = product.priceCny ?? Math.round(product.price * 7.24);
+      estimatedOrderValue = product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
 
       // 根据VIP等级调整转化概率
       if (userContext?.vipLevel) {
@@ -1327,7 +1327,7 @@ class AIService {
     products.forEach((product, index) => {
       response += `${index + 1}. 【${product.brandCn}${product.name}】\n`;
       response += `   品牌：${product.brandCn} (${product.brand})\n`;
-      response += `   价格：¥${(product.priceCny ?? Math.round(product.price * 7.24)).toLocaleString()}\n`;
+      response += `   价格：¥${(product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))).toLocaleString()}\n`;
       response += `   评分：${'★'.repeat(Math.floor(product.rating))}${product.rating}/5\n\n`;
     });
 
@@ -1405,7 +1405,7 @@ class AIService {
     if (products.length > 1) {
       response += `此外，还有其他不错的选择：\n`;
       products.slice(1, 3).forEach((p, i) => {
-        response += `${i + 2}. ${p.brandCn}${p.name} - ¥${(p.priceCny ?? Math.round(p.price * 7.24)).toLocaleString()}\n`;
+        response += `${i + 2}. ${p.brandCn}${p.name} - ¥${(p.priceCny ?? Math.round(p.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))).toLocaleString()}\n`;
       });
     }
 
@@ -1516,7 +1516,7 @@ class AIService {
     let response = '根据当前市场数据，以下是值得关注的投资级奢侈品推荐：\n\n';
     response += `【首选推荐】${topProduct.brandCn}${topProduct.name}\n`;
     response += `• 参考编号：${topProduct.reference || 'N/A'}\n`;
-    const topPrice = topProduct.priceCny ?? Math.round(topProduct.price * 7.24);
+    const topPrice = topProduct.priceCny ?? Math.round(topProduct.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
     response += `• 当前价格：¥${topPrice.toLocaleString()}\n`;
     response += `• 最近拍卖成交价：¥${(topProduct.auctionData?.soldPriceCny || topPrice).toLocaleString()}\n`;
     response += `• 过去表现：${topProduct.auctionData?.priceTrend === 'up' ? '优秀（持续上涨）' : '良好'}\n`;
@@ -1600,7 +1600,7 @@ class AIService {
 
     const message = `【${product.brandCn}${product.name}】\n` +
       `• 库存状态：${status}\n` +
-      `• 价格：¥${(product.priceCny ?? Math.round(product.price * 7.24)).toLocaleString()}\n`;
+      `• 价格：¥${(product.priceCny ?? Math.round(product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))).toLocaleString()}\n`;
 
     return { message, products: [product] };
   }
@@ -1667,8 +1667,8 @@ class AIService {
 
     let response = '当前优惠活动：\n\n';
     products.forEach((p, i) => {
-      const originalPrice = p.priceCny ?? Math.round(p.price * 7.24);
-      const vipGoldPrice = p.vipPrices?.gold ?? (p.priceCny ?? Math.round(p.price * 7.24));
+      const originalPrice = p.priceCny ?? Math.round(p.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'));
+      const vipGoldPrice = p.vipPrices?.gold ?? (p.priceCny ?? Math.round(p.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24')));
       const saving = originalPrice - vipGoldPrice;
 
       response += `${i + 1}. ${p.brandCn}${p.name}\n`;
@@ -1951,3 +1951,4 @@ class AIService {
 // ============================================================================
 
 export default AIService;
+

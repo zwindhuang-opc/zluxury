@@ -13,7 +13,62 @@
  */
 
 import type { Metadata } from 'next'
+import {
+  Cormorant_Garamond,
+  Montserrat,
+  Noto_Sans_SC,
+  Noto_Serif_SC,
+  Playfair_Display,
+  Inter,
+} from 'next/font/google'
 import './globals.css'
+
+/**
+ * Self-hosted Google Fonts via next/font/google.
+ * Eliminates external fonts.googleapis.com requests (no ERR_ABORTED / ORB issues).
+ * Fonts are inlined and served from the same origin.
+ */
+const cormorantGaramond = Cormorant_Garamond({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-cormorant',
+  display: 'swap',
+})
+
+const montserrat = Montserrat({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  display: 'swap',
+})
+
+const playfairDisplay = Playfair_Display({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
+const inter = Inter({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const notoSansSC = Noto_Sans_SC({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-noto-sans-sc',
+  display: 'swap',
+})
+
+const notoSerifSC = Noto_Serif_SC({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-noto-serif-sc',
+  display: 'swap',
+})
 
 /**
  * Application metadata for SEO optimization
@@ -37,6 +92,9 @@ export const metadata: Metadata = {
  * Root Layout Component
  * Wraps all pages with consistent styling
  * 
+ * Font CSS variables injected on root <html> element
+ * so they're available to Tailwind and all descendant components.
+ * 
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Child components
  * @returns {JSX.Element} Layout component
@@ -47,17 +105,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className="scroll-smooth">
-      <head>
-        {/* Preconnect to fonts for performance / 预连接字体服务 */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Professional luxury fonts / 专业奢华字体 */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html
+      lang="zh-CN"
+      className={`scroll-smooth ${cormorantGaramond.variable} ${montserrat.variable} ${playfairDisplay.variable} ${inter.variable} ${notoSansSC.variable} ${notoSerifSC.variable}`}
+    >
       <body className="bg-zl-dark text-zl-text antialiased font-sans">
         {/* Main content wrapper / 主内容包装器 */}
         <div className="min-h-screen flex flex-col">

@@ -1,336 +1,284 @@
-/**
- * Git Push Script for ZLuxury Platform
- * Handles GitHub backup with proper branch management
- * 
- * Features:
- * - Automatic branch management (main, develop, feature branches)
- * - GitHub integration for vcfhuang@qq.com
- * - Backup automation
- * - Version tag pushing
- */
+#!/usr/bin/env node
 
 const { execSync } = require('child_process');
-const path = require('path');
-
-// Configuration
-const GITHUB_USER = 'vcfhuang@qq.com';
-const REPO_NAME = 'zluxury';
-const DEFAULT_BRANCH = 'main';
-const DEVELOP_BRANCH = 'develop';
 
 /**
- * Execute git command and return output
+ * Default GitHub remote URL for the ZLuxury project.
+ * Used during the "setup" command to configure the origin remote.
+ * @type {string}
  */
-function execGit(command, silent = false) {
+const DEFAULT_REMOTE_URL = 'git@github.com:zwindhuang/zluxury.git';
+
+/**
+ * Default branch name for deployment/production.
+ * @type {string}
+ */
+const DEFAULT_DEPLOY_BRANCH = 'main';
+
+/**
+ * Generates a timestamp string suitable for use in commit messages.
+ * Format: "YYYY-MM-DD HH:mm:ss"
+ * @returns {string} Formatted timestamp.
+ */
+function getTimestamp() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
+/**
+ * Executes a shell command and returns its stdout as a trimmed string.
+ * Throws an error with contextual information if the command fails.
+ * @param {string} command - The shell command to execute.
+ * @param {object} [options] - Optional configuration for child_process.execSync.
+ * @returns {string} Trimmed stdout of the command.
+ * @throws {Error} If the command exits with a non-zero code.
+ */
+function runCommand(command, options = {}) {
   try {
-    const options = { encoding: 'utf8' };
-    if (silent) {
-      options.stdio = 'pipe';
+    const result = execSync(command, { encoding: 'utf-8', stdio: 'pipe', ...options });
+    return result.trim();
+  } catch (err) {
+    const message = err.stderr ? err.stderr.toString().trim() : err.message;
+    throw new Error(`Command failed: ${command}\n${message}`);
+  }
+}
+
+/**
+ * Initializes a git repository and configures the GitHub remote origin.
+ * If a remote already exists, it will be updated to use the default URL.
+ */
+function setupGit() {
+  console.log('\nZLuxury Git Setup');
+  console.log('=================');
+
+  try {
+    // Check if .git directory exists
+    try {
+      runCommand('git rev-parse --git-dir');
+      console.log('Git repository already initialized.');
+    } catch {
+      console.log('Initializing git repository...');
+      runCommand('git init');
+      console.log('Git repository initialized.');
     }
-    return execSync(command, options).trim();
-  } catch (error) {
-    if (!silent) {
-      console.error(`Git command failed: ${command}`);
-      console.error(error.message);
-    }
-    throw error;
-  }
-}
-
-/**
- * Check if git remote exists
- */
-function hasRemote(remoteName = 'origin') {
-  try {
-    const remotes = execGit('git remote -v', true);
-    return remotes.includes(remoteName);
-  } catch (error) {
-    return false;
-  }
-}
-
-/**
- * Add remote repository
- */
-function addRemote(remoteName, remoteUrl) {
-  try {
-    execGit(`git remote add ${remoteName} ${remoteUrl}`);
-    console.log(`✓ Added remote ${remoteName}: ${remoteUrl}`);
-  } catch (error) {
-    console.error(`Failed to add remote: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Get current branch name
- */
-function getCurrentBranch() {
-  try {
-    return execGit('git rev-parse --abbrev-ref HEAD', true);
-  } catch (error) {
-    console.error('Failed to get current branch');
-    throw error;
-  }
-}
-
-/**
- * Get all branches
- */
-function getBranches() {
-  try {
-    const branches = execGit('git branch -a', true);
-    return branches.split('\n').map(branch => branch.trim().replace('* ', '').replace('remotes/', ''));
-  } catch (error) {
-    return [];
-  }
-}
-
-/**
- * Create and switch to branch
- */
-function createBranch(branchName) {
-  try {
-    execGit(`git checkout -b ${branchName}`);
-    console.log(`✓ Created and switched to branch: ${branchName}`);
-  } catch (error) {
-    console.error(`Failed to create branch ${branchName}: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Switch to existing branch
- */
-function switchBranch(branchName) {
-  try {
-    execGit(`git checkout ${branchName}`);
-    console.log(`✓ Switched to branch: ${branchName}`);
-  } catch (error) {
-    console.error(`Failed to switch to branch ${branchName}: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Push changes to remote
- */
-function pushToRemote(branchName, remoteName = 'origin', force = false) {
-  try {
-    const forceFlag = force ? '--force' : '--set-upstream';
-    execGit(`git push ${forceFlag} ${remoteName} ${branchName}`);
-    console.log(`✓ Pushed ${branchName} to ${remoteName}`);
-  } catch (error) {
-    console.error(`Failed to push to remote: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Push all tags to remote
- */
-function pushTags(remoteName = 'origin') {
-  try {
-    execGit(`git push ${remoteName} --tags`);
-    console.log(`✓ Pushed all tags to ${remoteName}`);
-  } catch (error) {
-    console.error(`Failed to push tags: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Create backup
- */
-function createBackup() {
-  try {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const backupName = `backup-${timestamp}`;
-    
-    // Create archive
-    execGit(`git archive --format=zip --output=${backupName}.zip HEAD`);
-    console.log(`✓ Created backup: ${backupName}.zip`);
-    
-    return backupName;
-  } catch (error) {
-    console.error(`Failed to create backup: ${error.message}`);
-    throw error;
-  }
-}
-
-/**
- * Main push function
- */
-function pushToGitHub(branchName = null, createBackupFlag = false) {
-  console.log(`\n=== ZLuxury GitHub Backup ===`);
-  console.log(`GitHub User: ${GITHUB_USER}`);
-  console.log(`Repository: ${REPO_NAME}\n`);
-
-  try {
-    // Check if there are changes to commit
-    const status = execGit('git status --porcelain', true);
-    
-    if (!status.trim()) {
-      console.log('No changes to push');
-      return;
-    }
-
-    // Stage all changes
-    execGit('git add .');
-    console.log('✓ Staged all changes');
-
-    // Create commit
-    const timestamp = new Date().toISOString();
-    const commitMessage = `Auto-commit - ${timestamp}`;
-    execGit(`git commit -m "${commitMessage}"`);
-    console.log('✓ Created commit');
-
-    // Create backup if requested
-    if (createBackupFlag) {
-      createBackup();
-    }
-
-    // Determine branch to push
-    const currentBranch = branchName || getCurrentBranch();
-    console.log(`Current branch: ${currentBranch}`);
 
     // Check if remote exists
-    if (!hasRemote('origin')) {
-      console.log('No remote repository configured');
-      console.log('To add GitHub remote, run:');
-      console.log(`  git remote add origin https://github.com/${GITHUB_USER}/${REPO_NAME}.git`);
-      console.log('Or use SSH:');
-      console.log(`  git remote add origin git@github.com:${GITHUB_USER}/${REPO_NAME}.git`);
-      return;
+    let remoteExists = false;
+    try {
+      runCommand('git remote get-url origin');
+      remoteExists = true;
+    } catch {
+      // remote does not exist
     }
 
-    // Push to remote
-    pushToRemote(currentBranch, 'origin');
-    
-    // Push tags
-    pushTags('origin');
+    if (remoteExists) {
+      console.log(`Updating remote origin to ${DEFAULT_REMOTE_URL}...`);
+      runCommand(`git remote set-url origin ${DEFAULT_REMOTE_URL}`);
+    } else {
+      console.log(`Setting remote origin to ${DEFAULT_REMOTE_URL}...`);
+      runCommand(`git remote add origin ${DEFAULT_REMOTE_URL}`);
+    }
 
-    console.log(`\n✅ Successfully pushed to GitHub!`);
-    console.log(`📦 Repository: ${GITHUB_USER}/${REPO_NAME}`);
-    console.log(`🌿 Branch: ${currentBranch}`);
-    console.log(`🔗 URL: https://github.com/${GITHUB_USER}/${REPO_NAME}`);
-
-  } catch (error) {
-    console.error('❌ GitHub push failed:', error.message);
+    console.log('\nRemote configured successfully.');
+    console.log('Remote URL: ' + DEFAULT_REMOTE_URL);
+    console.log('\nTo push for the first time, run:');
+    console.log('  git push -u origin main');
+  } catch (err) {
+    console.error(`\nSetup failed: ${err.message}`);
     process.exit(1);
   }
 }
 
 /**
- * Setup initial repository structure
+ * Stages all changes, commits them with a timestamped message, and pushes
+ * to the currently checked-out branch.
  */
-function setupRepository() {
-  console.log(`\n=== ZLuxury Repository Setup ===\n`);
+function pushChanges() {
+  console.log('\nZLuxury Git Push');
+  console.log('================');
 
   try {
-    // Check if git is initialized
+    // Get current branch
+    const currentBranch = runCommand('git rev-parse --abbrev-ref HEAD');
+    console.log(`Current branch: ${currentBranch}`);
+
+    // Stage all changes
+    console.log('Staging all changes...');
+    runCommand('git add .');
+
+    // Check if there are staged changes to commit
     try {
-      execGit('git rev-parse --git-dir', true);
-      console.log('✓ Git repository already initialized');
-    } catch (error) {
-      execGit('git init');
-      console.log('✓ Initialized git repository');
+      runCommand('git diff --cached --quiet');
+      console.log('No changes to commit. Working tree is clean.');
+    } catch {
+      // There are staged changes
+      const timestamp = getTimestamp();
+      const commitMessage = `ZLuxury backup - ${timestamp}`;
+      console.log(`Committing: "${commitMessage}"`);
+      runCommand(`git commit -m "${commitMessage}"`);
+      console.log('Commit created.');
     }
 
-    // Create main branch if it doesn't exist
-    const branches = getBranches();
-    if (!branches.includes(DEFAULT_BRANCH)) {
-      execGit(`git checkout -b ${DEFAULT_BRANCH}`);
-      console.log(`✓ Created ${DEFAULT_BRANCH} branch`);
-    }
-
-    // Create develop branch if it doesn't exist
-    if (!branches.includes(DEVELOP_BRANCH)) {
-      createBranch(DEVELOP_BRANCH);
-      console.log(`✓ Created ${DEVELOP_BRANCH} branch`);
-    }
-
-    // Switch back to main
-    switchBranch(DEFAULT_BRANCH);
-
-    console.log(`\n✅ Repository setup completed!`);
-    console.log(`\nBranch structure:`);
-    console.log(`  ${DEFAULT_BRANCH} - Production releases`);
-    console.log(`  ${DEVELOP_BRANCH} - Development integration`);
-    console.log(`\nNext steps:`);
-    console.log(`  1. Add GitHub remote:`);
-    console.log(`     git remote add origin https://github.com/${GITHUB_USER}/${REPO_NAME}.git`);
-    console.log(`  2. Push to GitHub:`);
-    console.log(`     npm run git:push`);
-
-  } catch (error) {
-    console.error('❌ Repository setup failed:', error.message);
+    // Push to current branch
+    console.log(`Pushing to origin/${currentBranch}...`);
+    runCommand(`git push origin ${currentBranch}`);
+    console.log('Push successful.');
+  } catch (err) {
+    console.error(`\nPush failed: ${err.message}`);
     process.exit(1);
   }
 }
 
 /**
- * Create feature branch
+ * Creates a new feature branch with a given name, commits all current
+ * changes with a descriptive message, and pushes the new branch to origin.
+ * @param {string} branchName - The name for the new feature branch.
+ *                              If not provided, prompts the user (falls back to "feature").
  */
-function createFeatureBranch(featureName) {
-  console.log(`\n=== Creating Feature Branch ===\n`);
+function createFeatureBranch(branchName) {
+  console.log('\nZLuxury Feature Branch');
+  console.log('=======================');
+
+  if (!branchName) {
+    console.error('Usage: node scripts/git-push.js feature <branch-name>');
+    console.error('Example: node scripts/git-push.js feature add-auction-module');
+    process.exit(1);
+  }
 
   try {
-    // Switch to develop branch
-    switchBranch(DEVELOP_BRANCH);
-    
-    // Pull latest changes
+    const currentBranch = runCommand('git rev-parse --abbrev-ref HEAD');
+    console.log(`Current branch: ${currentBranch}`);
+
+    // Stage and commit current changes first
+    console.log('Staging current changes...');
+    runCommand('git add .');
+
     try {
-      execGit('git pull origin develop');
-      console.log('✓ Pulled latest changes from develop');
-    } catch (error) {
-      console.log('No remote changes to pull');
+      runCommand('git diff --cached --quiet');
+      console.log('No changes to commit before branching.');
+    } catch {
+      const timestamp = getTimestamp();
+      runCommand(`git commit -m "WIP before feature branch - ${timestamp}"`);
+      console.log('Current changes committed.');
     }
 
-    // Create feature branch
-    const featureBranch = `feature/${featureName}`;
-    createBranch(featureBranch);
+    // Create and switch to the new branch
+    console.log(`Creating feature branch: ${branchName}...`);
+    runCommand(`git checkout -b ${branchName}`);
+    console.log(`Switched to branch: ${branchName}`);
 
-    console.log(`\n✅ Feature branch created: ${featureBranch}`);
-    console.log(`\nWorkflow:`);
-    console.log(`  1. Make your changes`);
-    console.log(`  2. Commit changes: git commit -am "Your message"`);
-    console.log(`  3. Push to GitHub: npm run git:push`);
-    console.log(`  4. Create pull request to develop branch`);
-
-  } catch (error) {
-    console.error('❌ Feature branch creation failed:', error.message);
+    // Push the new branch
+    console.log(`Pushing new branch to origin...`);
+    runCommand(`git push -u origin ${branchName}`);
+    console.log(`Feature branch "${branchName}" created and pushed successfully.`);
+  } catch (err) {
+    console.error(`\nFeature branch creation failed: ${err.message}`);
     process.exit(1);
   }
 }
 
-// Command line interface
-const args = process.argv.slice(2);
-const command = args[0] || 'push';
+/**
+ * Pushes the current branch to the deployment branch (main) for production
+ * deployment. This merges the current branch into main and pushes.
+ */
+function deploy() {
+  console.log('\nZLuxury Deploy');
+  console.log('===============');
 
-switch (command) {
-  case 'setup':
-    setupRepository();
-    break;
-  case 'push':
-    const branch = args[1] || null;
-    const backup = args.includes('--backup');
-    pushToGitHub(branch, backup);
-    break;
-  case 'feature':
-    const featureName = args[1];
-    if (!featureName) {
-      console.error('Please provide a feature name');
-      console.error('Usage: npm run git:push feature "feature-name"');
-      process.exit(1);
+  try {
+    const currentBranch = runCommand('git rev-parse --abbrev-ref HEAD');
+    console.log(`Current branch: ${currentBranch}`);
+
+    if (currentBranch === DEFAULT_DEPLOY_BRANCH) {
+      // Already on main — just commit and push
+      console.log('Already on main branch.');
+      console.log('Staging and pushing...');
+      runCommand('git add .');
+
+      try {
+        runCommand('git diff --cached --quiet');
+        console.log('No changes to deploy.');
+      } catch {
+        const timestamp = getTimestamp();
+        runCommand(`git commit -m "Deploy to production - ${timestamp}"`);
+        console.log('Deploy commit created.');
+      }
+
+      runCommand(`git push origin ${DEFAULT_DEPLOY_BRANCH}`);
+      console.log('Deployment pushed to origin/main.');
+    } else {
+      // Switch to main, merge current branch, push
+      console.log(`Switching to ${DEFAULT_DEPLOY_BRANCH}...`);
+      runCommand(`git checkout ${DEFAULT_DEPLOY_BRANCH}`);
+
+      console.log(`Merging "${currentBranch}" into ${DEFAULT_DEPLOY_BRANCH}...`);
+      runCommand(`git merge ${currentBranch} --no-edit`);
+
+      // Handle merge conflicts
+      try {
+        runCommand('git diff --name-only --diff-filter=U');
+        console.error('Merge conflicts detected. Please resolve them manually, then run:');
+        console.error('  git add . && git commit -m "Resolve merge conflicts"');
+        process.exit(1);
+      } catch {
+        // No conflicts — safe to push
+      }
+
+      const timestamp = getTimestamp();
+      console.log(`Committing merge...`);
+      runCommand(`git commit -m "Merge ${currentBranch} into ${DEFAULT_DEPLOY_BRANCH} for deployment - ${timestamp}"`);
+
+      console.log(`Pushing ${DEFAULT_DEPLOY_BRANCH}...`);
+      runCommand(`git push origin ${DEFAULT_DEPLOY_BRANCH}`);
+
+      // Switch back to the original feature branch
+      console.log(`Switching back to "${currentBranch}"...`);
+      runCommand(`git checkout ${currentBranch}`);
+
+      console.log(`\nDeployment complete! Branch "${currentBranch}" has been merged into "${DEFAULT_DEPLOY_BRANCH}".`);
     }
-    createFeatureBranch(featureName);
-    break;
-  default:
-    console.log('Available commands:');
-    console.log('  npm run git:push setup    - Setup repository structure');
-    console.log('  npm run git:push push     - Push to GitHub (default)');
-    console.log('  npm run git:push push [branch] --backup - Push with backup');
-    console.log('  npm run git:push feature [name] - Create feature branch');
-    process.exit(0);
+  } catch (err) {
+    console.error(`\nDeployment failed: ${err.message}`);
+    process.exit(1);
+  }
 }
+
+/**
+ * Main entry point for the git-push script.
+ * Parses command-line arguments and dispatches to the appropriate action handler.
+ * Usage: node scripts/git-push.js [setup|push|feature <name>|deploy]
+ */
+function main() {
+  const args = process.argv.slice(2);
+  const action = args[0] || 'push';
+
+  const validActions = ['setup', 'push', 'feature', 'deploy'];
+
+  if (!validActions.includes(action)) {
+    console.error('Usage: node scripts/git-push.js [setup|push|feature|deploy]');
+    console.error('');
+    console.error('  setup    - Initialize git repo and set GitHub remote');
+    console.error('  push     - Stage, commit with timestamp, and push current branch');
+    console.error('  feature  - Create a new feature branch (add branch name as second arg)');
+    console.error('  deploy   - Push to main branch for deployment');
+    process.exit(1);
+  }
+
+  switch (action) {
+    case 'setup':
+      setupGit();
+      break;
+    case 'push':
+      pushChanges();
+      break;
+    case 'feature':
+      createFeatureBranch(args[1]);
+      break;
+    case 'deploy':
+      deploy();
+      break;
+  }
+}
+
+main();

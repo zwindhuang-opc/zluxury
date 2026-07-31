@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/i18n/useTranslation'
-import { getProductById } from '@/data/products'
+import { getProductById, getProducts } from '@/data/products'
 import { CartService } from '@/data/cart'
 
 interface ProductDetail {
@@ -54,6 +54,90 @@ const getCategoryEmoji = (category: string): string => {
         'Yachts': '⛵'
     }
     return emojis[category] || '✨'
+}
+
+/**
+ * RelatedProductsSection - Displays related products filtered by category
+ * Falls back to top products if insufficient category matches
+ *
+ * @param props - Component props
+ * @param props.currentProductId - ID of the current product to exclude
+ * @param props.category - Product category for filtering
+ * @param props.formatPrice - Price formatting function
+ */
+function RelatedProductsSection({
+    currentProductId,
+    category,
+    formatPrice
+}: {
+    currentProductId: string;
+    category: string;
+    formatPrice: (price: number, currency?: string) => string;
+}) {
+    const allProducts = getProducts();
+
+    /** Filter products in the same category, excluding current product */
+    const sameCategoryProducts = allProducts.filter(
+        (p) => p.id !== currentProductId && p.category === category
+    );
+
+    /** Fallback: top rated products if not enough category matches */
+    const fallbackProducts = allProducts
+        .filter((p) => p.id !== currentProductId)
+        .sort((a, b) => b.rating - a.rating);
+
+    const relatedProducts = (sameCategoryProducts.length >= 4
+        ? sameCategoryProducts
+        : sameCategoryProducts.length > 0
+            ? [...sameCategoryProducts, ...fallbackProducts.filter(
+                (p) => !sameCategoryProducts.find((sp) => sp.id === p.id)
+            )]
+            : fallbackProducts
+    ).slice(0, 4);
+
+    if (relatedProducts.length === 0) {
+        return (
+            <div className="text-center py-12 text-zl-text-muted">
+                <p>No related products available at this time.</p>
+                <Link href="/products" className="premium-button inline-block mt-4 px-6 py-2 rounded-lg">
+                    Browse All Products
+                </Link>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {relatedProducts.map((p) => (
+                <Link key={p.id} href={`/product/${p.id}`} className="group">
+                    <div className="luxury-card rounded-xl overflow-hidden">
+                        <div className="aspect-square bg-zl-dark-3 flex items-center justify-center">
+                            {p.imageUrl ? (
+                                <img
+                                    src={p.imageUrl}
+                                    alt={p.name}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    referrerPolicy="no-referrer"
+                                />
+                            ) : (
+                                <svg width="80" height="80" viewBox="0 0 100 100" opacity="0.5">
+                                    <circle cx="50" cy="50" r="45" stroke="#D4AF37" strokeWidth="2" fill="none" />
+                                    <rect x="42" y="35" width="16" height="30" rx="2" fill="#D4AF37" />
+                                </svg>
+                            )}
+                        </div>
+                        <div className="p-4">
+                            <p className="text-sm text-zl-text-muted truncate">{p.brand}</p>
+                            <p className="font-semibold truncate">{p.name}</p>
+                            <p className="text-sm text-zl-accent mt-1">
+                                {formatPrice(p.price, p.currency)}
+                            </p>
+                        </div>
+                    </div>
+                </Link>
+            ))}
+        </div>
+    );
 }
 
 export default function ProductDetailClient({ productId }: { productId: string }) {
@@ -376,7 +460,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                                 <span className="text-zl-text-muted">Trend:</span>
                                                 <span className={`ml-2 ${product.auctionData.priceTrend === 'up' ? 'text-green-400' :
                                                     product.auctionData.priceTrend === 'down' ? 'text-red-400' :
-                                                    'text-yellow-400'
+                                                        'text-yellow-400'
                                                     }`}>
                                                     {product.auctionData.priceTrend === 'up' ? '↑ Rising' :
                                                         product.auctionData.priceTrend === 'down' ? '↓ Falling' :
@@ -555,24 +639,11 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                 <section className="mt-20">
                     <h2 className="text-2xl font-bold font-montserrat mb-8">You May Also Like</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map((i) => (
-                            <Link key={i} href="#" className="group">
-                                <div className="luxury-card rounded-xl overflow-hidden">
-                                    <div className="aspect-square bg-zl-dark-3 flex items-center justify-center">
-                                        <svg width="80" height="80" viewBox="0 0 100 100" opacity="0.5">
-                                            <circle cx="50" cy="50" r="45" stroke="#D4AF37" strokeWidth="2" fill="none" />
-                                            <rect x="42" y="35" width="16" height="30" rx="2" fill="#D4AF37" />
-                                        </svg>
-                                    </div>
-                                    <div className="p-4">
-                                        <p className="text-sm text-zl-text-muted truncate">Related Product {i}</p>
-                                        <p className="font-semibold">$XX,XXX</p>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                    <RelatedProductsSection
+                        currentProductId={product.id}
+                        category={product.category}
+                        formatPrice={formatPrice}
+                    />
                 </section>
             </div>
         </main>

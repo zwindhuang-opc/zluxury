@@ -24,9 +24,14 @@ module.exports = {
         'zl-error': '#C62828',
       },
       fontFamily: {
-        montserrat: ['Montserrat', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
-        playfair: ['Playfair Display', 'serif'],
+        montserrat: ['var(--font-montserrat)', 'Montserrat', 'sans-serif'],
+        inter: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        playfair: ['var(--font-playfair)', 'Playfair Display', 'serif'],
+        cormorant: ['var(--font-cormorant)', 'Cormorant Garamond', 'serif'],
+        notoSans: ['var(--font-noto-sans-sc)', 'Noto Sans SC', 'sans-serif'],
+        notoSansSC: ['var(--font-noto-sans-sc)', 'Noto Sans SC', 'sans-serif'],
+        notoSerif: ['var(--font-noto-serif-sc)', 'Noto Serif SC', 'serif'],
+        notoSansSerif: ['var(--font-noto-serif-sc)', 'Noto Serif SC', 'serif'],
       },
       backgroundImage: {
         'gradient-luxury': 'linear-gradient(135deg, #00B4D8 0%, #0096C7 50%, #006D8F 100%)',

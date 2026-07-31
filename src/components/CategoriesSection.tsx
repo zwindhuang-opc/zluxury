@@ -1,10 +1,36 @@
+/**
+ * CategoriesSection Component - Luxury category showcase with grid layout
+ * 
+ * Design inspired by:
+ * - Cartier: Category-based product navigation
+ * - Tiffany & Co.: Elegant product categorization
+ * - Bulgari: Artistic category presentation
+ * 
+ * Features:
+ * - 8 luxury product categories with real images
+ * - Category emoji icons for quick recognition
+ * - Brand listings per category
+ * - Hover animations with framer-motion
+ * - Multi-language support via translation keys
+ * - Product count display for each category
+ * 
+ * @module CategoriesSection
+ * @version 1.3.0
+ */
+
 'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useTranslation } from '@/i18n/useTranslation'
 
-// Helper function to get emoji based on category ID / 根据分类ID获取表情符号的辅助函数
+/**
+ * Helper function to get emoji based on category ID
+ * Returns a Unicode emoji matching the product category for visual enhancement
+ * 
+ * @param categoryId - The category identifier (e.g., 'watches', 'jewelry')
+ * @returns Unicode emoji string for the category, or default sparkle emoji
+ */
 const getCategoryEmoji = (categoryId: string): string => {
   const emojis: Record<string, string> = {
     'watches': '⌚',
@@ -27,7 +53,7 @@ const categories = [
     color: '#00B4D8',
     count: 2500,
     brands: ['Rolex', 'Patek Philippe', 'Omega', 'Cartier', 'IWC'],
-    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury Swiss watches collection gold platinum display pedestal dramatic studio lighting")}&image_size=landscape_4_3`
   },
   {
     id: 'jewelry',
@@ -36,7 +62,7 @@ const categories = [
     color: '#D4AF37',
     count: 3200,
     brands: ['Tiffany', 'Cartier', 'Van Cleef', 'Bulgari', 'Harry Winston'],
-    imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Fine diamond jewelry collection precious gemstone display luxury showcase dramatic lighting")}&image_size=landscape_4_3`
   },
   {
     id: 'fashion',
@@ -45,7 +71,7 @@ const categories = [
     color: '#00B4D8',
     count: 8000,
     brands: ['Louis Vuitton', 'Gucci', 'Chanel', 'Dior', 'Prada'],
-    imageUrl: 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Haute couture luxury fashion apparel elegant runway editorial premium fabric")}&image_size=landscape_4_3`
   },
   {
     id: 'bags',
@@ -54,7 +80,7 @@ const categories = [
     color: '#D4AF37',
     count: 4500,
     brands: ['Hermès', 'Louis Vuitton', 'Chanel', 'Gucci', 'Bottega Veneta'],
-    imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury designer handbag collection leather exotic skin display elegant boutique lighting")}&image_size=landscape_4_3`
   },
   {
     id: 'art',
@@ -63,7 +89,7 @@ const categories = [
     color: '#00B4D8',
     count: 1200,
     brands: ["Sotheby's", "Christie's", 'Gallery Partners'],
-    imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Fine art masterpiece painting sculpture gallery exhibition museum quality display")}&image_size=landscape_4_3`
   },
   {
     id: 'cars',
@@ -72,7 +98,7 @@ const categories = [
     color: '#D4AF37',
     count: 800,
     brands: ['Ferrari', 'Lamborghini', 'Porsche', 'Bentley', 'Rolls-Royce'],
-    imageUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Exotic luxury sports car collection supercar showroom dramatic studio lighting")}&image_size=landscape_4_3`
   },
   {
     id: 'real-estate',
@@ -81,7 +107,7 @@ const categories = [
     color: '#00B4D8',
     count: 500,
     brands: ["Sotheby's Realty", "Christie's Realty"],
-    imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury real estate mansion villa property elegant architecture interior design")}&image_size=landscape_4_3`
   },
   {
     id: 'yachts',
@@ -90,12 +116,12 @@ const categories = [
     color: '#D4AF37',
     count: 150,
     brands: ['Azimut', 'Benetti', 'Sunseeker', 'Feadship'],
-    imageUrl: 'https://images.unsplash.com/photo-1567899378494-00b15b55c073?w=400&q=80'
+    imageUrl: `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury superyacht sailing yacht collection Mediterranean ocean sunset elegant")}&image_size=landscape_4_3`
   }
 ]
 
-const CategoryIcon = ({ categoryId }: { categoryId: string }) => {
-  const icons: Record<string, React.ReactNode> = {
+const CategoryIcon = ({ categoryId }: { categoryId: string }): JSX.Element | null => {
+  const icons: Record<string, JSX.Element> = {
     watches: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="10" />

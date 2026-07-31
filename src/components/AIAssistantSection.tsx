@@ -1,3 +1,24 @@
+/**
+ * AIAssistantSection Component - Interactive AI assistant chat interface
+ * 
+ * Design inspired by:
+ * - Claude Code: Multi-agent orchestration pattern
+ * - OpenClaw: Real-time automation feedback
+ * - Hermes Agent: Luxury recommendation specialist
+ * - ZUnicorn Agent: Multi-agent loop engineering
+ * 
+ * Features:
+ * - Multi-agent system (Hermes, Unicorn, OpenClaw, ClaudeCode)
+ * - Real-time chat interface with typing animations
+ * - Agent-specific response templates and suggestions
+ * - Logger integration for debugging
+ * - Suggested follow-up actions for each response
+ * - framer-motion animations for UI transitions
+ * 
+ * @module AIAssistantSection
+ * @version 2.0.0
+ */
+
 'use client'
 
 import { useState, useEffect } from 'react'

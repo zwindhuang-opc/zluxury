@@ -12,21 +12,21 @@ import { Product, ProductRepository } from '@/data/products'
 
 // Brand-matched images for fallback
 const BRAND_IMAGES: Record<string, string> = {
-  'PROD-001': 'https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80',
-  'PROD-002': 'https://images.unsplash.com/photo-1524592094714-0f06ad4d40e8?w=800&q=80',
-  'PROD-003': 'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=800&q=80',
-  'PROD-004': 'https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=800&q=80',
-  'PROD-005': 'https://images.unsplash.com/photo-1566168541886-d06c0873b11f?w=800&q=80',
-  'PROD-006': 'https://images.unsplash.com/photo-1594224424497-4c0fbd81d5e5?w=800&q=80',
-  'PROD-007': 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
-  'PROD-008': 'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=800&q=80',
-  'PROD-009': 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
-  'PROD-010': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
-  'PROD-011': 'https://images.unsplash.com/photo-1599643478518-a784e5a4bd8f?w=800&q=80',
-  'PROD-012': 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80',
-  'PROD-013': 'https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=800&q=80',
-  'PROD-014': 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80',
-  'PROD-015': 'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=800&q=80'
+  'PROD-001': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Rolex Submariner luxury diver watch stainless steel gold product photography studio dramatic lighting")}&image_size=square_hd`,
+  'PROD-002': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Patek Philippe Nautilus luxury watch blue dial steel gold elegant studio product photography")}&image_size=square_hd`,
+  'PROD-003': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Omega Speedmaster professional chronograph luxury moonwatch dramatic studio product photography")}&image_size=square_hd`,
+  'PROD-004': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Audemars Piguet Royal Oak luxury watch steel octagonal bezel elegant studio product")}&image_size=square_hd`,
+  'PROD-005': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Hermes Birkin luxury handbag leather gold hardware exclusive product photography")}&image_size=square_hd`,
+  'PROD-006': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Hermes Kelly luxury designer handbag leather gold clasp elegant studio product")}&image_size=square_hd`,
+  'PROD-007': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Louis Vuitton Capucines luxury designer handbag leather monogram elegant product photography")}&image_size=square_hd`,
+  'PROD-008': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Chanel Classic Flap luxury handbag quilted leather gold chain elegant product photography")}&image_size=square_hd`,
+  'PROD-009': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Cartier Love bracelet luxury jewelry gold diamond elegant product photography")}&image_size=square_hd`,
+  'PROD-010': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Van Cleef Arpels Alhambra luxury jewelry motif gold mother of pearl elegant studio")}&image_size=square_hd`,
+  'PROD-011': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Tiffany T Wire luxury diamond jewelry gold elegant studio product photography")}&image_size=square_hd`,
+  'PROD-012': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Bulgari Serpenti luxury jewelry snake motif gold diamond elegant product photography")}&image_size=square_hd`,
+  'PROD-013': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Gucci GG belt luxury designer fashion accessory leather gold buckle product photography")}&image_size=square_hd`,
+  'PROD-014': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Prada Nylon luxury designer fashion bag accessory elegant product photography")}&image_size=square_hd`,
+  'PROD-015': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Dior Saddle luxury designer handbag fashion elegant product photography studio")}&image_size=square_hd`
 }
 
 interface CategoryPageClientProps {
@@ -203,7 +203,7 @@ export default function CategoryPageClient({
 
                     <div className="flex items-center justify-between">
                       <div className="text-xl font-bold font-montserrat text-zl-text">
-                        {formatPrice(product.priceCny || product.price * 7.24)}
+                        {formatPrice(product.priceCny || product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'))}
                       </div>
 
                       <div className="flex items-center gap-1">

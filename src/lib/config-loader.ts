@@ -281,8 +281,8 @@ export function loadConfig(): ZLuxuryConfig {
             name: env('APP_NAME', 'ZLuxury'),
             version: env('APP_VERSION', '2.0.0'),
             environment: (env('NODE_ENV', 'development') as any) || 'development',
-            port: envNumber('PORT', 13153),
-            baseUrl: env('APP_URL', 'http://localhost:13153'),
+            port: envNumber('PORT', 19000),
+            baseUrl: env('APP_URL', 'http://localhost:19000'),
             apiBaseUrl: '/api',
         },
 

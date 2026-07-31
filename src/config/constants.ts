@@ -19,31 +19,63 @@
 export const APP_CONFIG = {
   /** Application name / 应用名称 */
   name: 'ZLuxury',
-  
+
   /** Application version / 应用版本 */
   version: '1.0.0',
-  
+
   /** Environment mode (development, production, staging) / 环境模式 */
   environment: process.env.NODE_ENV || 'development',
-  
+
   /** Base URL for API calls / API基础URL */
   apiBaseUrl: process.env.NEXT_PUBLIC_API_URL || '/api',
-  
+
   /** Default language code / 默认语言代码 */
   defaultLanguage: 'zh-CN' as const,
-  
+
   /** Supported languages / 支持的语言 */
   supportedLanguages: ['en', 'zh-CN', 'zh-TW'] as const,
-  
+
   /** Items per page for pagination / 每页项目数 */
   itemsPerPage: 12,
-  
+
   /** Maximum upload size in bytes / 最大上传大小（字节） */
   maxUploadSize: 10 * 1024 * 1024, // 10MB
-  
+
   /** Session timeout in minutes / 会话超时时间（分钟） */
   sessionTimeout: 30,
 }
+
+// ============================================================================
+// EXCHANGE RATE CONFIG / 汇率配置
+// ============================================================================
+
+/**
+ * USD to CNY exchange rate (centralized to eliminate hardcoded 7.24)
+ * Loaded from environment variable FALLBACK_EXCHANGE_RATE_USD_CNY
+ * Falls back to 7.24 if environment variable is not set
+ * 
+ * Usage:
+ *   import { EXCHANGE_RATES } from '@/config/constants'
+ *   const cnyPrice = product.price * EXCHANGE_RATES.USD_TO_CNY
+ */
+export const EXCHANGE_RATES = {
+  /** USD to CNY conversion rate / 美元兑人民币汇率 */
+  USD_TO_CNY: parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'),
+  /** EUR to CNY conversion rate / 欧元兑人民币汇率 */
+  EUR_TO_CNY: parseFloat(process.env.EXCHANGE_RATE_EUR || '7.78'),
+  /** GBP to CNY conversion rate / 英镑兑人民币汇率 */
+  GBP_TO_CNY: parseFloat(process.env.EXCHANGE_RATE_GBP || '9.32'),
+  /** JPY to CNY conversion rate / 日元兑人民币汇率 */
+  JPY_TO_CNY: parseFloat(process.env.EXCHANGE_RATE_JPY || '0.047'),
+  /** HKD to CNY conversion rate / 港币兑人民币汇率 */
+  HKD_TO_CNY: parseFloat(process.env.EXCHANGE_RATE_HKD || '0.915'),
+} as const;
+
+/**
+ * Helper: Get USD to CNY rate. Runtime-accessible getter for use in functions.
+ * @returns Current USD to CNY exchange rate from config/env
+ */
+export const getUsdToCnyRate = (): number => EXCHANGE_RATES.USD_TO_CNY;
 
 // ============================================================================
 // THEME & STYLING CONFIG / 主题和样式配置
@@ -58,7 +90,7 @@ export const COLORS = {
   accent: '#D4AF37',
   accentHover: '#E6C55A',
   accentLight: 'rgba(212, 175, 55, 0.1)',
-  
+
   // Background colors / 背景色
   background: {
     primary: '#0a0a0a',      // Main background / 主背景
@@ -66,7 +98,7 @@ export const COLORS = {
     tertiary: '#1a1a1a',      // Tertiary background / 第三背景
     card: '#161616',          // Card background / 卡片背景
   },
-  
+
   // Text colors / 文本色
   text: {
     primary: '#ffffff',       // Primary text / 主要文本
@@ -74,7 +106,7 @@ export const COLORS = {
     muted: '#888888',         // Muted text / 弱化文本
     link: '#D4AF37',          // Link text / 链接文本
   },
-  
+
   // Status colors / 状态色
   status: {
     success: '#22c55e',       // Success / 成功
@@ -82,7 +114,7 @@ export const COLORS = {
     warning: '#f59e0b',       // Warning / 警告
     info: '#3b82f6',          // Info / 信息
   },
-  
+
   // Border colors / 边框色
   border: {
     light: 'rgba(255, 255, 255, 0.1)',

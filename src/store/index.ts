@@ -411,7 +411,7 @@ export const useZLuxuryStore = create<ZLuxuryStore>()(
         const totals = get().cartItems.reduce(
           (acc, item) => ({
             usd: acc.usd + item.price * item.quantity,
-            cny: acc.cny + (item.priceCny || item.price * 7.24) * item.quantity
+            cny: acc.cny + (item.priceCny || item.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24')) * item.quantity
           }),
           { usd: 0, cny: 0 }
         )

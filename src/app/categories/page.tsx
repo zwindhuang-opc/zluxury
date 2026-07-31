@@ -27,22 +27,22 @@ import { CategoryRepository, Category } from '@/data/products'
 // ============================================================================
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  'watches': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80',
-  'jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80',
-  'fashion': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80',
-  'bags': 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80',
-  'art': 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80',
-  'cars': 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80',
-  'real-estate': 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80',
-  'yachts': 'https://images.unsplash.com/photo-1567899378494-00b15b55c073?w=600&q=80',
+  'watches': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury Swiss watches collection gold platinum display pedestal dramatic studio lighting")}&image_size=landscape_4_3`,
+  'jewelry': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Fine diamond jewelry collection precious gemstone display luxury showcase dramatic lighting")}&image_size=landscape_4_3`,
+  'fashion': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Haute couture luxury fashion apparel elegant runway editorial premium fabric")}&image_size=landscape_4_3`,
+  'bags': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury designer handbag collection leather exotic skin display elegant boutique lighting")}&image_size=landscape_4_3`,
+  'art': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Fine art masterpiece painting sculpture gallery exhibition museum quality display")}&image_size=landscape_4_3`,
+  'cars': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Exotic luxury sports car collection supercar showroom dramatic studio lighting")}&image_size=landscape_4_3`,
+  'real-estate': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury real estate mansion villa property elegant architecture interior design")}&image_size=landscape_4_3`,
+  'yachts': `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury superyacht sailing yacht collection Mediterranean ocean sunset elegant")}&image_size=landscape_4_3`,
 }
 
 // ============================================================================
 // CATEGORY ICONS
 // ============================================================================
 
-const CategoryIcon = ({ categoryId }: { categoryId: string }) => {
-  const icons: Record<string, React.ReactNode> = {
+const CategoryIcon = ({ categoryId }: { categoryId: string }): JSX.Element | null => {
+  const icons: Record<string, JSX.Element> = {
     watches: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="10" />
