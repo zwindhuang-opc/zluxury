@@ -329,7 +329,11 @@ async function main() {
 
   // Step 4: Create tree
   console.log('\nStep 4: Creating tree...');
-  const baseTreeSha = getTreeSha(diffBase);
+  // Fetch the remote commit's tree SHA via API (local tree SHA may not exist on GitHub)
+  console.log('  Fetching remote tree SHA via API...');
+  const remoteCommit = ghApi(`repos/${SLUG}/git/commits/${remoteSha}`);
+  const baseTreeSha = remoteCommit.tree.sha;
+  console.log(`  Base tree: ${baseTreeSha.substring(0, 12)}`);
   const newTreeSha = createTree(baseTreeSha, treeEntries);
   console.log(`  Tree: ${newTreeSha.substring(0, 12)}`);
 
