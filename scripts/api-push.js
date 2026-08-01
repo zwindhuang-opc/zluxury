@@ -278,7 +278,18 @@ async function main() {
 
   // Step 2: Get changed files
   console.log('\nStep 2: Computing diff...');
-  const changedFiles = getChangedFiles(remoteSha, localHead);
+  let changedFiles;
+  let diffBase = remoteSha;
+  try {
+    changedFiles = getChangedFiles(remoteSha, localHead);
+  } catch {
+    // Remote SHA doesn't exist locally (was created via API).
+    // Fall back to diffing against HEAD~1 (the last synced local commit).
+    console.log(`  Remote SHA not in local db, falling back to HEAD~1...`);
+    diffBase = git('rev-parse HEAD~1');
+    changedFiles = getChangedFiles(diffBase, localHead);
+  }
+  console.log(`  Diff base: ${diffBase.substring(0, 12)}`);
   console.log(`  Changed files: ${changedFiles.length}`);
 
   if (changedFiles.length === 0) {
@@ -318,10 +329,8 @@ async function main() {
 
   // Step 4: Create tree
   console.log('\nStep 4: Creating tree...');
-  const remoteTreeSha = getTreeSha(remoteSha);
-  // Note: getTreeSha gets the LOCAL tree for that SHA. We need the REMOTE tree.
-  // Since the remote commit SHA exists locally (it's in our history), this works.
-  const newTreeSha = createTree(remoteTreeSha, treeEntries);
+  const baseTreeSha = getTreeSha(diffBase);
+  const newTreeSha = createTree(baseTreeSha, treeEntries);
   console.log(`  Tree: ${newTreeSha.substring(0, 12)}`);
 
   // Step 5: Create commit
