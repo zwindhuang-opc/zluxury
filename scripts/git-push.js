@@ -7,7 +7,7 @@ const { execSync } = require('child_process');
  * Used during the "setup" command to configure the origin remote.
  * @type {string}
  */
-const DEFAULT_REMOTE_URL = 'git@github.com:zwindhuang/zluxury.git';
+const DEFAULT_REMOTE_URL = 'https://github.com/zwindhuang-opc/zluxury.git';
 
 /**
  * Default branch name for deployment/production.

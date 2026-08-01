@@ -5,16 +5,16 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 /**
- * Default GitHub repository URL for the ZLuxury project (SSH format).
+ * Default GitHub repository URL for the ZLuxury project (HTTPS format).
  * @type {string}
  */
-const GITHUB_REMOTE_URL = 'git@github.com:zwindhuang/zluxury.git';
+const GITHUB_REMOTE_URL = 'https://github.com/zwindhuang-opc/zluxury.git';
 
 /**
  * Fallback HTTPS URL for GitHub (used when SSH is not configured).
  * @type {string}
  */
-const GITHUB_HTTPS_URL = 'https://github.com/zwindhuang/zluxury.git';
+const GITHUB_HTTPS_URL = 'https://github.com/zwindhuang-opc/zluxury.git';
 
 /**
  * Default deployment/production branch name.
