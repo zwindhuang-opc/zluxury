@@ -1,27 +1,265 @@
-/**
- * ZLuxury Configuration Loader
- * 
- * Centralized configuration management system.
- * Loads settings from environment variables with sensible defaults.
- * Eliminates hardcoded values across the entire application.
- * 
- * Features:
- * - Environment variable loading with type safety
- * - Validation of required config values
- * - Feature flag management
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  * - Runtime configuration updates
- * 
+    * 
  * Usage:
  *   import { config } from '@/lib/config-loader'
  *   
  *   const rate = config.exchangeRate.usdToCny
- *   const port = config.app.port
- *   const isAuthEnabled = config.features.userAuthentication
- * 
+    *   const port = config.app.port
+        *   const isAuthEnabled = config.features.userAuthentication
+            * 
  * Architecture: Configuration Layer
  * Version: 2.0.0
- * Last Updated: 2025-06-13
- */
+    * Last Updated: 2025-06 - 13
+        */
 
 // ============================================================================
 // TYPE DEFINITIONS / 类型定义
@@ -280,121 +518,121 @@ export function loadConfig(): ZLuxuryConfig {
         app: {
             name: env('APP_NAME', 'ZLuxury'),
             version: env('APP_VERSION', '2.0.0'),
-            environment: (env('NODE_ENV', 'development') as any) || 'development',
-            port: envNumber('PORT', 19000),
+| environment: (env('NODE_ENV', 'development') as any) || 'development',
+        port: envNumber('PORT', 19000),
             baseUrl: env('APP_URL', 'http://localhost:19000'),
-            apiBaseUrl: '/api',
+                apiBaseUrl: '/api',
         },
 
-        // ------------------------------------------------------------------
-        // DATABASE SETTINGS / 数据库设置
-        // ------------------------------------------------------------------
-        database: {
-            url: env('DATABASE_URL', 'postgresql://localhost:5432/zluxury'),
-            redisUrl: env('REDIS_URL', 'redis://localhost:6379'),
+// ------------------------------------------------------------------
+// DATABASE SETTINGS / 数据库设置
+// ------------------------------------------------------------------
+database: {
+    url: env('DATABASE_URL', 'postgresql://localhost:5432/zluxury'),
+        redisUrl: env('REDIS_URL', 'redis://localhost:6379'),
             useMockData: envBool('USE_MOCK_DATA', true),
         },
 
-        // ------------------------------------------------------------------
-        // EXCHANGE RATE SETTINGS / 汇率设置
-        // ------------------------------------------------------------------
-        exchangeRate: {
-            provider: env('EXCHANGE_RATE_PROVIDER', 'mock'),
-            apiKey: env('EXCHANGE_RATE_API_KEY', ''),
+// ------------------------------------------------------------------
+// EXCHANGE RATE SETTINGS / 汇率设置
+// ------------------------------------------------------------------
+exchangeRate: {
+    provider: env('EXCHANGE_RATE_PROVIDER', 'mock'),
+        apiKey: env('EXCHANGE_RATE_API_KEY', ''),
             cacheMinutes: envNumber('EXCHANGE_RATE_CACHE_MINUTES', 60),
-            usdToCnyFallback: envNumber('FALLBACK_EXCHANGE_RATE_USD_CNY', 7.24),
-            currentUsdToCny: envNumber('FALLBACK_EXCHANGE_RATE_USD_CNY', 7.24),
-            usd: envNumber('EXCHANGE_RATE_USD', 7.24),
-            eur: envNumber('EXCHANGE_RATE_EUR', 7.78),
-            gbp: envNumber('EXCHANGE_RATE_GBP', 9.32),
-            jpy: envNumber('EXCHANGE_RATE_JPY', 0.047),
-            hkd: envNumber('EXCHANGE_RATE_HKD', 0.915),
+                usdToCnyFallback: envNumber('FALLBACK_EXCHANGE_RATE_USD_CNY', 7.24),
+                    currentUsdToCny: envNumber('FALLBACK_EXCHANGE_RATE_USD_CNY', 7.24),
+                        usd: envNumber('EXCHANGE_RATE_USD', 7.24),
+                            eur: envNumber('EXCHANGE_RATE_EUR', 7.78),
+                                gbp: envNumber('EXCHANGE_RATE_GBP', 9.32),
+                                    jpy: envNumber('EXCHANGE_RATE_JPY', 0.047),
+                                        hkd: envNumber('EXCHANGE_RATE_HKD', 0.915),
         },
 
-        // ------------------------------------------------------------------
-        // TAX RATES (Chinese Customs) / 税率设置（中国海关）
-        // ------------------------------------------------------------------
-        tax: {
-            importDutyRate: envNumber('DEFAULT_IMPORT_DUTY_RATE', 0.20),     // 20% average luxury goods duty
-            vatRate: envNumber('DEFAULT_VAT_RATE', 0.13),                    // 13% VAT in China
+// ------------------------------------------------------------------
+// TAX RATES (Chinese Customs) / 税率设置（中国海关）
+// ------------------------------------------------------------------
+tax: {
+    importDutyRate: envNumber('DEFAULT_IMPORT_DUTY_RATE', 0.20),     // 20% average luxury goods duty
+        vatRate: envNumber('DEFAULT_VAT_RATE', 0.13),                    // 13% VAT in China
             consumptionTaxRate: envNumber('DEFAULT_CONSUMPTION_TAX_RATE', 0.10), // 10% consumption tax on luxury items
-            personalCarryAllowanceCny: envNumber('PERSONAL_CARRY_ALLOWANCE_CNY', 50000), // ¥50K/year personal allowance
+                personalCarryAllowanceCny: envNumber('PERSONAL_CARRY_ALLOWANCE_CNY', 50000), // ¥50K/year personal allowance
         },
 
-        // ------------------------------------------------------------------
-        // SHIPPING SETTINGS / 物流设置
-        // ------------------------------------------------------------------
-        shipping: {
-            freeThreshold: envNumber('FREE_SHIPPING_THRESHOLD', 1000),       // Free shipping over ¥1000 CNY
-            defaultWarehouse: env('DEFAULT_WAREHOUSE', 'SHANGHAI_FTZ'),      // Shanghai Free Trade Zone
+// ------------------------------------------------------------------
+// SHIPPING SETTINGS / 物流设置
+// ------------------------------------------------------------------
+shipping: {
+    freeThreshold: envNumber('FREE_SHIPPING_THRESHOLD', 1000),       // Free shipping over ¥1000 CNY
+        defaultWarehouse: env('DEFAULT_WAREHOUSE', 'SHANGHAI_FTZ'),      // Shanghai Free Trade Zone
         },
 
-        // ------------------------------------------------------------------
-        // PRICING SETTINGS / 定价设置
-        // ------------------------------------------------------------------
-        pricing: {
-            targetMargin: envNumber('PRICING_TARGET_MARGIN', 0.30),
-            vipDiscountRates: {
-                standard: envNumber('VIP_DISCOUNT_STANDARD', 0.0),
-                silver: envNumber('VIP_DISCOUNT_SILVER', 0.03),
+// ------------------------------------------------------------------
+// PRICING SETTINGS / 定价设置
+// ------------------------------------------------------------------
+pricing: {
+    targetMargin: envNumber('PRICING_TARGET_MARGIN', 0.30),
+        vipDiscountRates: {
+        standard: envNumber('VIP_DISCOUNT_STANDARD', 0.0),
+            silver: envNumber('VIP_DISCOUNT_SILVER', 0.03),
                 gold: envNumber('VIP_DISCOUNT_GOLD', 0.07),
-                platinum: envNumber('VIP_DISCOUNT_PLATINUM', 0.12),
-                black: envNumber('VIP_DISCOUNT_BLACK', 0.15),
-                diamond: envNumber('VIP_DISCOUNT_DIAMOND', 0.22),
+                    platinum: envNumber('VIP_DISCOUNT_PLATINUM', 0.12),
+                        black: envNumber('VIP_DISCOUNT_BLACK', 0.15),
+                            diamond: envNumber('VIP_DISCOUNT_DIAMOND', 0.22),
             },
-            shippingCostsPerChannel: {
-                personalCarry: envNumber('SHIPPING_PERSONAL_CARRY', 0),
-                hkDirect: {
-                    low: envNumber('SHIPPING_HK_DIRECT_LOW', 80),
-                    high: envNumber('SHIPPING_HK_DIRECT_HIGH', 200),
+    shippingCostsPerChannel: {
+        personalCarry: envNumber('SHIPPING_PERSONAL_CARRY', 0),
+            hkDirect: {
+            low: envNumber('SHIPPING_HK_DIRECT_LOW', 80),
+                high: envNumber('SHIPPING_HK_DIRECT_HIGH', 200),
                     threshold: envNumber('SHIPPING_HK_DIRECT_THRESHOLD', 30000),
                 },
-                bondedWarehouse: {
-                    low: envNumber('SHIPPING_BONDED_LOW', 50),
-                    high: envNumber('SHIPPING_BONDED_HIGH', 150),
+        bondedWarehouse: {
+            low: envNumber('SHIPPING_BONDED_LOW', 50),
+                high: envNumber('SHIPPING_BONDED_HIGH', 150),
                     threshold: envNumber('SHIPPING_BONDED_THRESHOLD', 50000),
                 },
-                japanAuction: envNumber('SHIPPING_JAPAN_AUCTION', 300),
-                europeBoutique: envNumber('SHIPPING_EUROPE_BOUTIQUE', 450),
+        japanAuction: envNumber('SHIPPING_JAPAN_AUCTION', 300),
+            europeBoutique: envNumber('SHIPPING_EUROPE_BOUTIQUE', 450),
                 default: envNumber('SHIPPING_DEFAULT', 100),
             },
-        },
+},
 
-        // ------------------------------------------------------------------
-        // FEATURE FLAGS / 功能开关
-        // ------------------------------------------------------------------
-        features: {
-            userAuthentication: envBool('ENABLE_USER_AUTHENTICATION', false),
-            shoppingCart: envBool('ENABLE_SHOPPING_CART', true),
+// ------------------------------------------------------------------
+// FEATURE FLAGS / 功能开关
+// ------------------------------------------------------------------
+features: {
+    userAuthentication: envBool('ENABLE_USER_AUTHENTICATION', false),
+        shoppingCart: envBool('ENABLE_SHOPPING_CART', true),
             checkout: envBool('ENABLE_CHECKOUT', false),
-            orderManagement: envBool('ENABLE_ORDER_MANAGEMENT', true),
-            adminDashboard: envBool('ENABLE_ADMIN_DASHBOARD', false),
-            productReviews: envBool('ENABLE_PRODUCT_REVIEWS', true),
-            wishlist: envBool('ENABLE_WISHLIST', true),
-            productComparison: envBool('ENABLE_PRODUCT_COMPARISON', true),
-            liveChat: envBool('ENABLE_LIVE_CHAT', false),
-            multiLanguage: envBool('ENABLE_MULTI_LANGUAGE', true),
-            currencySwitcher: envBool('ENABLE_CURRENCY_SWITCHER', true),
-            newsletter: envBool('ENABLE_NEWSLETTER', false),
-            aiAssistant: envBool('ENABLE_AI_ASSISTANT', true),
-            aiRecommendations: envBool('ENABLE_AI_RECOMMENDATIONS', true),
+                orderManagement: envBool('ENABLE_ORDER_MANAGEMENT', true),
+                    adminDashboard: envBool('ENABLE_ADMIN_DASHBOARD', false),
+                        productReviews: envBool('ENABLE_PRODUCT_REVIEWS', true),
+                            wishlist: envBool('ENABLE_WISHLIST', true),
+                                productComparison: envBool('ENABLE_PRODUCT_COMPARISON', true),
+                                    liveChat: envBool('ENABLE_LIVE_CHAT', false),
+                                        multiLanguage: envBool('ENABLE_MULTI_LANGUAGE', true),
+                                            currencySwitcher: envBool('ENABLE_CURRENCY_SWITCHER', true),
+                                                newsletter: envBool('ENABLE_NEWSLETTER', false),
+                                                    aiAssistant: envBool('ENABLE_AI_ASSISTANT', true),
+                                                        aiRecommendations: envBool('ENABLE_AI_RECOMMENDATIONS', true),
         },
 
-        // ------------------------------------------------------------------
-        // LOGGING SETTINGS / 日志设置
-        // ------------------------------------------------------------------
-        logging: {
-            level: env('LOG_LEVEL', 'debug'),
-            directory: env('LOG_DIR', './logs'),
+// ------------------------------------------------------------------
+// LOGGING SETTINGS / 日志设置
+// ------------------------------------------------------------------
+logging: {
+    level: env('LOG_LEVEL', 'debug'),
+        directory: env('LOG_DIR', './logs'),
         },
 
-        environment: env('NODE_ENV', 'development'),
+environment: env('NODE_ENV', 'development'),
     };
 
-    // Validate critical configuration
-    validateConfig(config);
+// Validate critical configuration
+validateConfig(config);
 
-    return config;
+return config;
 }
 
 /**
