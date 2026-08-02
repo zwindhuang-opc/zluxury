@@ -8,7 +8,8 @@
     "about": "About",
     "signIn": "Sign In",
     "vipAccess": "VIP Access",
-    "searchPlaceholder": "Search luxury products, brands, collections..."
+    "searchPlaceholder": "Search luxury products, brands, collections...",
+    "cart": "Shopping Bag"
   },
   "hero": {
     "badge": "AI-Powered Luxury Platform",
@@ -28,7 +29,10 @@
       "diamond": "Fine Diamond",
       "bag": "Designer Bag",
       "jewelry": "High Jewelry"
-    }
+    },
+    "exclusiveCollection": "Exclusive Collection",
+    "curatedSelection": "Curated selection from Rolex, Hermès, Cartier & more",
+    "imageAlt": "Luxury curated collection - fine watches, diamond jewelry & designer handbags in elegant boutique display"
   },
   "ai": {
     "badge": "AI Powered",
@@ -44,6 +48,8 @@
   "products": {
     "title": "Curated Selection",
     "subtitle": "Discover Your Exclusive Luxury",
+    "featured": "Featured Products",
+    "featuredSubtitle": "Curated selection with HK/Europe/Japan sourcing • Save up to 30% vs China retail",
     "viewDetails": "View Details",
     "viewAll": "Browse All Products",
     "addToCart": "Add to Bag",
@@ -51,7 +57,74 @@
     "limited": "Limited Edition",
     "newArrival": "New Arrival",
     "investmentGrade": "Investment Grade",
-    "auction": "Auction Piece"
+    "auction": "Auction Piece",
+    "loadingSelection": "Loading premium selection...",
+    "viewAllProducts": "View All Products",
+    "newBadge": "New",
+    "limitedBadge": "Limited",
+    "stockInStock": "In Stock",
+    "stockOnly": "Only {{count}} left",
+    "stockOnlyLeft": "Only {{count}} left!",
+    "bestSourcingChannel": "Best Sourcing Channel",
+    "sourcingChannels": {
+      "hkDirect": "Hong Kong Direct",
+      "japanAuction": "Japan Auction",
+      "europeBoutique": "Europe Boutique",
+      "bondedWarehouse": "Shanghai FTZ Bonded",
+      "personalCarry": "Personal Carry"
+    },
+    "regularPrice": "Regular Price",
+    "vipPricing": "VIP Pricing",
+    "auctionData": "Auction Data",
+    "lastSold": "Last Sold:",
+    "auctionPrice": "Auction Price:",
+    "trend": "Trend:",
+    "trendUp": "↑ Rising",
+    "trendDown": "↓ Falling",
+    "trendStable": "→ Stable",
+    "quantity": "Quantity:",
+    "quantityAvailable": "({{count}} available)",
+    "outOfStock": "Out of Stock",
+    "wishlist": "♡ Wishlist",
+    "share": "Share",
+    "guarantees": {
+      "authenticity": "Authenticity Guaranteed",
+      "securePayment": "Secure Payment",
+      "insuredShipping": "Insured Shipping"
+    },
+    "tabs": {
+      "description": "Description",
+      "specs": "Specifications",
+      "reviews": "Reviews ({{count}})"
+    },
+    "craftsmanship": "Craftsmanship",
+    "craftsmanshipDesc": "Each piece is meticulously crafted by master artisans using traditional techniques passed down through generations. The attention to detail ensures exceptional quality and longevity.",
+    "investmentValue": "Investment Value",
+    "investmentValueDesc": "This piece represents not just a purchase, but an investment in timeless elegance. Luxury items from this collection have shown consistent appreciation over time.",
+    "verifiedPurchase": "Verified Purchase",
+    "viewAllReviews": "View all {{count}} reviews",
+    "loadMoreReviews": "Load More Reviews",
+    "youMayAlsoLike": "You May Also Like",
+    "allTitle": "All Products",
+    "allSubtitle": "Browse our complete collection of luxury pieces. From iconic timepieces to rare gemstones, each item is authenticated and sourced from reputable global channels.",
+    "searchPlaceholder": "Search by name, brand, or keyword...",
+    "filters": {
+      "allCategories": "All Categories",
+      "allBrands": "All Brands",
+      "sortByName": "Sort by Name",
+      "sortByPriceAsc": "Price: Low to High",
+      "sortByPriceDesc": "Price: High to Low",
+      "sortByRating": "Top Rated",
+      "sortByNewest": "Newest First",
+      "priceRange": "Price Range (USD):",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "clearFilters": "Clear Filters",
+      "showing": "Showing {{filtered}} of {{total}} products",
+      "noProducts": "No products found matching your criteria.",
+      "noProductsHint": "Try adjusting your filters or search terms.",
+      "loadingProducts": "Loading products..."
+    }
   },
   "categories": {
     "title": "Luxury Collections",
@@ -61,7 +134,66 @@
     "handbags": "Designer Handbags",
     "diamonds": "Fine Diamonds",
     "fragrances": "Luxury Fragrances",
-    "accessories": "Fine Accessories"
+    "accessories": "Fine Accessories",
+    "fashion": "Designer Fashion",
+    "art": "Fine Art",
+    "cars": "Luxury Automobiles",
+    "realEstate": "Exclusive Real Estate",
+    "yachts": "Luxury Yachts",
+    "pageTitle": "Product Categories",
+    "pageSubtitle": "Explore our curated selection of luxury categories. From haute horlogerie to fine art, discover the finest pieces from the world's most prestigious houses.",
+    "searchPlaceholder": "Search categories, brands, or styles...",
+    "showing": "Showing {{filtered}} of {{total}} categories",
+    "itemsCount": "{{count}} items",
+    "explore": "Explore",
+    "moreBrands": "+{{count}} more",
+    "noCategories": "No categories found matching \"{{query}}\".",
+    "clearSearch": "Clear Search",
+    "descriptions": {
+      "watches": "Timepieces from Rolex, Patek Philippe, Omega, and more",
+      "jewelry": "Diamonds, gemstones, and precious metals",
+      "handbags": "Handbags and accessories from top designers",
+      "fashion": "Haute couture and luxury apparel",
+      "art": "Original artworks and limited editions",
+      "cars": "Premium automobiles and exotic cars",
+      "realEstate": "Exclusive properties worldwide",
+      "yachts": "Superyachts and sailing vessels"
+    },
+    "imageAltSuffix": "curated collection image"
+  },
+  "collections": {
+    "title": "Luxury Collections",
+    "pageSubtitle": "Explore our meticulously curated collections, each telling a unique story of luxury, craftsmanship, and timeless elegance.",
+    "searchPlaceholder": "Search collections, brands, or styles...",
+    "sortByName": "Sort by Name",
+    "sortByProducts": "Sort by Products",
+    "sortByBrands": "Sort by Brands",
+    "showing": "Showing {{filtered}} of {{total}} collections",
+    "itemsCount": "{{count}} Items",
+    "moreBrands": "+{{count}} more",
+    "exploreCollection": "Explore Collection →",
+    "noCollections": "No collections found matching your criteria.",
+    "clearFilters": "Clear Filters",
+    "productsInCollection": "Products in Selected Collection",
+    "loadingProducts": "Loading products...",
+    "ctaTitle": "Can't Find What You're Looking For?",
+    "ctaSubtitle": "Our AI-powered concierge service can help you source rare and exclusive pieces from our global network of partners.",
+    "askAI": "Ask AI Assistant",
+    "contactConcierge": "Contact Concierge",
+    "timelessElegance": "Timeless Elegance",
+    "modernLuxe": "Modern Luxury",
+    "hauteHorlogerie": "Haute Horlogerie",
+    "rareGems": "Rare Gems & Jewelry",
+    "leatherCraftsmanship": "Leather Craftsmanship",
+    "limitedEditions": "Limited Editions",
+    "descriptions": {
+      "timelessElegance": "Classic pieces that transcend seasons and trends. Enduring designs from heritage houses.",
+      "modernLuxe": "Contemporary designs pushing boundaries of luxury fashion and accessories.",
+      "hauteHorlogerie": "Exceptional timepieces showcasing the pinnacle of watchmaking artistry.",
+      "rareGems": "Extraordinary gemstones and jewelry pieces for discerning collectors.",
+      "leatherCraftsmanship": "Master leather goods showcasing exceptional artisanal skills.",
+      "limitedEditions": "Exclusive pieces available in limited quantities for true connoisseurs."
+    }
   },
   "vip": {
     "title": "VIP Membership",
@@ -71,17 +203,244 @@
       "silver": "Silver Member",
       "gold": "Gold Member",
       "black": "Black Member",
-      "diamond": "Diamond Member"
+      "diamond": "Diamond Member",
+      "platinum": "Platinum Member"
     },
     "benefits": {
       "discount": "Exclusive Discount",
       "concierge": "One-on-One Concierge",
       "priority": "Priority Purchase",
       "events": "Private Event Invitations",
-      "investment": "Investment Advisory"
+      "investment": "Investment Advisory",
+      "earlyAccess": "Early access",
+      "prioritySupport": "Priority support",
+      "exclusiveEvents": "Exclusive events",
+      "personalShopper": "Personal shopper",
+      "whiteGlove": "White-glove service",
+      "privateCollections": "Private collections"
     },
     "join": "Become a Member",
     "upgrade": "Upgrade Membership"
+  },
+  "about": {
+    "title": "About ZLuxury",
+    "subtitle": "Redefining luxury commerce through the fusion of artificial intelligence and timeless elegance. We connect discerning collectors with the world's finest pieces, authenticated and delivered with unparalleled care.",
+    "exploreCollection": "Explore Collection",
+    "viewCollections": "View Collections",
+    "mission": {
+      "title": "Our Mission",
+      "description": "To democratize luxury by making authentic, high-end pieces accessible to collectors worldwide through transparent pricing, AI-driven personalization, and a seamless cross-border shopping experience. We believe luxury should be inclusive, intelligent, and deeply personal."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To become the world's leading AI-powered luxury marketplace by 2030, connecting collectors with rare and exclusive pieces from every corner of the globe. We envision a future where technology enhances the human experience of acquiring and cherishing beautiful objects."
+    },
+    "coreValues": {
+      "title": "Core Values",
+      "subtitle": "The principles that guide everything we do — from sourcing to customer service.",
+      "authenticity": "Authenticity",
+      "authenticityDesc": "Every piece is meticulously authenticated through our network of trusted experts and auction house partnerships.",
+      "aiPersonalized": "AI-Personalized",
+      "aiPersonalizedDesc": "Our Unicorn AI engine learns your preferences to recommend pieces that match your unique taste and lifestyle.",
+      "globalSourcing": "Global Sourcing",
+      "globalSourcingDesc": "Direct channels from Hong Kong, Japan, Europe, and bonded warehouses ensure the best prices and fastest delivery.",
+      "vipConcierge": "VIP Concierge",
+      "vipConciergeDesc": "Dedicated personal shoppers for our premium members, providing white-glove service from selection to delivery."
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Our unique business model combines global sourcing with AI-powered personalization to deliver unmatched value.",
+      "steps": {
+        "sourcing": {
+          "title": "Sourcing",
+          "description": "We procure luxury items through multiple channels: Hong Kong direct, Japan auctions, European boutiques, and Shanghai FTZ bonded warehouses."
+        },
+        "authentication": {
+          "title": "Authentication",
+          "description": "Every item undergoes rigorous authentication by certified appraisers. Serial numbers, condition grading, and provenance are all verified."
+        },
+        "aiMatching": {
+          "title": "AI Matching",
+          "description": "Our Unicorn AI engine analyzes your browsing, purchase history, and preferences to recommend pieces tailored to your taste and lifestyle."
+        },
+        "delivery": {
+          "title": "Delivery",
+          "description": "Choose from four shipping modes including personal carry (0-1 day), bonded warehouse (2-5 days), direct mail (7-14 days), and express courier (3-7 days)."
+        }
+      }
+    },
+    "stats": {
+      "authenticatedProducts": "Authenticated Products",
+      "luxuryBrands": "Luxury Brands",
+      "sourcingChannels": "Sourcing Channels",
+      "averageSavings": "Average Savings vs Retail"
+    },
+    "cta": {
+      "title": "Ready to Experience Luxury Differently?",
+      "subtitle": "Join ZLuxury today and discover a new paradigm in luxury shopping — where artificial intelligence meets timeless craftsmanship.",
+      "shopNow": "Shop Now",
+      "browseCollections": "Browse Collections"
+    }
+  },
+  "aiAssistant": {
+    "title": "AI Assistant",
+    "subtitle": "Powered by Hermes Agent, OpenClaw, and Unicorn AI from Anna AI Platform",
+    "selectAgent": "Select AI Agent",
+    "online": "Online",
+    "placeholder": "Ask about luxury products, recommendations, prices...",
+    "send": "Send",
+    "agents": {
+      "hermes": {
+        "name": "Hermes Agent",
+        "nameCn": "Hermes AI Concierge",
+        "description": "Luxury recommendation specialist",
+        "capabilities": {
+          "recommendations": "Product recommendations",
+          "expertise": "Brand expertise",
+          "matching": "Style matching",
+          "trends": "Trend analysis"
+        }
+      },
+      "openclaw": {
+        "name": "OpenClaw Engine",
+        "nameCn": "OpenClaw Automation",
+        "description": "Skills and automation engine",
+        "capabilities": {
+          "priceComparison": "Price comparison",
+          "availability": "Availability check",
+          "tracking": "Order tracking",
+          "automation": "Automated tasks"
+        }
+      },
+      "unicorn": {
+        "name": "Unicorn Agent",
+        "nameCn": "Unicorn Dialogue",
+        "description": "Enhanced AI conversation",
+        "capabilities": {
+          "conversation": "Natural conversation",
+          "context": "Context understanding",
+          "dialogue": "Multi-turn dialogue",
+          "personalized": "Personalized responses"
+        }
+      }
+    },
+    "welcomeMessage": "Welcome to ZLuxury AI Assistant! 🎩\n\nI'm your luxury concierge, powered by advanced AI agents:\n\n**Hermes** - Product recommendations & brand expertise\n**OpenClaw** - Price tracking & order management\n**Unicorn** - Creative conversation & styling advice\n\nHow may I assist you today?",
+    "errorMessage": "I apologize, but I encountered an issue processing your request. Please try again or select a different agent."
+  },
+  "businessStrategy": {
+    "title": "Business Strategy",
+    "subtitle": "Comprehensive monetization plan and market positioning for sustainable growth",
+    "marketAnalysis": "Market Analysis",
+    "stats": {
+      "globalMarket": "Global Luxury Market",
+      "growthRate": "Annual Growth Rate",
+      "onlineSegment": "Online Segment",
+      "aiAdoption": "AI Adoption Rate"
+    },
+    "keyRegions": "Key Regions",
+    "targetDemographics": "Target Demographics",
+    "strategies": {
+      "subscription": {
+        "title": "VIP Membership Program",
+        "description": "Tiered subscription model offering exclusive benefits",
+        "revenueModel": "Monthly recurring revenue with tier upgrade incentives",
+        "target": "High-net-worth individuals seeking premium service"
+      },
+      "commission": {
+        "title": "Transaction Commission",
+        "description": "Commission-based revenue from luxury transactions",
+        "revenueModel": "Per-transaction commission with volume bonuses",
+        "target": "Luxury brands and authorized dealers"
+      },
+      "aiServices": {
+        "title": "AI Agent Services",
+        "description": "Premium AI-powered services for businesses",
+        "revenueModel": "SaaS subscription + API usage fees",
+        "target": "Luxury retailers, brands, and marketplaces"
+      },
+      "concierge": {
+        "title": "Concierge Services",
+        "description": "White-glove personal shopping and advisory",
+        "revenueModel": "Service fees + success-based bonuses",
+        "target": "Ultra-high-net-worth clients"
+      }
+    },
+    "revenueModel": "Revenue Model",
+    "targetAudience": "Target Audience",
+    "aiBenefits": {
+      "title": "AI Integration Benefits",
+      "hermes": {
+        "name": "Hermes Agent",
+        "benefits": [
+          "Personalized product recommendations",
+          "Brand expertise and heritage knowledge",
+          "Style matching algorithms",
+          "Investment value analysis"
+        ]
+      },
+      "openclaw": {
+        "name": "OpenClaw Skills",
+        "benefits": [
+          "Automated price comparisons",
+          "Real-time availability checks",
+          "Order tracking automation",
+          "Market trend monitoring"
+        ]
+      },
+      "unicorn": {
+        "name": "Unicorn Agent",
+        "benefits": [
+          "Natural conversation interface",
+          "Context-aware responses",
+          "Multi-turn dialogue support",
+          "Emotional intelligence"
+        ]
+      }
+    },
+    "categories": {
+      "watchesJewelry": "Watches & Jewelry",
+      "fashionBags": "Fashion & Bags",
+      "artCollectibles": "Art & Collectibles",
+      "realEstateYachts": "Real Estate & Yachts"
+    },
+    "services": {
+      "hermesApi": "Hermes Recommendation API",
+      "openClawSuite": "OpenClaw Automation Suite",
+      "unicornChat": "Unicorn Chat Integration",
+      "fullPlatform": "Full AI Platform License"
+    },
+    "packages": {
+      "personalShopping": "Personal Shopping",
+      "collectionAdvisory": "Collection Advisory",
+      "investmentGuidance": "Investment Guidance",
+      "fullYearConcierge": "Full Year Concierge"
+    },
+    "perSession": "per session",
+    "perConsultation": "per consultation",
+    "perAnalysis": "per analysis",
+    "annual": "annual",
+    "customPricing": "Custom pricing",
+    "demographics": {
+      "hnwi": "HNWI (High Net Worth Individuals) - {{threshold}} assets",
+      "uhnwi": "UHNWI (Ultra High Net Worth) - {{threshold}} assets",
+      "aspiring": "Aspiring luxury consumers - {{threshold}} income"
+    },
+    "regions": {
+      "northAmerica": "North America",
+      "europe": "Europe",
+      "asiaPacific": "Asia-Pacific",
+      "middleEast": "Middle East"
+    }
+  },
+  "testimonials": {
+    "title": "Client Testimonials",
+    "subtitle": "Real experiences from our discerning clients worldwide",
+    "trustStats": {
+      "satisfaction": "Client Satisfaction Rate",
+      "brands": "Verified Luxury Brands",
+      "transactions": "Transactions Processed",
+      "members": "Active Members"
+    }
   },
   "footer": {
     "description": "Fusing artificial intelligence with supreme luxury, providing unique shopping experiences for distinguished clients.",
@@ -99,7 +458,24 @@
     "terms": "Terms of Service",
     "cookies": "Cookie Policy",
     "tagline": "Designed for extraordinary luxury experiences",
-    "copyright": "All Rights Reserved"
+    "copyright": "All Rights Reserved",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "contact": "Contact",
+    "vipMembership": "VIP Membership",
+    "auctions": "Auctions",
+    "authentication": "Authentication",
+    "valuation": "Valuation",
+    "insurance": "Insurance",
+    "globalShipping": "Global Shipping",
+    "home": "Home",
+    "contactInfo": {
+      "hq": "Global Headquarters: Geneva, Switzerland",
+      "email": "contact@zluxury.com",
+      "phone": "+41 22 000 0000"
+    },
+    "newsletter": "Newsletter",
+    "newsletterPlaceholder": "Enter your email"
   },
   "language": {
     "switch": "Language",
@@ -116,6 +492,656 @@
     "save": "Save",
     "close": "Close",
     "currency": "¥",
-    "priceFrom": "Starting from"
+    "priceFrom": "Starting from",
+    "or": "or",
+    "and": "and",
+    "view": "View",
+    "readMore": "Read More",
+    "learnMore": "Learn More",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "apply": "Apply",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "success": "Success",
+    "failed": "Failed",
+    "warning": "Warning",
+    "info": "Info",
+    "networkError": "Network error. Please try again.",
+    "image": "Image",
+    "collection": "Collection",
+    "luxuryProduct": "Luxury Product"
+  },
+  "categoryPage": {
+    "results": "Showing <0>{{count}}</0> products in <1>{{name}}</1>",
+    "noProductsTitle": "No products found",
+    "noProductsDesc": "We don't have any products in this category yet.",
+    "browseAll": "Browse All Collections",
+    "newBadge": "New",
+    "limitedBadge": "Limited",
+    "onlyLeft": "Only {{count}} left"
+  },
+  "vipPage": {
+    "title": "VIP Membership",
+    "subtitle": "Unlock exclusive privileges, personalized services, and access to the world's most sought-after luxury pieces. Elevate your collection with ZLuxury VIP.",
+    "viewPlans": "View Membership Plans",
+    "learnMore": "Learn More",
+    "whyTitle": "Why Become a VIP?",
+    "whySubtitle": "Our VIP members enjoy a curated luxury experience beyond ordinary shopping.",
+    "perMonth": "month",
+    "mostPopular": "Most Popular",
+    "joinNow": "Join Now",
+    "shopNow": "Shop Now",
+    "backHome": "Back to Home",
+    "compareTitle": "Compare Plans",
+    "featuresColumn": "Features",
+    "tiersTitle": "Choose Your Tier",
+    "tiersSubtitle": "Three levels of luxury, each designed to match your lifestyle and collection goals.",
+    "ctaTitle": "Ready to Elevate Your Luxury Experience?",
+    "ctaSubtitle": "Join ZLuxury VIP today and enjoy exclusive access, personal concierge services, and premium pricing on the world's finest pieces.",
+    "tiers": {
+      "silver": {
+        "name": "Silver Member",
+        "description": "Perfect for emerging collectors starting their luxury journey."
+      },
+      "gold": {
+        "name": "Gold Member",
+        "description": "Our most popular tier for serious luxury enthusiasts."
+      },
+      "platinum": {
+        "name": "Platinum Member",
+        "description": "The ultimate luxury experience for ultra-high-net-worth collectors."
+      }
+    },
+    "features": {
+      "exclusiveAccess": {
+        "title": "Exclusive Access",
+        "description": "Be the first to access limited editions, private collections, and pre-sale events not available to the general public."
+      },
+      "personalConcierge": {
+        "title": "Personal Concierge",
+        "description": "Enjoy dedicated one-on-one personal shopping assistance from our luxury experts who understand your taste and preferences."
+      },
+      "curatedSelection": {
+        "title": "Curated Selection",
+        "description": "Receive personalized product recommendations based on your collection history, style preferences, and investment goals."
+      }
+    }
+  },
+  "aiAssistantPage": {
+    "title": "AI Assistant",
+    "subtitle": "Experience the future of luxury shopping with our multi-agent AI system. Three specialized agents work together to provide intelligent recommendations, real-time price analysis, and natural conversation.",
+    "tryNow": "Try AI Now",
+    "learnMore": "Learn More",
+    "agentsTitle": "Meet Our AI Agents",
+    "agentsSubtitle": "Each agent specializes in a different aspect of luxury shopping, working together to deliver the best experience.",
+    "howTitle": "How It Works",
+    "howDescription": "Our AI system orchestrates multiple specialized agents to understand your needs and deliver personalized luxury experiences.",
+    "benefitsTitle": "Why Choose AI Assistant?",
+    "ctaTitle": "Ready to Experience AI-Powered Luxury?",
+    "ctaSubtitle": "Let our AI agents guide you to the perfect luxury piece. Whether you're a seasoned collector or new to luxury, our AI provides expert guidance 24/7.",
+    "browseProducts": "Browse Products",
+    "backHome": "Back to Home",
+    "agents": {
+      "hermes": {
+        "title": "Hermes Agent",
+        "description": "Luxury recommendation specialist with deep brand expertise"
+      },
+      "openclaw": {
+        "title": "OpenClaw Engine",
+        "description": "Automation and price comparison engine for smart shopping"
+      },
+      "unicorn": {
+        "title": "Unicorn Agent",
+        "description": "Advanced conversation agent with contextual understanding"
+      }
+    },
+    "features": {
+      "recommendations": "Personalized recommendations",
+      "brandExpertise": "Deep brand knowledge",
+      "styleMatching": "Style matching algorithm",
+      "investmentAnalysis": "Investment value analysis",
+      "priceComparison": "Real-time price comparison",
+      "availabilityCheck": "Live availability check",
+      "orderTracking": "Automated order tracking",
+      "marketMonitoring": "Market trend monitoring",
+      "naturalConversation": "Natural conversation",
+      "contextUnderstanding": "Context-aware responses",
+      "multiTurnDialogue": "Multi-turn dialogue",
+      "emotionalIntelligence": "Emotional intelligence"
+    },
+    "howSteps": {
+      "input": {
+        "title": "Your Input",
+        "description": "Ask a question or describe what you're looking for in natural language."
+      },
+      "analyze": {
+        "title": "AI Analysis",
+        "description": "Our agents analyze your request, search multiple data sources, and find the best matches."
+      },
+      "respond": {
+        "title": "Smart Response",
+        "description": "Receive a comprehensive response with product details, pricing, and recommendations."
+      }
+    },
+    "stats": {
+      "247": "Availability",
+      "languages": "Languages",
+      "responseTime": "Response Time",
+      "accuracy": "Accuracy"
+    }
+  },
+  "conciergePage": {
+    "title": "Concierge Services",
+    "subtitle": "Experience white-glove personal shopping at its finest. Our dedicated concierge team provides discreet, expert guidance to help you find the perfect luxury piece for any occasion.",
+    "viewServices": "View Services",
+    "vipAccess": "VIP Access",
+    "whyTitle": "Our Concierge Promise",
+    "whySubtitle": "We deliver an unparalleled luxury experience built on trust, expertise, and discretion.",
+    "servicesTitle": "Our Services",
+    "servicesSubtitle": "Choose from our range of concierge services tailored to your luxury needs.",
+    "processTitle": "How Our Concierge Works",
+    "ctaTitle": "Ready for a Personal Luxury Experience?",
+    "ctaSubtitle": "Let our concierge team guide you through the world of luxury. From sourcing rare pieces to investment advisory, we handle every detail.",
+    "requestService": "Request Concierge",
+    "backHome": "Back to Home",
+    "features": {
+      "discretion": {
+        "title": "Absolute Discretion",
+        "description": "Your privacy is paramount. All interactions are kept strictly confidential, with no public disclosure of your purchases or collection."
+      },
+      "expertise": {
+        "title": "Expert Knowledge",
+        "description": "Our concierge team consists of luxury specialists with decades of experience in watches, jewelry, fashion, and art."
+      },
+      "network": {
+        "title": "Global Network",
+        "description": "Access our extensive global network of suppliers, auction houses, and private collectors to find even the rarest pieces."
+      }
+    },
+    "services": {
+      "personalShopping": {
+        "title": "Personal Shopping",
+        "description": "One-on-one shopping assistance, either in-person or virtually. We help you select pieces that match your style, occasion, and budget.",
+        "price": "$150"
+      },
+      "collectionAdvisory": {
+        "title": "Collection Advisory",
+        "description": "Expert guidance on building and diversifying your luxury collection across categories and price points.",
+        "price": "$500"
+      },
+      "investmentGuidance": {
+        "title": "Investment Guidance",
+        "description": "Data-driven investment analysis, including market trends, historical performance, and future appreciation potential.",
+        "price": "$1,000"
+      },
+      "fullYear": {
+        "title": "Full Year Concierge",
+        "description": "Unlimited access to our concierge team for an entire year. Includes personal shopping, advisory, and priority sourcing.",
+        "price": "$5,000"
+      }
+    },
+    "process": {
+      "consultation": {
+        "title": "Consultation",
+        "description": "Tell us your preferences, needs, and budget through a private consultation."
+      },
+      "curate": {
+        "title": "Curate",
+        "description": "We search our global network to find the perfect pieces matching your requirements."
+      },
+      "acquire": {
+        "title": "Acquire",
+        "description": "We handle all negotiations, authentication, and logistics on your behalf."
+      },
+      "deliver": {
+        "title": "Deliver",
+        "description": "Your purchase is delivered with white-glove service, fully insured and authenticated."
+      }
+    }
+  },
+  "auctionsPage": {
+    "title": "Luxury Auctions",
+    "subtitle": "Participate in curated luxury auctions featuring exceptional pieces from prestigious houses. Our authenticated auction process ensures authenticity and fair pricing.",
+    "viewUpcoming": "View Upcoming Auctions",
+    "howItWorks": "How It Works",
+    "upcomingTitle": "Upcoming Auctions",
+    "upcomingSubtitle": "Browse our calendar of upcoming luxury auctions and register to participate.",
+    "howTitle": "How Auctions Work",
+    "estimated": "Estimated",
+    "viewLot": "View Lot",
+    "ctaTitle": "Ready to Bid on Extraordinary Pieces?",
+    "ctaSubtitle": "Join our upcoming auctions and discover exceptional luxury pieces you won't find anywhere else.",
+    "browseAuctions": "Browse Auctions",
+    "backHome": "Back to Home",
+    "features": {
+      "curated": {
+        "title": "Curated Selection",
+        "description": "Each auction is carefully curated by our experts to ensure only the finest pieces are offered."
+      },
+      "authenticated": {
+        "title": "Authenticated Pieces",
+        "description": "Every item is thoroughly authenticated by our team of certified appraisers before being listed."
+      },
+      "global": {
+        "title": "Global Access",
+        "description": "Participate in auctions from anywhere in the world through our secure online bidding platform."
+      }
+    },
+    "lots": {
+      "watches2026": {
+        "title": "Haute Horlogerie Collection"
+      },
+      "jewelry2026": {
+        "title": "Rare Gems & High Jewelry"
+      },
+      "bags2026": {
+        "title": "Iconic Designer Handbags"
+      },
+      "art2026": {
+        "title": "Fine Art & Collectibles"
+      }
+    },
+    "months": {
+      "01": "Jan",
+      "02": "Feb",
+      "03": "Mar",
+      "04": "Apr",
+      "05": "May",
+      "06": "Jun",
+      "07": "Jul",
+      "08": "Aug",
+      "09": "Sep",
+      "10": "Oct",
+      "11": "Nov",
+      "12": "Dec"
+    },
+    "howSteps": {
+      "browse": {
+        "title": "Browse Lots",
+        "description": "Explore upcoming auction lots with detailed descriptions and pre-sale estimates."
+      },
+      "register": {
+        "title": "Register",
+        "description": "Register as a bidder to participate in our auctions. Verification is quick and simple."
+      },
+      "bid": {
+        "title": "Place Bids",
+        "description": "Place your bids online in real-time with our secure bidding platform. Set your maximum bid and let our system bid for you."
+      },
+      "win": {
+        "title": "Win & Collect",
+        "description": "Congratulations! If you win, we handle payment, authentication, and insured delivery."
+      }
+    }
+  },
+  "authenticationPage": {
+    "title": "Product Authentication",
+    "subtitle": "Every luxury piece deserves provenance. Our rigorous authentication process ensures that every item you purchase is genuine, certified, and backed by our authenticity guarantee.",
+    "startVerification": "Start Verification",
+    "shopAuthentic": "Shop Authentic",
+    "methodsTitle": "Authentication Methods",
+    "methodsSubtitle": "We employ multiple verification techniques to ensure every piece is authentic.",
+    "processTitle": "Our Authentication Process",
+    "ctaTitle": "Buy with Confidence",
+    "ctaSubtitle": "Every piece sold by ZLuxury is authenticated by our team of experts. Shop knowing your investment is protected.",
+    "browseProducts": "Browse Products",
+    "backHome": "Back to Home",
+    "features": {
+      "peaceOfMind": {
+        "title": "Peace of Mind",
+        "description": "Our authentication guarantee provides full refund if any piece is found to be inauthentic."
+      },
+      "expertNetwork": {
+        "title": "Expert Network",
+        "description": "We work with a global network of certified appraisers and brand-authorized authenticators."
+      },
+      "blockchain": {
+        "title": "Blockchain Verified",
+        "description": "Selected pieces include blockchain-verified provenance records for complete transparency."
+      }
+    },
+    "methods": {
+      "serialNumber": {
+        "title": "Serial Number Verification",
+        "description": "Every luxury timepiece and serialized item undergoes thorough serial number verification against manufacturer databases."
+      },
+      "certOfAuthenticity": {
+        "title": "Certificate of Authenticity",
+        "description": "We verify all accompanying certificates, ensuring they match the piece and are properly issued by the brand."
+      },
+      "brandVerification": {
+        "title": "Brand Expertise",
+        "description": "Our team includes specialists with deep knowledge of specific luxury brands and their manufacturing techniques."
+      },
+      "expertAppraisal": {
+        "title": "Expert Appraisal",
+        "description": "Physical examination by certified appraisers, including material analysis, craftsmanship assessment, and condition grading."
+      }
+    },
+    "process": {
+      "submit": {
+        "title": "Submit",
+        "description": "Submit your item for authentication through our online form or bring it to one of our verification centers."
+      },
+      "examine": {
+        "title": "Examine",
+        "description": "Our authentication team thoroughly examines the item using multiple verification methods."
+      },
+      "verify": {
+        "title": "Verify",
+        "description": "Cross-reference with brand databases, auction records, and provenance documentation."
+      },
+      "certify": {
+        "title": "Certify",
+        "description": "Upon successful verification, the item receives our official authentication certification."
+      }
+    }
+  },
+  "valuationPage": {
+    "title": "Luxury Valuation",
+    "subtitle": "Get accurate, certified valuations for your luxury items. Whether for insurance, resale, or investment purposes, our expert valuation service provides comprehensive market analysis.",
+    "getValuation": "Get Valuation",
+    "verifyFirst": "Verify First",
+    "servicesTitle": "Valuation Services",
+    "servicesSubtitle": "Choose the valuation service that matches your needs.",
+    "processTitle": "Our Valuation Process",
+    "reportTitle": "What's Included in Valuation Report",
+    "pricingTitle": "Valuation Pricing",
+    "ctaTitle": "Know the True Value of Your Luxury",
+    "ctaSubtitle": "Get a professional valuation from our certified experts. Accurate, detailed, and insured.",
+    "startNow": "Start Now",
+    "backHome": "Back to Home",
+    "features": {
+      "accurate": {
+        "title": "Accurate Valuations",
+        "description": "Our valuations are based on comprehensive market data, recent auction results, and expert assessment."
+      },
+      "comprehensive": {
+        "title": "Comprehensive Reports",
+        "description": "Each valuation includes detailed analysis covering condition, market trends, and investment potential."
+      },
+      "certified": {
+        "title": "Certified & Insured",
+        "description": "Our valuations are recognized by insurance companies, financial institutions, and auction houses."
+      }
+    },
+    "services": {
+      "marketValuation": {
+        "title": "Market Valuation",
+        "description": "General market value assessment for resale purposes, based on current market trends and comparable sales."
+      },
+      "insuranceValuation": {
+        "title": "Insurance Valuation",
+        "description": "Detailed valuation report accepted by insurance companies for coverage purposes, with replacement value assessment."
+      },
+      "resaleValuation": {
+        "title": "Resale Valuation",
+        "description": "Expert guidance on optimal timing and pricing for reselling your luxury items, including market outlook."
+      },
+      "investmentValuation": {
+        "title": "Investment Valuation",
+        "description": "In-depth analysis of investment potential, including historical performance and future appreciation projections."
+      }
+    },
+    "process": {
+      "submit": {
+        "title": "Submit",
+        "description": "Provide details and photos of your item through our secure online form."
+      },
+      "analyze": {
+        "title": "Analyze",
+        "description": "Our valuation experts analyze your item using market data and professional assessment."
+      },
+      "report": {
+        "title": "Report",
+        "description": "Receive a comprehensive valuation report with detailed analysis and market data."
+      },
+      "certify": {
+        "title": "Certify",
+        "description": "Download your certified valuation document, recognized by insurers and institutions."
+      }
+    },
+    "reportContents": {
+      "itemDescription": "Detailed item description",
+      "conditionAssessment": "Condition assessment with grading",
+      "marketAnalysis": "Current market analysis",
+      "priceRange": "Estimated value range",
+      "investmentRating": "Investment rating and outlook"
+    },
+    "pricing": {
+      "standard": {
+        "name": "Standard",
+        "desc": "Email delivery within 48 hours"
+      },
+      "express": {
+        "name": "Express",
+        "desc": "Email delivery within 24 hours"
+      },
+      "premium": {
+        "name": "Premium",
+        "desc": "Physical report with hard copy"
+      }
+    }
+  },
+  "insurancePage": {
+    "title": "Luxury Insurance",
+    "subtitle": "Protect your valuable luxury items with comprehensive insurance coverage. Our tailored insurance solutions safeguard your collection against theft, damage, and loss.",
+    "viewPlans": "View Insurance Plans",
+    "getValuation": "Get Valuation First",
+    "plansTitle": "Insurance Plans",
+    "plansSubtitle": "Choose the coverage level that best protects your luxury collection.",
+    "recommended": "Most Popular",
+    "ofValue": "of item value",
+    "applyNow": "Apply Now",
+    "processTitle": "How Insurance Works",
+    "ctaTitle": "Protect Your Luxury Investment",
+    "ctaSubtitle": "Don't let your valuable collection go unprotected. Get comprehensive insurance coverage today.",
+    "shopInsured": "Shop with Insurance",
+    "backHome": "Back to Home",
+    "features": {
+      "peaceOfMind": {
+        "title": "Peace of Mind",
+        "description": "Sleep knowing your luxury collection is fully protected against unexpected events."
+      },
+      "globalCoverage": {
+        "title": "Global Coverage",
+        "description": "Insurance protection that follows your items wherever they travel in the world."
+      },
+      "quickClaims": {
+        "title": "Quick Claims",
+        "description": "Streamlined claims process with fast response times and expert handling."
+      }
+    },
+    "plans": {
+      "basic": {
+        "title": "Basic Coverage",
+        "description": "Essential protection for individual luxury items up to $50,000."
+      },
+      "premium": {
+        "title": "Premium Coverage",
+        "description": "Comprehensive protection for collections up to $500,000. Most popular."
+      },
+      "ultimate": {
+        "title": "Ultimate Coverage",
+        "description": "Unlimited coverage for ultra-high-value collections with personalized terms."
+      }
+    },
+    "coverage": {
+      "theft": "Theft protection",
+      "damage": "Accidental damage",
+      "loss": "Loss coverage",
+      "naturalDisaster": "Natural disaster"
+    },
+    "process": {
+      "apply": {
+        "title": "Apply",
+        "description": "Submit your insurance application with item details and valuation."
+      },
+      "assess": {
+        "title": "Assess",
+        "description": "We review your application and determine the appropriate coverage plan."
+      },
+      "insure": {
+        "title": "Insure",
+        "description": "Your insurance policy is activated, providing immediate coverage."
+      },
+      "claim": {
+        "title": "Claim",
+        "description": "In the event of a claim, our team guides you through the process swiftly."
+      }
+    }
+  },
+  "shippingPage": {
+    "title": "Global Luxury Shipping",
+    "subtitle": "World-class shipping solutions for your luxury purchases. From personal carry to insured express, we deliver your treasures safely to your doorstep anywhere in the world.",
+    "viewMethods": "View Shipping Methods",
+    "viewCart": "View Cart",
+    "methodsTitle": "Shipping Methods",
+    "methodsSubtitle": "Choose the shipping option that balances speed, security, and cost for your needs.",
+    "regionsTitle": "Ship to Worldwide",
+    "trackingTitle": "Track Your Shipment",
+    "trackingDescription": "Real-time tracking for all shipments. Know where your luxury purchase is at every step.",
+    "trackingPlaceholder": "Enter tracking number...",
+    "track": "Track",
+    "insuranceTitle": "Shipping Insurance",
+    "insuranceDescription": "All shipments are fully insured. Additional coverage available for high-value items.",
+    "ctaTitle": "Ready for Your Luxury Delivery?",
+    "ctaSubtitle": "We handle the logistics so you can enjoy your purchase. Safe, secure, and timely delivery guaranteed.",
+    "startShopping": "Start Shopping",
+    "backHome": "Back to Home",
+    "features": {
+      "global": {
+        "title": "Global Network",
+        "description": "Shipping to over 100 countries with partners specializing in luxury logistics."
+      },
+      "secure": {
+        "title": "Secure & Insured",
+        "description": "Every shipment is fully insured and handled with premium security protocols."
+      },
+      "tracked": {
+        "title": "Real-time Tracking",
+        "description": "Follow your package in real-time from warehouse to doorstep."
+      }
+    },
+    "methods": {
+      "personalCarry": {
+        "title": "Personal Carry",
+        "description": "Discreet personal delivery by hand-carried courier. The ultimate in luxury shipping.",
+        "time": "0-1 days"
+      },
+      "bondedWarehouse": {
+        "title": "Bonded Warehouse",
+        "description": "Secure storage and delivery via bonded warehouse in Shanghai FTZ. Cost-effective and secure.",
+        "time": "2-5 days"
+      },
+      "directMail": {
+        "title": "Direct Mail",
+        "description": "Standard international mail with full tracking and insurance. Ideal for non-urgent deliveries.",
+        "time": "7-14 days"
+      },
+      "expressCourier": {
+        "title": "Express Courier",
+        "description": "Priority express delivery with DHL/UPS/FedEx. Fast and fully insured.",
+        "time": "3-7 days"
+      }
+    },
+    "deliveryTime": "Delivery Time",
+    "selectMethod": "Select Method",
+    "regions": {
+      "asia": "Asia Pacific",
+      "asiaDesc": "Hong Kong, Japan, China, Singapore, and more",
+      "europe": "Europe",
+      "europeDesc": "EU countries, UK, Switzerland, and more",
+      "northAmerica": "North America",
+      "northAmericaDesc": "USA, Canada, and Mexico",
+      "middleEast": "Middle East & Africa",
+      "middleEastDesc": "UAE, Saudi Arabia, South Africa, and more"
+    },
+    "insuranceFeatures": {
+      "fullCoverage": "Full item coverage",
+      "damageProtection": "Damage protection",
+      "lossProtection": "Loss protection",
+      "signatureRequired": "Signature required delivery"
+    }
+  },
+  "cartPage": {
+    "title": "Shopping Bag",
+    "subtitle": "Review your luxury selections and proceed to secure checkout.",
+    "itemsTitle": "Your Items",
+    "continueShopping": "Continue Shopping",
+    "clearCart": "Clear Cart",
+    "shippingTitle": "Shipping Method",
+    "voucherTitle": "Promo Code",
+    "voucherPlaceholder": "Enter promo code",
+    "apply": "Apply",
+    "summaryTitle": "Order Summary",
+    "subtotal": "Subtotal",
+    "shippingLabel": "Shipping",
+    "insuranceLabel": "Insurance",
+    "included": "Included",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "recommendTitle": "You May Also Like",
+    "recommendSubtitle": "Based on your selections, we think you'll love these.",
+    "ctaTitle": "Complete Your Luxury Experience",
+    "ctaSubtitle": "Your selections are carefully curated. Complete your purchase and enjoy white-glove delivery.",
+    "viewDetails": "View Details",
+    "backHome": "Back to Home",
+    "items": {
+      "watch": {
+        "name": "Luxury Chronograph Watch",
+        "brand": "Swiss Precision"
+      },
+      "bag": {
+        "name": "Designer Leather Handbag",
+        "brand": "Italian Maison"
+      },
+      "ring": {
+        "name": "Diamond Engagement Ring",
+        "brand": "High Jewelry House"
+      }
+    },
+    "shipping": {
+      "standard": {
+        "name": "Standard Shipping",
+        "time": "7-14 days delivery"
+      },
+      "express": {
+        "name": "Express Shipping",
+        "time": "3-7 days delivery"
+      },
+      "premium": {
+        "name": "Premium White-Glove",
+        "time": "0-1 days hand delivery"
+      }
+    },
+    "guarantees": {
+      "secureCheckout": "Secure SSL checkout",
+      "freeReturns": "30-day free returns",
+      "authenticityGuaranteed": "Authenticity guaranteed"
+    },
+    "recommendations": {
+      "diamond": {
+        "name": "Pear-Cut Diamond Pendant",
+        "desc": "Timeless elegance with certified centerpiece diamond."
+      },
+      "watch": {
+        "name": "Limited Edition Timepiece",
+        "desc": "Numbered edition with unique dial configuration."
+      },
+      "bag": {
+        "name": "Classic Patent Handbag",
+        "desc": "Iconic design in seasonal limited color."
+      }
+    }
   }
 }

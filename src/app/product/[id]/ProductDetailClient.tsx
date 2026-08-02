@@ -64,15 +64,18 @@ const getCategoryEmoji = (category: string): string => {
  * @param props.currentProductId - ID of the current product to exclude
  * @param props.category - Product category for filtering
  * @param props.formatPrice - Price formatting function
+ * @param props.t - Translation function from useTranslation
  */
 function RelatedProductsSection({
     currentProductId,
     category,
-    formatPrice
+    formatPrice,
+    t
 }: {
     currentProductId: string;
     category: string;
     formatPrice: (price: number, currency?: string) => string;
+    t: (key: string, params?: Record<string, any>) => string;
 }) {
     const allProducts = getProducts();
 
@@ -98,9 +101,9 @@ function RelatedProductsSection({
     if (relatedProducts.length === 0) {
         return (
             <div className="text-center py-12 text-zl-text-muted">
-                <p>No related products available at this time.</p>
+                <p>{t('common.noData')}</p>
                 <Link href="/products" className="premium-button inline-block mt-4 px-6 py-2 rounded-lg">
-                    Browse All Products
+                    {t('products.viewAllProducts')}
                 </Link>
             </div>
         );
@@ -276,7 +279,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
         <main className="min-h-screen pt-24 pb-20">
             <div className="container mb-8">
                 <nav className="flex items-center gap-2 text-sm text-zl-text-muted">
-                    <Link href="/" className="hover:text-zl-accent transition">Home</Link>
+                    <Link href="/" className="hover:text-zl-accent transition">{t('nav.home')}</Link>
                     <span>/</span>
                     <Link href="/products" className="hover:text-zl-accent transition">{t('nav.products')}</Link>
                     <span>/</span>
@@ -346,7 +349,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                 )}
                                 {product.stock <= 5 && product.stock > 0 && (
                                     <span className="px-3 py-1 bg-orange-500/20 text-orange-400 text-xs font-semibold rounded-full border border-orange-500/30">
-                                        Only {product.stock} left!
+                                        {t('products.stockOnlyLeft', { count: product.stock })}
                                     </span>
                                 )}
                             </div>
@@ -363,7 +366,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                     >
                                         <img
                                             src={image}
-                                            alt={`${product.name} - Image ${index + 1}`}
+                                            alt={`${product.name} - ${t('common.image')} ${index + 1}`}
                                             className="w-full h-full object-cover"
                                             referrerPolicy="no-referrer"
                                         />
@@ -414,7 +417,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                         <div className="bg-zl-dark-3 rounded-xl p-6 mb-6">
                             <div className="mb-4">
-                                <span className="text-sm text-zl-text-muted">Regular Price</span>
+                                <span className="text-sm text-zl-text-muted">{t('products.regularPrice')}</span>
                                 <div className="text-3xl font-bold text-zl-text">
                                     {formatPrice(product.price, product.currency)}
                                 </div>
@@ -427,7 +430,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                             {product.vipPrices && (
                                 <div className="border-t border-zl-gray pt-4">
-                                    <h4 className="text-sm font-semibold text-zl-accent mb-3">{t('vip.title')} Pricing</h4>
+                                    <h4 className="text-sm font-semibold text-zl-accent mb-3">{t('products.vipPricing')}</h4>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                         {Object.entries(product.vipPrices).map(([tier, price]) => (
                                             <div key={tier} className="bg-zl-dark rounded-lg p-2 text-center">
@@ -441,30 +444,30 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                             {product.auctionData && (
                                 <div className="border-t border-zl-gray mt-4 pt-4">
-                                    <h4 className="text-sm font-semibold text-zl-accent mb-2">{t('products.auction')} Data</h4>
+                                    <h4 className="text-sm font-semibold text-zl-accent mb-2">{t('products.auctionData')}</h4>
                                     <div className="grid grid-cols-2 gap-2 text-sm">
                                         {product.auctionData.lastSold && (
                                             <div>
-                                                <span className="text-zl-text-muted">Last Sold:</span>
+                                                <span className="text-zl-text-muted">{t('products.lastSold')}:</span>
                                                 <span className="ml-2">{new Date(product.auctionData.lastSold).toLocaleDateString()}</span>
                                             </div>
                                         )}
                                         {product.auctionData.soldPrice && (
                                             <div>
-                                                <span className="text-zl-text-muted">Auction Price:</span>
+                                                <span className="text-zl-text-muted">{t('products.auctionPrice')}:</span>
                                                 <span className="ml-2">${product.auctionData.soldPrice.toLocaleString()}</span>
                                             </div>
                                         )}
                                         {product.auctionData.priceTrend && (
                                             <div className="col-span-2">
-                                                <span className="text-zl-text-muted">Trend:</span>
+                                                <span className="text-zl-text-muted">{t('products.trend')}:</span>
                                                 <span className={`ml-2 ${product.auctionData.priceTrend === 'up' ? 'text-green-400' :
                                                     product.auctionData.priceTrend === 'down' ? 'text-red-400' :
                                                         'text-yellow-400'
                                                     }`}>
-                                                    {product.auctionData.priceTrend === 'up' ? '↑ Rising' :
-                                                        product.auctionData.priceTrend === 'down' ? '↓ Falling' :
-                                                            '→ Stable'}
+                                                    {product.auctionData.priceTrend === 'up' ? `↑ ${t('products.trendUp')}` :
+                                                        product.auctionData.priceTrend === 'down' ? `↓ ${t('products.trendDown')}` :
+                                                            `→ ${t('products.trendStable')}`}
                                                 </span>
                                             </div>
                                         )}
@@ -474,7 +477,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                         </div>
 
                         <div className="flex items-center gap-4 mb-6">
-                            <label className="text-sm text-zl-text-muted">Quantity:</label>
+                            <label className="text-sm text-zl-text-muted">{t('products.quantity')}:</label>
                             <div className="flex items-center border border-zl-gray rounded-lg">
                                 <button
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -498,7 +501,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                 </button>
                             </div>
                             <span className="text-sm text-zl-text-muted">
-                                ({product.stock} available)
+                                {t('products.quantityAvailable', { count: product.stock })}
                             </span>
                         </div>
 
@@ -509,7 +512,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                 className={`w-full premium-button py-4 rounded-xl text-lg font-semibold ${product.stock === 0 ? 'opacity-50 cursor-not-allowed' : ''
                                     }`}
                             >
-                                {product.stock === 0 ? 'Out of Stock' : t('products.addToCart')}
+                                {product.stock === 0 ? t('products.outOfStock') : t('products.addToCart')}
                             </button>
 
                             {cartMessage && (
@@ -521,10 +524,10 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                             <div className="grid grid-cols-2 gap-3">
                                 <button className="py-3 border border-zl-gray rounded-xl hover:bg-zl-dark-3 transition">
-                                    ♡ Wishlist
+                                    {t('products.wishlist')}
                                 </button>
                                 <button className="py-3 border border-zl-gray rounded-xl hover:bg-zl-dark-3 transition">
-                                    Share
+                                    {t('products.share')}
                                 </button>
                             </div>
                         </div>
@@ -533,15 +536,15 @@ export default function ProductDetailClient({ productId }: { productId: string }
                             <div className="grid grid-cols-3 gap-4 text-center">
                                 <div>
                                     <div className="text-zl-accent text-lg mb-1">✓</div>
-                                    <div className="text-xs text-zl-text-muted">Authenticity Guaranteed</div>
+                                    <div className="text-xs text-zl-text-muted">{t('products.guarantees.authenticity')}</div>
                                 </div>
                                 <div>
                                     <div className="text-zl-accent text-lg mb-1">🔒</div>
-                                    <div className="text-xs text-zl-text-muted">Secure Payment</div>
+                                    <div className="text-xs text-zl-text-muted">{t('products.guarantees.securePayment')}</div>
                                 </div>
                                 <div>
                                     <div className="text-zl-accent text-lg mb-1">📦</div>
-                                    <div className="text-xs text-zl-text-muted">Insured Shipping</div>
+                                    <div className="text-xs text-zl-text-muted">{t('products.guarantees.insuredShipping')}</div>
                                 </div>
                             </div>
                         </div>
@@ -560,7 +563,7 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                         : 'text-zl-text-muted hover:text-zl-text'
                                         }`}
                                 >
-                                    {tab === 'description' ? 'Description' : tab === 'specs' ? 'Specifications' : `Reviews (${product.reviews})`}
+                                    {tab === 'description' ? t('products.tabs.description') : tab === 'specs' ? t('products.tabs.specs') : t('products.tabs.reviews', { count: product.reviews })}
                                 </button>
                             ))}
                         </div>
@@ -575,17 +578,15 @@ export default function ProductDetailClient({ productId }: { productId: string }
 
                                 <div className="mt-8 grid md:grid-cols-2 gap-8">
                                     <div className="bg-zl-dark-3 rounded-xl p-6">
-                                        <h4 className="font-semibold mb-4 text-zl-accent">Craftsmanship</h4>
+                                        <h4 className="font-semibold mb-4 text-zl-accent">{t('products.craftsmanship')}</h4>
                                         <p className="text-zl-text-muted text-sm leading-relaxed">
-                                            Each piece is meticulously crafted by master artisans using traditional techniques passed down through generations.
-                                            The attention to detail ensures exceptional quality and longevity.
+                                            {t('products.craftsmanshipDesc')}
                                         </p>
                                     </div>
                                     <div className="bg-zl-dark-3 rounded-xl p-6">
-                                        <h4 className="font-semibold mb-4 text-zl-accent">Investment Value</h4>
+                                        <h4 className="font-semibold mb-4 text-zl-accent">{t('products.investmentValue')}</h4>
                                         <p className="text-zl-text-muted text-sm leading-relaxed">
-                                            This piece represents not just a purchase, but an investment in timeless elegance.
-                                            Luxury items from this collection have shown consistent appreciation over time.
+                                            {t('products.investmentValueDesc')}
                                         </p>
                                     </div>
                                 </div>
@@ -621,15 +622,15 @@ export default function ProductDetailClient({ productId }: { productId: string }
                                                 Exceptional quality and craftsmanship. This exceeded my expectations.
                                                 The attention to detail is remarkable. Highly recommend for collectors.
                                             </p>
-                                            <span className="text-xs text-zl-text-muted mt-2 block">Verified Purchase • 2024-05-15</span>
+                                            <span className="text-xs text-zl-text-muted mt-2 block">{t('products.verifiedPurchase')} • 2024-05-15</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="text-center py-8">
-                                    <p className="text-zl-text-muted mb-4">View all {product.reviews} reviews</p>
+                                    <p className="text-zl-text-muted mb-4">{t('products.viewAllReviews', { count: product.reviews })}</p>
                                     <button className="premium-button px-6 py-2 rounded-lg">
-                                        Load More Reviews
+                                        {t('products.loadMoreReviews')}
                                     </button>
                                 </div>
                             </div>
@@ -638,11 +639,12 @@ export default function ProductDetailClient({ productId }: { productId: string }
                 </div>
 
                 <section className="mt-20">
-                    <h2 className="text-2xl font-bold font-montserrat mb-8">You May Also Like</h2>
+                    <h2 className="text-2xl font-bold font-montserrat mb-8">{t('products.youMayAlsoLike')}</h2>
                     <RelatedProductsSection
                         currentProductId={product.id}
                         category={product.category}
                         formatPrice={formatPrice}
+                        t={t}
                     />
                 </section>
             </div>

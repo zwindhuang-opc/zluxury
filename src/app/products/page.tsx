@@ -23,6 +23,7 @@ import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Product, ProductRepository } from '@/data/products'
+import { useTranslation } from '@/i18n/useTranslation'
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -54,6 +55,7 @@ const formatPrice = (price: number, currency: string = 'USD'): string => {
  * with comprehensive filtering, sorting, and search capabilities.
  */
 export default function ProductsPage() {
+  const { t } = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -146,12 +148,10 @@ export default function ProductsPage() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold font-montserrat mb-4">
-            <span className="text-gradient">All Products</span>
+            <span className="text-gradient">{t('products.allTitle')}</span>
           </h1>
           <p className="text-zl-text-muted text-lg max-w-2xl">
-            Browse our complete collection of luxury pieces. From iconic timepieces
-            to rare gemstones, each item is authenticated and sourced from
-            reputable global channels.
+            {t('products.allSubtitle')}
           </p>
         </motion.div>
       </section>
@@ -166,7 +166,7 @@ export default function ProductsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by name, brand, or keyword..."
+                placeholder={t('products.searchPlaceholder')}
                 className="input-luxury w-full pl-12"
               />
               <svg
@@ -191,7 +191,7 @@ export default function ProductsPage() {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="bg-zl-dark-3 border border-zl-gray rounded-lg px-4 py-2 text-sm focus:border-zl-accent outline-none"
               >
-                <option value="all">All Categories</option>
+                <option value="all">{t('products.filters.allCategories')}</option>
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
@@ -204,7 +204,7 @@ export default function ProductsPage() {
                 onChange={(e) => setSelectedBrand(e.target.value)}
                 className="bg-zl-dark-3 border border-zl-gray rounded-lg px-4 py-2 text-sm focus:border-zl-accent outline-none"
               >
-                <option value="all">All Brands</option>
+                <option value="all">{t('products.filters.allBrands')}</option>
                 {brands.map((br) => (
                   <option key={br} value={br}>
                     {br}
@@ -217,23 +217,23 @@ export default function ProductsPage() {
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="bg-zl-dark-3 border border-zl-gray rounded-lg px-4 py-2 text-sm focus:border-zl-accent outline-none"
               >
-                <option value="name">Sort by Name</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-                <option value="newest">Newest First</option>
+                <option value="name">{t('products.filters.sortByName')}</option>
+                <option value="price-asc">{t('products.filters.sortByPriceAsc')}</option>
+                <option value="price-desc">{t('products.filters.sortByPriceDesc')}</option>
+                <option value="rating">{t('products.filters.sortByRating')}</option>
+                <option value="newest">{t('products.filters.sortByNewest')}</option>
               </select>
             </div>
           </div>
 
           {/* Price Range */}
           <div className="mt-4 flex items-center gap-3 text-sm text-zl-text-muted">
-            <span>Price Range (USD):</span>
+            <span>{t('products.filters.priceRange')}</span>
             <input
               type="number"
               value={priceRange.min}
               onChange={(e) => setPriceRange((p) => ({ ...p, min: e.target.value }))}
-              placeholder="Min"
+              placeholder={t('products.filters.priceMin')}
               className="w-24 bg-zl-dark-3 border border-zl-gray rounded-lg px-3 py-1 text-sm focus:border-zl-accent outline-none"
             />
             <span>—</span>
@@ -241,7 +241,7 @@ export default function ProductsPage() {
               type="number"
               value={priceRange.max}
               onChange={(e) => setPriceRange((p) => ({ ...p, max: e.target.value }))}
-              placeholder="Max"
+              placeholder={t('products.filters.priceMax')}
               className="w-24 bg-zl-dark-3 border border-zl-gray rounded-lg px-3 py-1 text-sm focus:border-zl-accent outline-none"
             />
             {(searchQuery ||
@@ -258,13 +258,13 @@ export default function ProductsPage() {
                   }}
                   className="text-zl-accent hover:underline text-xs ml-2"
                 >
-                  Clear Filters
+                  {t('products.filters.clearFilters')}
                 </button>
               )}
           </div>
 
           <div className="mt-4 text-sm text-zl-text-muted">
-            Showing {filteredProducts.length} of {products.length} products
+            {t('products.filters.showing', { filtered: filteredProducts.length, total: products.length })}
           </div>
         </div>
       </section>
@@ -331,12 +331,12 @@ export default function ProductsPage() {
                       <div className="absolute top-4 left-4 flex gap-2">
                         {product.isNew && (
                           <span className="px-3 py-1 bg-zl-accent text-zl-dark text-xs font-semibold rounded-full uppercase">
-                            New
+                            {t('products.newBadge')}
                           </span>
                         )}
                         {product.isLimited && (
                           <span className="px-3 py-1 bg-zl-gold text-zl-dark text-xs font-semibold rounded-full uppercase">
-                            Limited
+                            {t('products.limitedBadge')}
                           </span>
                         )}
                       </div>
@@ -345,11 +345,11 @@ export default function ProductsPage() {
                       <div className="absolute top-4 right-4">
                         <span
                           className={`px-2 py-1 text-xs rounded ${product.stock <= 5
-                              ? 'bg-zl-error/20 text-zl-error'
-                              : 'bg-zl-success/20 text-zl-success'
+                            ? 'bg-zl-error/20 text-zl-error'
+                            : 'bg-zl-success/20 text-zl-success'
                             }`}
                         >
-                          {product.stock <= 5 ? `Only ${product.stock} left` : 'In Stock'}
+                          {product.stock <= 5 ? t('products.stockOnly', { count: product.stock }) : t('products.stockInStock')}
                         </span>
                       </div>
                     </div>
@@ -395,7 +395,7 @@ export default function ProductsPage() {
                           )}
                         </div>
                         <span className="text-xs text-zl-accent uppercase tracking-wide group-hover:translate-x-1 transition-transform">
-                          View →
+                          {t('products.viewDetails')}
                         </span>
                       </div>
                     </div>
@@ -410,10 +410,10 @@ export default function ProductsPage() {
         {!loading && filteredProducts.length === 0 && (
           <div className="text-center py-20">
             <p className="text-zl-text-muted text-lg mb-4">
-              No products found matching your criteria.
+              {t('products.filters.noProducts')}
             </p>
             <p className="text-zl-text-muted mb-8">
-              Try adjusting your filters or search terms.
+              {t('products.filters.noProductsHint')}
             </p>
           </div>
         )}

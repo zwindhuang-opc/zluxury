@@ -84,60 +84,60 @@ export default function Footer() {
 
                         {/* Quick Links */}
                         <div>
-                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">Quick Links</h4>
+                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">{t('footer.quickLinks')}</h4>
                             <ul className="space-y-3">
-                                <li><Link href="/" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Home</Link></li>
-                                <li><Link href="/collections" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Collections</Link></li>
-                                <li><Link href="/products" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Products</Link></li>
-                                <li><Link href="/ai-assistant" className="text-sm text-zl-text-muted hover:text-zl-accent transition">AI Assistant</Link></li>
-                                <li><Link href="/concierge" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Concierge</Link></li>
-                                <li><Link href="/about" className="text-sm text-zl-text-muted hover:text-zl-accent transition">About Us</Link></li>
+                                <li><Link href="/" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('nav.home')}</Link></li>
+                                <li><Link href="/collections" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('nav.collections')}</Link></li>
+                                <li><Link href="/products" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('nav.products')}</Link></li>
+                                <li><Link href="/ai-assistant" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('nav.aiAssistant')}</Link></li>
+                                <li><Link href="/concierge" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('nav.concierge')}</Link></li>
+                                <li><Link href="/about" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.aboutUs')}</Link></li>
                             </ul>
                         </div>
 
                         {/* Services */}
                         <div>
-                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">Services</h4>
+                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">{t('footer.services')}</h4>
                             <ul className="space-y-3">
-                                <li><Link href="/vip" className="text-sm text-zl-text-muted hover:text-zl-accent transition">VIP Membership</Link></li>
-                                <li><Link href="/auctions" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Auctions</Link></li>
-                                <li><Link href="/authentication" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Authentication</Link></li>
-                                <li><Link href="/valuation" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Valuation</Link></li>
-                                <li><Link href="/insurance" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Insurance</Link></li>
-                                <li><Link href="/shipping" className="text-sm text-zl-text-muted hover:text-zl-accent transition">Global Shipping</Link></li>
+                                <li><Link href="/vip" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.vipMembership')}</Link></li>
+                                <li><Link href="/auctions" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.auctions')}</Link></li>
+                                <li><Link href="/authentication" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.authentication')}</Link></li>
+                                <li><Link href="/valuation" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.valuation')}</Link></li>
+                                <li><Link href="/insurance" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.insurance')}</Link></li>
+                                <li><Link href="/shipping" className="text-sm text-zl-text-muted hover:text-zl-accent transition">{t('footer.globalShipping')}</Link></li>
                             </ul>
                         </div>
 
                         {/* Contact */}
                         <div>
-                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">Contact</h4>
+                            <h4 className="text-sm font-semibold text-zl-accent uppercase tracking-wider mb-6">{t('footer.contact')}</h4>
                             <ul className="space-y-4">
                                 <li className="flex items-start gap-3">
                                     <svg className="w-5 h-5 text-zl-accent mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-                                    <span className="text-sm text-zl-text-muted">Global Headquarters: Geneva, Switzerland</span>
+                                    <span className="text-sm text-zl-text-muted">{t('footer.contactInfo.hq')}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <svg className="w-5 h-5 text-zl-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
-                                    <span className="text-sm text-zl-text-muted">contact@zluxury.com</span>
+                                    <span className="text-sm text-zl-text-muted">{t('footer.contactInfo.email')}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <svg className="w-5 h-5 text-zl-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                     </svg>
-                                    <span className="text-sm text-zl-text-muted">+41 22 000 0000</span>
+                                    <span className="text-sm text-zl-text-muted">{t('footer.contactInfo.phone')}</span>
                                 </li>
                             </ul>
                             <div className="mt-6">
-                                <h5 className="text-xs font-semibold text-zl-text uppercase tracking-wider mb-3">Newsletter</h5>
+                                <h5 className="text-xs font-semibold text-zl-text uppercase tracking-wider mb-3">{t('footer.newsletter')}</h5>
                                 <div className="flex">
                                     <input
                                         type="email"
-                                        placeholder="Enter your email"
+                                        placeholder={t('footer.newsletterPlaceholder')}
                                         className="flex-1 input-luxury text-sm"
                                     />
                                     <button className="premium-button px-4 ml-2">

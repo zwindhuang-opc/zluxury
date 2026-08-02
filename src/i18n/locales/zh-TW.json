@@ -8,7 +8,8 @@
     "about": "品牌故事",
     "signIn": "登入",
     "vipAccess": "VIP尊享",
-    "searchPlaceholder": "搜索奢華精品、品牌、系列..."
+    "searchPlaceholder": "搜索奢華精品、品牌、系列...",
+    "cart": "購物袋"
   },
   "hero": {
     "badge": "AI智能奢華平台",
@@ -24,11 +25,14 @@
       "satisfaction": "客戶滿意度"
     },
     "categories": {
-      "watch": "奢華腕表",
+      "watch": "奢華腕錶",
       "diamond": "璀璨鑽石",
       "bag": "設計師手袋",
       "jewelry": "高級珠寶"
-    }
+    },
+    "exclusiveCollection": "獨家臻品系列",
+    "curatedSelection": "精選勞力士、愛馬仕、卡地亞等品牌",
+    "imageAlt": "奢華甄選系列 - 高級腕錶、鑽石珠寶與設計師手袋在雅緻精品店內陳列"
   },
   "ai": {
     "badge": "AI驅動",
@@ -44,6 +48,8 @@
   "products": {
     "title": "臻品精選",
     "subtitle": "發現您的專屬奢華",
+    "featured": "精選臻品",
+    "featuredSubtitle": "香港/歐洲/日本直采渠道 • 比國內零售最高省30%",
     "viewDetails": "查看詳情",
     "viewAll": "瀏覽全部臻品",
     "addToCart": "加入購物袋",
@@ -51,17 +57,143 @@
     "limited": "限量款",
     "newArrival": "新品上市",
     "investmentGrade": "投資級臻品",
-    "auction": "拍賣精品"
+    "auction": "拍賣精品",
+    "loadingSelection": "加載臻品精選中...",
+    "viewAllProducts": "查看全部臻品",
+    "newBadge": "新品",
+    "limitedBadge": "限量",
+    "stockInStock": "現貨庫存",
+    "stockOnly": "僅剩{{count}}件",
+    "stockOnlyLeft": "僅剩{{count}}件！",
+    "bestSourcingChannel": "最佳採購渠道",
+    "sourcingChannels": {
+      "hkDirect": "香港直採",
+      "japanAuction": "日本拍賣",
+      "europeBoutique": "歐洲精品店",
+      "bondedWarehouse": "上海自貿區保稅倉",
+      "personalCarry": "專人攜帶"
+    },
+    "regularPrice": "官方指導價",
+    "vipPricing": "VIP會員價",
+    "auctionData": "拍賣數據",
+    "lastSold": "上次成交：",
+    "auctionPrice": "拍賣成交價：",
+    "trend": "價格趨勢：",
+    "trendUp": "↑ 上漲",
+    "trendDown": "↓ 下跌",
+    "trendStable": "→ 穩定",
+    "quantity": "數量：",
+    "quantityAvailable": "(庫存{{count}}件)",
+    "outOfStock": "已售罄",
+    "wishlist": "♡ 收藏夾",
+    "share": "分享",
+    "guarantees": {
+      "authenticity": "正品保障",
+      "securePayment": "安全支付",
+      "insuredShipping": "保價配送"
+    },
+    "tabs": {
+      "description": "商品描述",
+      "specs": "規格參數",
+      "reviews": "用戶評價 ({{count}})"
+    },
+    "craftsmanship": "匠心工藝",
+    "craftsmanshipDesc": "每一件臻品都由大師級工匠精心打造，秉承代代相傳的傳統工藝。對細節的極致追求確保卓越品質與永恆價值。",
+    "investmentValue": "投資價值",
+    "investmentValueDesc": "這件臻品不僅是一次購買，更是對永恆優雅的投資。本系列奢侈品長期以來保持穩定升值趨勢。",
+    "verifiedPurchase": "已驗證購買",
+    "viewAllReviews": "查看全部{{count}}條評價",
+    "loadMoreReviews": "加載更多評價",
+    "youMayAlsoLike": "您可能還喜歡",
+    "allTitle": "全部臻品",
+    "allSubtitle": "瀏覽我們完整的奢華臻品系列。從經典時計到稀有寶石，每一件商品都經過嚴格認證，來自全球知名正規渠道。",
+    "searchPlaceholder": "按名稱、品牌或關鍵詞搜索...",
+    "filters": {
+      "allCategories": "全部分類",
+      "allBrands": "全部品牌",
+      "sortByName": "按名稱排序",
+      "sortByPriceAsc": "價格：從低到高",
+      "sortByPriceDesc": "價格：從高到低",
+      "sortByRating": "評分最高",
+      "sortByNewest": "最新上架",
+      "priceRange": "價格區間（美元）：",
+      "priceMin": "最低",
+      "priceMax": "最高",
+      "clearFilters": "清除篩選",
+      "showing": "顯示 {{filtered}} / {{total}} 件臻品",
+      "noProducts": "未找到符合您篩選條件的臻品。",
+      "noProductsHint": "請嘗試調整篩選條件或搜索關鍵詞。",
+      "loadingProducts": "加載臻品中..."
+    }
   },
   "categories": {
     "title": "奢華系列",
     "subtitle": "探索頂級品牌臻品",
-    "watches": "奢華腕表",
+    "watches": "奢華腕錶",
     "jewelry": "高級珠寶",
     "handbags": "設計師手袋",
     "diamonds": "璀璨鑽石",
     "fragrances": "奢華香氛",
-    "accessories": "精緻配飾"
+    "accessories": "精緻配飾",
+    "fashion": "設計師時裝",
+    "art": "藝術臻品",
+    "cars": "豪華座駕",
+    "realEstate": "頂級房產",
+    "yachts": "豪華遊艇",
+    "pageTitle": "商品分類",
+    "pageSubtitle": "探索我們精心策劃的奢華分類。從高級製表到精品藝術，發現來自全球最負盛名品牌的頂級臻品。",
+    "searchPlaceholder": "搜索分類、品牌或款式...",
+    "showing": "顯示 {{filtered}} / {{total}} 個分類",
+    "itemsCount": "{{count}} 件商品",
+    "explore": "探索",
+    "moreBrands": "+{{count}} 更多品牌",
+    "noCategories": "未找到與\"{{query}}\"匹配的分類。",
+    "clearSearch": "清除搜索",
+    "descriptions": {
+      "watches": "勞力士、百達翡麗、歐米茄等品牌時計",
+      "jewelry": "鑽石、寶石與貴金屬",
+      "handbags": "頂級設計師手袋與配飾",
+      "fashion": "高級定制與奢華服飾",
+      "art": "原創藝術品與限量版作品",
+      "cars": "頂級汽車與超級跑車",
+      "realEstate": "全球獨家房產",
+      "yachts": "超級遊艇與帆船"
+    },
+    "imageAltSuffix": "系列精選圖片"
+  },
+  "collections": {
+    "title": "奢華系列",
+    "pageSubtitle": "探索我們精心策劃的臻品系列，每一個系列都講述著關於奢華、工藝與永恆優雅的獨特故事。",
+    "searchPlaceholder": "搜索系列、品牌或款式...",
+    "sortByName": "按名稱排序",
+    "sortByProducts": "按商品數排序",
+    "sortByBrands": "按品牌數排序",
+    "showing": "顯示 {{filtered}} / {{total}} 個臻品系列",
+    "itemsCount": "{{count}} 件臻品",
+    "moreBrands": "+{{count}} 更多品牌",
+    "exploreCollection": "探索系列 →",
+    "noCollections": "未找到符合您篩選條件的臻品系列。",
+    "clearFilters": "清除篩選",
+    "productsInCollection": "所選系列中的臻品",
+    "loadingProducts": "加載臻品中...",
+    "ctaTitle": "找不到您想要的臻品？",
+    "ctaSubtitle": "我們的AI驅動禮賓服務可以幫助您從全球合作夥伴網絡中採購稀有獨家臻品。",
+    "askAI": "咨詢AI顧問",
+    "contactConcierge": "聯繫專屬禮賓",
+    "timelessElegance": "永恆經典",
+    "modernLuxe": "現代奢華",
+    "hauteHorlogerie": "高級製表",
+    "rareGems": "珍稀寶石珠寶",
+    "leatherCraftsmanship": "皮革工藝",
+    "limitedEditions": "限量版臻品",
+    "descriptions": {
+      "timelessElegance": "超越季節與潮流的經典臻品。傳承品牌的永恆設計。",
+      "modernLuxe": "突破奢華時尚與配飾邊界的當代設計。",
+      "hauteHorlogerie": "展現製表藝術巔峰的卓越時計。",
+      "rareGems": "為鑒賞家收藏家打造的非凡寶石與珠寶臻品。",
+      "leatherCraftsmanship": "展現卓越工匠技藝的大師級皮具。",
+      "limitedEditions": "為真正鑒賞家打造的限量獨家臻品。"
+    }
   },
   "vip": {
     "title": "VIP尊享會員",
@@ -71,17 +203,244 @@
       "silver": "銀卡會員",
       "gold": "金卡會員",
       "black": "黑卡會員",
-      "diamond": "鑽石會員"
+      "diamond": "鑽石會員",
+      "platinum": "鉑金會員"
     },
     "benefits": {
       "discount": "專屬折扣",
       "concierge": "一對一顧問",
       "priority": "優先購買權",
       "events": "私密活動邀請",
-      "investment": "投資建議服務"
+      "investment": "投資建議服務",
+      "earlyAccess": "優先體驗",
+      "prioritySupport": "專屬客服",
+      "exclusiveEvents": "獨家活動",
+      "personalShopper": "私人導購",
+      "whiteGlove": "白手套尊享服務",
+      "privateCollections": "私人臻品預覽"
     },
     "join": "成為會員",
     "upgrade": "升級會員"
+  },
+  "about": {
+    "title": "關於ZLuxury",
+    "subtitle": "通過人工智能與永恆優雅的融合，重新定義奢華商業。我們將眼光獨到的收藏家與全球頂級臻品相連，以無與倫比的用心完成認證與配送。",
+    "exploreCollection": "探索臻品系列",
+    "viewCollections": "查看全部系列",
+    "mission": {
+      "title": "我們的使命",
+      "description": "通過透明定價、AI驅動個性化服務與無縫跨境購物體驗，讓全球收藏家都能獲得正品高端臻品，實現奢華民主化。我們相信奢華應具有包容性、智能性與高度個性化。"
+    },
+    "vision": {
+      "title": "我們的願景",
+      "description": "到2030年成為全球領先的AI驅動奢侈品市場，連接全球收藏家與來自世界各地的稀有獨家臻品。我們構想一個以科技提升人類獲取與珍藏美好物品體驗的未來。"
+    },
+    "coreValues": {
+      "title": "核心價值觀",
+      "subtitle": "指引我們從採購到客戶服務每一步的原則。",
+      "authenticity": "正品保障",
+      "authenticityDesc": "每一件臻品都通過我們可信賴的專家網絡與拍賣行合作關係進行嚴格認證。",
+      "aiPersonalized": "AI個性化",
+      "aiPersonalizedDesc": "我們的Unicorn AI引擎學習您的偏好，為您推薦匹配獨特品味與生活方式的臻品。",
+      "globalSourcing": "全球直採",
+      "globalSourcingDesc": "香港、日本、歐洲與保稅倉的直達渠道確保最優價格與最快配送。",
+      "vipConcierge": "VIP禮賓服務",
+      "vipConciergeDesc": "為高級會員提供專屬私人導購，從選購到配送全程白手套尊享服務。"
+    },
+    "howItWorks": {
+      "title": "服務流程",
+      "subtitle": "我們獨特的商業模式將全球直採與AI個性化服務相結合，為您提供無與倫比的價值。",
+      "steps": {
+        "sourcing": {
+          "title": "全球直採",
+          "description": "我們通過多種渠道採購奢侈品：香港直採、日本拍賣、歐洲精品店以及上海自貿區保稅倉。"
+        },
+        "authentication": {
+          "title": "正品認證",
+          "description": "每件商品都經過認證鑒定師的嚴格鑒定。序列號、成色等級與來源全部經過驗證。"
+        },
+        "aiMatching": {
+          "title": "AI智能匹配",
+          "description": "我們的Unicorn AI引擎分析您的瀏覽、購買歷史與偏好，為您推薦量身定制的臻品。"
+        },
+        "delivery": {
+          "title": "極速配送",
+          "description": "四種配送方式任選：專人攜帶（0-1天）、保稅倉（2-5天）、直郵（7-14天）與快遞（3-7天）。"
+        }
+      }
+    },
+    "stats": {
+      "authenticatedProducts": "已認證臻品",
+      "luxuryBrands": "奢華品牌",
+      "sourcingChannels": "直採渠道",
+      "averageSavings": "平均零售差價"
+    },
+    "cta": {
+      "title": "準備好體驗不一樣的奢華了嗎？",
+      "subtitle": "立即加入ZLuxury，發現奢華購物的全新範式——人工智能與永恆工藝在此交融。",
+      "shopNow": "立即選購",
+      "browseCollections": "瀏覽臻品系列"
+    }
+  },
+  "aiAssistant": {
+    "title": "AI智能顧問",
+    "subtitle": "由Anna AI平台的Hermes Agent、OpenClaw與Unicorn AI強力驅動",
+    "selectAgent": "選擇AI智能體",
+    "online": "在線",
+    "placeholder": "咨詢奢華臻品、推薦、價格等...",
+    "send": "發送",
+    "agents": {
+      "hermes": {
+        "name": "Hermes智能助手",
+        "nameCn": "愛馬仕AI禮賓",
+        "description": "奢華推薦專家",
+        "capabilities": {
+          "recommendations": "臻品推薦",
+          "expertise": "品牌專業知識",
+          "matching": "風格匹配",
+          "trends": "潮流分析"
+        }
+      },
+      "openclaw": {
+        "name": "OpenClaw引擎",
+        "nameCn": "OpenClaw自動化",
+        "description": "技能與自動化引擎",
+        "capabilities": {
+          "priceComparison": "價格對比",
+          "availability": "庫存查詢",
+          "tracking": "訂單追蹤",
+          "automation": "自動化任務"
+        }
+      },
+      "unicorn": {
+        "name": "Unicorn智能體",
+        "nameCn": "獨角獸對話",
+        "description": "增強AI對話",
+        "capabilities": {
+          "conversation": "自然對話",
+          "context": "上下文理解",
+          "dialogue": "多輪對話",
+          "personalized": "個性化回覆"
+        }
+      }
+    },
+    "welcomeMessage": "歡迎來到ZLuxury AI智能顧問！🎩\n\n我是您的奢華禮賓，由先進AI智能體強力驅動：\n\n**Hermes** — 臻品推薦與品牌專業知識\n**OpenClaw** — 價格追蹤與訂單管理\n**Unicorn** — 創意對話與造型建議\n\n請問今天有什麼可以幫您？",
+    "errorMessage": "抱歉，處理您的請求時出現問題。請重試或選擇其他智能體。"
+  },
+  "businessStrategy": {
+    "title": "商業戰略",
+    "subtitle": "可持續增長的綜合盈利計劃與市場定位",
+    "marketAnalysis": "市場分析",
+    "stats": {
+      "globalMarket": "全球奢侈品市場",
+      "growthRate": "年增長率",
+      "onlineSegment": "線上佔比",
+      "aiAdoption": "AI採用率"
+    },
+    "keyRegions": "核心市場",
+    "targetDemographics": "目標客群",
+    "strategies": {
+      "subscription": {
+        "title": "VIP會員計劃",
+        "description": "提供獨家權益的分級訂閱模式",
+        "revenueModel": "月度經常性收入 + 等級升級激勵",
+        "target": "追求尊貴服務的高淨值個人"
+      },
+      "commission": {
+        "title": "交易佣金",
+        "description": "基於奢侈品交易的佣金收入",
+        "revenueModel": "按筆佣金 + 成交量獎勵",
+        "target": "奢侈品牌與授權經銷商"
+      },
+      "aiServices": {
+        "title": "AI智能體服務",
+        "description": "面向企業的高級AI驅動服務",
+        "revenueModel": "SaaS訂閱 + API使用費",
+        "target": "奢侈品零售商、品牌與市場"
+      },
+      "concierge": {
+        "title": "禮賓服務",
+        "description": "白手套私人導購與咨詢",
+        "revenueModel": "服務費 + 成功獎勵",
+        "target": "超高淨值客戶"
+      }
+    },
+    "revenueModel": "收入模式",
+    "targetAudience": "目標受眾",
+    "aiBenefits": {
+      "title": "AI集成優勢",
+      "hermes": {
+        "name": "Hermes智能體",
+        "benefits": [
+          "個性化臻品推薦",
+          "品牌專業與傳承知識",
+          "風格匹配算法",
+          "投資價值分析"
+        ]
+      },
+      "openclaw": {
+        "name": "OpenClaw技能",
+        "benefits": [
+          "自動化價格對比",
+          "實時庫存查詢",
+          "訂單追蹤自動化",
+          "市場趨勢監控"
+        ]
+      },
+      "unicorn": {
+        "name": "Unicorn智能體",
+        "benefits": [
+          "自然對話界面",
+          "上下文感知回覆",
+          "多輪對話支持",
+          "情感智能"
+        ]
+      }
+    },
+    "categories": {
+      "watchesJewelry": "腕錶與珠寶",
+      "fashionBags": "時裝與手袋",
+      "artCollectibles": "藝術與收藏",
+      "realEstateYachts": "房產與遊艇"
+    },
+    "services": {
+      "hermesApi": "Hermes推薦API",
+      "openClawSuite": "OpenClaw自動化套件",
+      "unicornChat": "Unicorn聊天集成",
+      "fullPlatform": "全AI平台授權"
+    },
+    "packages": {
+      "personalShopping": "私人導購",
+      "collectionAdvisory": "收藏咨詢",
+      "investmentGuidance": "投資指導",
+      "fullYearConcierge": "全年禮賓"
+    },
+    "perSession": "每次",
+    "perConsultation": "每次咨詢",
+    "perAnalysis": "每份分析",
+    "annual": "年費",
+    "customPricing": "定制報價",
+    "demographics": {
+      "hnwi": "高淨值人士 (HNWI) — 資產{{threshold}}以上",
+      "uhnwi": "超高淨值人士 (UHNWI) — 資產{{threshold}}以上",
+      "aspiring": "追求奢華的消費者 — 年收入{{threshold}}以上"
+    },
+    "regions": {
+      "northAmerica": "北美",
+      "europe": "歐洲",
+      "asiaPacific": "亞太地區",
+      "middleEast": "中東"
+    }
+  },
+  "testimonials": {
+    "title": "客戶評價",
+    "subtitle": "來自全球眼光獨到客戶的真實體驗",
+    "trustStats": {
+      "satisfaction": "客戶滿意度",
+      "brands": "已認證奢華品牌",
+      "transactions": "已處理交易額",
+      "members": "活躍會員數"
+    }
   },
   "footer": {
     "description": "融合人工智能與頂級奢華，為尊貴客戶提供獨一無二的購物體驗平台。",
@@ -99,7 +458,24 @@
     "terms": "服務條款",
     "cookies": "Cookie政策",
     "tagline": "為非凡奢華體驗而生",
-    "copyright": "版權所有"
+    "copyright": "版權所有",
+    "quickLinks": "快速鏈接",
+    "services": "尊享服務",
+    "contact": "聯繫我們",
+    "vipMembership": "VIP會員",
+    "auctions": "拍賣中心",
+    "authentication": "正品認證",
+    "valuation": "估值服務",
+    "insurance": "保險服務",
+    "globalShipping": "全球配送",
+    "home": "首頁",
+    "contactInfo": {
+      "hq": "全球總部：瑞士日內瓦",
+      "email": "contact@zluxury.com",
+      "phone": "+41 22 000 0000"
+    },
+    "newsletter": "訂閱快訊",
+    "newsletterPlaceholder": "請輸入您的郵箱"
   },
   "language": {
     "switch": "語言切換",
@@ -116,6 +492,41 @@
     "save": "保存",
     "close": "關閉",
     "currency": "¥",
-    "priceFrom": "起售價"
+    "priceFrom": "起售價",
+    "or": "或",
+    "and": "和",
+    "view": "查看",
+    "readMore": "閱讀更多",
+    "learnMore": "了解更多",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "submit": "提交",
+    "apply": "應用",
+    "select": "選擇",
+    "search": "搜索",
+    "filter": "篩選",
+    "sort": "排序",
+    "all": "全部",
+    "none": "無",
+    "yes": "是",
+    "no": "否",
+    "success": "成功",
+    "failed": "失敗",
+    "warning": "警告",
+    "info": "提示",
+    "networkError": "網絡錯誤，請重試。",
+    "image": "圖片",
+    "collection": "系列",
+    "luxuryProduct": "奢華臻品"
+  },
+  "categoryPage": {
+    "results": "在<1>{{name}}</1>中顯示<0>{{count}}</0>件臻品",
+    "noProductsTitle": "暫無臻品",
+    "noProductsDesc": "該分類暫無臻品上架。",
+    "browseAll": "瀏覽全部系列",
+    "newBadge": "新品",
+    "limitedBadge": "限量",
+    "onlyLeft": "僅剩{{count}}件"
   }
 }

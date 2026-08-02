@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +29,9 @@ jobs:
           version: 10
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
+      - name: Type check
+        run: pnpm run type-check
+        continue-on-error: true
       - name: Build static export
         env:
           NEXT_PUBLIC_BASE_PATH: /zluxury

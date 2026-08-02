@@ -24,6 +24,7 @@
 
 import { motion } from 'framer-motion'
 import { config } from '@/lib/config-loader'
+import { useTranslation } from '@/i18n/useTranslation'
 
 /**
  * Business strategy local configuration
@@ -92,20 +93,20 @@ const activeBusinessConfig = getEffectiveBusinessConfig();
  * VIP tier pricing structure
  */
 interface VipTier {
-  /** Tier name / 等级名称 */
-  name: string;
+  /** Tier key for i18n lookup / 等级i18n查找键 */
+  key: 'silver' | 'gold' | 'platinum';
   /** Monthly price (USD) / 月度价格（美元） */
   price: number;
-  /** List of benefits / 权益列表 */
-  benefits: string[];
+  /** List of benefit keys for i18n lookup / 权益i18n查找键列表 */
+  benefitKeys: string[];
 }
 
 /**
  * Commission rate by category
  */
 interface CommissionRate {
-  /** Product category / 产品类别 */
-  category: string;
+  /** Category key for i18n lookup / 类别i18n查找键 */
+  key: 'watchesJewelry' | 'fashionBags' | 'artCollectibles' | 'realEstateYachts';
   /** Commission percentage range / 佣金比例范围 */
   rate: string;
 }
@@ -114,8 +115,8 @@ interface CommissionRate {
  * AI service pricing
  */
 interface AiService {
-  /** Service name / 服务名称 */
-  name: string;
+  /** Service key for i18n lookup / 服务i18n查找键 */
+  key: 'hermesApi' | 'openClawSuite' | 'unicornChat' | 'fullPlatform';
   /** Price description / 价格描述 */
   price: string;
 }
@@ -124,12 +125,12 @@ interface AiService {
  * Concierge package
  */
 interface ConciergePackage {
-  /** Package name / 套餐名称 */
-  name: string;
+  /** Package key for i18n lookup / 套餐i18n查找键 */
+  key: 'personalShopping' | 'collectionAdvisory' | 'investmentGuidance' | 'fullYearConcierge';
   /** Package price / 套餐价格 */
   price: number;
-  /** Price unit (e.g. per session, annual) / 价格单位 */
-  unit: string;
+  /** Unit key for i18n lookup (e.g. per session, annual) / 价格单位i18n查找键 */
+  unitKey: 'perSession' | 'perConsultation' | 'perAnalysis' | 'annual';
 }
 
 /**
@@ -138,10 +139,8 @@ interface ConciergePackage {
 interface BusinessStrategyEntry {
   /** Unique strategy ID / 策略唯一ID */
   id: 'subscription' | 'commission' | 'ai-services' | 'concierge';
-  /** Strategy display title / 策略显示标题 */
-  title: string;
-  /** Short description / 简要描述 */
-  description: string;
+  /** Strategy key for i18n lookup / 策略i18n查找键 */
+  strategyKey: 'subscription' | 'commission' | 'aiServices' | 'concierge';
   /** VIP tier pricing (for subscription) / VIP等级价格 */
   tiers?: VipTier[];
   /** Commission rates (for commission) / 佣金费率 */
@@ -150,10 +149,6 @@ interface BusinessStrategyEntry {
   services?: AiService[];
   /** Concierge packages / 礼宾服务套餐 */
   packages?: ConciergePackage[];
-  /** Revenue model description / 收入模型描述 */
-  revenueModel: string;
-  /** Target audience description / 目标受众描述 */
-  target: string;
 }
 
 /**
@@ -170,8 +165,8 @@ interface MarketAnalysis {
   aiAdoption: string;
   /** Key geographic regions / 核心市场区域 */
   keyRegions: string[];
-  /** Target customer segments / 目标客户群体 */
-  targetDemographics: string[];
+  /** Demographic keys with thresholds / 目标客户群体键与阈值 */
+  demographics: Array<{ key: 'hnwi' | 'uhnwi' | 'aspiring'; threshold: string }>;
 }
 
 /**
@@ -181,54 +176,42 @@ interface MarketAnalysis {
 const businessStrategies: BusinessStrategyEntry[] = [
   {
     id: 'subscription',
-    title: 'VIP Membership Program',
-    description: 'Tiered subscription model offering exclusive benefits',
+    strategyKey: 'subscription',
     tiers: [
-      { name: 'Silver', price: 99, benefits: ['Early access', 'Priority support', '5% discount'] },
-      { name: 'Gold', price: 299, benefits: ['All Silver + Exclusive events', '10% discount', 'Personal shopper'] },
-      { name: 'Platinum', price: 999, benefits: ['All Gold + White-glove service', '15% discount', 'Private collections'] }
+      { key: 'silver', price: 99, benefitKeys: ['earlyAccess', 'prioritySupport', 'discount'] },
+      { key: 'gold', price: 299, benefitKeys: ['exclusiveEvents', 'discount', 'personalShopper'] },
+      { key: 'platinum', price: 999, benefitKeys: ['whiteGlove', 'discount', 'privateCollections'] }
     ],
-    revenueModel: 'Monthly recurring revenue with tier upgrade incentives',
-    target: 'High-net-worth individuals seeking premium service'
   },
   {
     id: 'commission',
-    title: 'Transaction Commission',
-    description: 'Commission-based revenue from luxury transactions',
+    strategyKey: 'commission',
     rates: [
-      { category: 'Watches & Jewelry', rate: '3-5%' },
-      { category: 'Fashion & Bags', rate: '5-8%' },
-      { category: 'Art & Collectibles', rate: '8-12%' },
-      { category: 'Real Estate & Yachts', rate: '1-3%' }
+      { key: 'watchesJewelry', rate: '3-5%' },
+      { key: 'fashionBags', rate: '5-8%' },
+      { key: 'artCollectibles', rate: '8-12%' },
+      { key: 'realEstateYachts', rate: '1-3%' }
     ],
-    revenueModel: 'Per-transaction commission with volume bonuses',
-    target: 'Luxury brands and authorized dealers'
   },
   {
     id: 'ai-services',
-    title: 'AI Agent Services',
-    description: 'Premium AI-powered services for businesses',
+    strategyKey: 'aiServices',
     services: [
-      { name: 'Hermes Recommendation API', price: 'Custom pricing' },
-      { name: 'OpenClaw Automation Suite', price: activeBusinessConfig.aiServicePrices.openClaw },
-      { name: 'Unicorn Chat Integration', price: activeBusinessConfig.aiServicePrices.unicorn },
-      { name: 'Full AI Platform License', price: activeBusinessConfig.aiServicePrices.fullPlatform }
+      { key: 'hermesApi', price: 'custom' },
+      { key: 'openClawSuite', price: activeBusinessConfig.aiServicePrices.openClaw },
+      { key: 'unicornChat', price: activeBusinessConfig.aiServicePrices.unicorn },
+      { key: 'fullPlatform', price: activeBusinessConfig.aiServicePrices.fullPlatform }
     ],
-    revenueModel: 'SaaS subscription + API usage fees',
-    target: 'Luxury retailers, brands, and marketplaces'
   },
   {
     id: 'concierge',
-    title: 'Concierge Services',
-    description: 'White-glove personal shopping and advisory',
+    strategyKey: 'concierge',
     packages: [
-      { name: 'Personal Shopping', price: 150, unit: 'per session' },
-      { name: 'Collection Advisory', price: 500, unit: 'per consultation' },
-      { name: 'Investment Guidance', price: 1000, unit: 'per analysis' },
-      { name: 'Full Year Concierge', price: 5000, unit: 'annual' }
+      { key: 'personalShopping', price: 150, unitKey: 'perSession' },
+      { key: 'collectionAdvisory', price: 500, unitKey: 'perConsultation' },
+      { key: 'investmentGuidance', price: 1000, unitKey: 'perAnalysis' },
+      { key: 'fullYearConcierge', price: 5000, unitKey: 'annual' }
     ],
-    revenueModel: 'Service fees + success-based bonuses',
-    target: 'Ultra-high-net-worth clients'
   }
 ]
 
@@ -236,16 +219,17 @@ const businessStrategies: BusinessStrategyEntry[] = [
  * Global market analysis data for luxury goods industry
  * Contains market size, growth metrics, key regions, and target demographics
  */
-const marketAnalysis: MarketAnalysis = {
+const marketAnalysis: MarketAnalysis & { regionKeys: string[] } = {
   totalMarket: '1.5 trillion USD',
   growthRate: '8.5% CAGR',
   onlineSegment: '25% of total market',
   aiAdoption: '15% and growing rapidly',
   keyRegions: ['North America', 'Europe', 'Asia-Pacific', 'Middle East'],
-  targetDemographics: [
-    `HNWI (High Net Worth Individuals) - ${activeBusinessConfig.demographicThresholds.hnwi} assets`,
-    `UHNWI (Ultra High Net Worth) - ${activeBusinessConfig.demographicThresholds.uhnwi} assets`,
-    `Aspiring luxury consumers - ${activeBusinessConfig.demographicThresholds.aspiring} income`
+  regionKeys: ['northAmerica', 'europe', 'asiaPacific', 'middleEast'],
+  demographics: [
+    { key: 'hnwi', threshold: activeBusinessConfig.demographicThresholds.hnwi },
+    { key: 'uhnwi', threshold: activeBusinessConfig.demographicThresholds.uhnwi },
+    { key: 'aspiring', threshold: activeBusinessConfig.demographicThresholds.aspiring }
   ]
 }
 
@@ -288,6 +272,15 @@ const StrategyIcon = ({ type }: { type: string }): JSX.Element | null => {
 }
 
 /**
+ * AI benefit config for section rendering
+ */
+const aiBenefitConfigs = [
+  { agentKey: 'hermes', borderClass: 'border-zl-gold', textClass: 'text-zl-gold' },
+  { agentKey: 'openclaw', borderClass: 'border-zl-accent', textClass: 'text-zl-accent' },
+  { agentKey: 'unicorn', borderClass: 'border-zl-accent-light', textClass: 'text-zl-accent-light' }
+]
+
+/**
  * BusinessStrategy Component
  * Main revenue strategy presentation component showcasing business models,
  * market analysis data, and AI integration benefits.
@@ -300,15 +293,17 @@ const StrategyIcon = ({ type }: { type: string }): JSX.Element | null => {
  * @returns {JSX.Element} Business strategy presentation section
  */
 export default function BusinessStrategy() {
+  const { t } = useTranslation()
+
   return (
     <section className="py-20 bg-zl-dark-2">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-            Business <span className="text-gradient">Strategy</span>
+            {t('businessStrategy.title').split(' ')[0]} <span className="text-gradient">{t('businessStrategy.title').split(' ').slice(1).join(' ')}</span>
           </h2>
           <p className="text-zl-text-muted max-w-2xl mx-auto">
-            Comprehensive monetization plan and market positioning for sustainable growth
+            {t('businessStrategy.subtitle')}
           </p>
         </div>
 
@@ -322,46 +317,46 @@ export default function BusinessStrategy() {
             <svg className="w-5 h-5 text-zl-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Market Analysis
+            {t('businessStrategy.marketAnalysis')}
           </h3>
 
           <div className="grid md:grid-cols-4 gap-6 mb-6">
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">
               <div className="text-2xl font-bold text-zl-accent mb-2">{activeBusinessConfig.marketStats.totalMarketLabel}</div>
-              <div className="text-sm text-zl-text-muted">Global Luxury Market</div>
+              <div className="text-sm text-zl-text-muted">{t('businessStrategy.stats.globalMarket')}</div>
             </div>
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">
-              <div className="text-2xl font-bold text-zl-success mb-2">8.5%</div>
-              <div className="text-sm text-zl-text-muted">Annual Growth Rate</div>
+              <div className="text-2xl font-bold text-zl-success mb-2">{marketAnalysis.growthRate.split(' ')[0]}</div>
+              <div className="text-sm text-zl-text-muted">{t('businessStrategy.stats.growthRate')}</div>
             </div>
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">
-              <div className="text-2xl font-bold text-zl-gold mb-2">25%</div>
-              <div className="text-sm text-zl-text-muted">Online Segment</div>
+              <div className="text-2xl font-bold text-zl-gold mb-2">{marketAnalysis.onlineSegment.split('%')[0]}%</div>
+              <div className="text-sm text-zl-text-muted">{t('businessStrategy.stats.onlineSegment')}</div>
             </div>
             <div className="text-center p-4 bg-zl-dark-3 rounded-lg">
-              <div className="text-2xl font-bold text-zl-accent-light mb-2">15%</div>
-              <div className="text-sm text-zl-text-muted">AI Adoption Rate</div>
+              <div className="text-2xl font-bold text-zl-accent-light mb-2">{marketAnalysis.aiAdoption.split('%')[0]}%</div>
+              <div className="text-sm text-zl-text-muted">{t('businessStrategy.stats.aiAdoption')}</div>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-semibold text-zl-accent mb-3 uppercase tracking-wider">Key Regions</h4>
+              <h4 className="text-sm font-semibold text-zl-accent mb-3 uppercase tracking-wider">{t('businessStrategy.keyRegions')}</h4>
               <div className="flex flex-wrap gap-2">
-                {marketAnalysis.keyRegions.map((region) => (
-                  <span key={region} className="px-3 py-1 bg-zl-dark-3 text-zl-text-muted rounded-full text-sm">
-                    {region}
+                {marketAnalysis.regionKeys.map((regionKey) => (
+                  <span key={regionKey} className="px-3 py-1 bg-zl-dark-3 text-zl-text-muted rounded-full text-sm">
+                    {t(`businessStrategy.regions.${regionKey}`)}
                   </span>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-zl-accent mb-3 uppercase tracking-wider">Target Demographics</h4>
+              <h4 className="text-sm font-semibold text-zl-accent mb-3 uppercase tracking-wider">{t('businessStrategy.targetDemographics')}</h4>
               <div className="space-y-2">
-                {marketAnalysis.targetDemographics.map((demo) => (
-                  <div key={demo} className="flex items-center gap-2 text-sm text-zl-text-muted">
+                {marketAnalysis.demographics.map((demo) => (
+                  <div key={demo.key} className="flex items-center gap-2 text-sm text-zl-text-muted">
                     <span className="w-2 h-2 bg-zl-accent rounded-full"></span>
-                    {demo}
+                    {t(`businessStrategy.demographics.${demo.key}`, { threshold: demo.threshold })}
                   </div>
                 ))}
               </div>
@@ -383,31 +378,62 @@ export default function BusinessStrategy() {
                   <StrategyIcon type={strategy.id} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold font-montserrat">{strategy.title}</h3>
-                  <p className="text-sm text-zl-text-muted">{strategy.description}</p>
+                  <h3 className="text-lg font-semibold font-montserrat">{t(`businessStrategy.strategies.${strategy.strategyKey}.title`)}</h3>
+                  <p className="text-sm text-zl-text-muted">{t(`businessStrategy.strategies.${strategy.strategyKey}.description`)}</p>
                 </div>
               </div>
 
               <div className="space-y-3 mb-4">
-                {(strategy.tiers || strategy.rates || strategy.services || strategy.packages)?.map((item: any) => (
-                  <div key={item.name || item.category} className="flex items-center justify-between p-3 bg-zl-dark-3 rounded-lg">
-                    <span className="text-sm text-zl-text">{item.name || item.category}</span>
+                {strategy.tiers?.map((tier) => (
+                  <div key={tier.key} className="p-3 bg-zl-dark-3 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-zl-text font-semibold">{t(`vip.tiers.${tier.key}`)}</span>
+                      <span className="text-sm font-semibold text-zl-accent">${tier.price}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {tier.benefitKeys.map((bk) => (
+                        <span key={bk} className="text-xs px-2 py-0.5 rounded bg-zl-dark text-zl-text-muted">
+                          {t(`vip.benefits.${bk}`)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {strategy.rates?.map((rate) => (
+                  <div key={rate.key} className="flex items-center justify-between p-3 bg-zl-dark-3 rounded-lg">
+                    <span className="text-sm text-zl-text">{t(`businessStrategy.categories.${rate.key}`)}</span>
+                    <span className="text-sm font-semibold text-zl-accent">{rate.rate}</span>
+                  </div>
+                ))}
+
+                {strategy.services?.map((service) => (
+                  <div key={service.key} className="flex items-center justify-between p-3 bg-zl-dark-3 rounded-lg">
+                    <span className="text-sm text-zl-text">{t(`businessStrategy.services.${service.key}`)}</span>
                     <span className="text-sm font-semibold text-zl-accent">
-                      {item.price ? `$${item.price}` : item.rate}
-                      {item.unit && <span className="text-zl-text-muted ml-1">{item.unit}</span>}
+                      {service.price === 'custom' ? t('businessStrategy.customPricing') : service.price}
+                    </span>
+                  </div>
+                ))}
+
+                {strategy.packages?.map((pkg) => (
+                  <div key={pkg.key} className="flex items-center justify-between p-3 bg-zl-dark-3 rounded-lg">
+                    <span className="text-sm text-zl-text">{t(`businessStrategy.packages.${pkg.key}`)}</span>
+                    <span className="text-sm font-semibold text-zl-accent">
+                      ${pkg.price}<span className="text-zl-text-muted ml-1">{t(`businessStrategy.${pkg.unitKey}`)}</span>
                     </span>
                   </div>
                 ))}
               </div>
 
               <div className="pt-4 border-t border-zl-gray">
-                <div className="text-xs text-zl-accent uppercase tracking-wider mb-2">Revenue Model</div>
-                <p className="text-sm text-zl-text-muted">{strategy.revenueModel}</p>
+                <div className="text-xs text-zl-accent uppercase tracking-wider mb-2">{t('businessStrategy.revenueModel')}</div>
+                <p className="text-sm text-zl-text-muted">{t(`businessStrategy.strategies.${strategy.strategyKey}.revenueModel`)}</p>
               </div>
 
               <div className="mt-3">
-                <div className="text-xs text-zl-gold uppercase tracking-wider mb-2">Target Audience</div>
-                <p className="text-sm text-zl-text-muted">{strategy.target}</p>
+                <div className="text-xs text-zl-gold uppercase tracking-wider mb-2">{t('businessStrategy.targetAudience')}</div>
+                <p className="text-sm text-zl-text-muted">{t(`businessStrategy.strategies.${strategy.strategyKey}.target`)}</p>
               </div>
             </motion.div>
           ))}
@@ -423,37 +449,20 @@ export default function BusinessStrategy() {
             <svg className="w-5 h-5 text-zl-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-            AI Integration Benefits
+            {t('businessStrategy.aiBenefits.title')}
           </h3>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-4 bg-zl-dark-3 rounded-lg border-l-2 border-zl-gold">
-              <h4 className="font-semibold text-zl-gold mb-2">Hermes Agent</h4>
-              <ul className="space-y-1 text-sm text-zl-text-muted">
-                <li>• Personalized product recommendations</li>
-                <li>• Brand expertise and heritage knowledge</li>
-                <li>• Style matching algorithms</li>
-                <li>• Investment value analysis</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-zl-dark-3 rounded-lg border-l-2 border-zl-accent">
-              <h4 className="font-semibold text-zl-accent mb-2">OpenClaw Skills</h4>
-              <ul className="space-y-1 text-sm text-zl-text-muted">
-                <li>• Automated price comparisons</li>
-                <li>• Real-time availability checks</li>
-                <li>• Order tracking automation</li>
-                <li>• Market trend monitoring</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-zl-dark-3 rounded-lg border-l-2 border-zl-accent-light">
-              <h4 className="font-semibold text-zl-accent-light mb-2">Unicorn Agent</h4>
-              <ul className="space-y-1 text-sm text-zl-text-muted">
-                <li>• Natural conversation interface</li>
-                <li>• Context-aware responses</li>
-                <li>• Multi-turn dialogue support</li>
-                <li>• Emotional intelligence</li>
-              </ul>
-            </div>
+            {aiBenefitConfigs.map(({ agentKey, borderClass, textClass }) => (
+              <div key={agentKey} className={`p-4 bg-zl-dark-3 rounded-lg border-l-2 ${borderClass}`}>
+                <h4 className={`font-semibold ${textClass} mb-2`}>{t(`businessStrategy.aiBenefits.${agentKey}.name`)}</h4>
+                <ul className="space-y-1 text-sm text-zl-text-muted">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <li key={idx}>&bull; {t(`businessStrategy.aiBenefits.${agentKey}.benefits.${idx}`)}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

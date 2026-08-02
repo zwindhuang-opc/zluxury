@@ -194,11 +194,11 @@ export default function HeroSection() {
               <div className="absolute inset-0 border-2 border-zl-gold/20 rounded-lg"></div>
               <div className="absolute inset-4 border border-zl-gold/10 rounded-lg"></div>
 
-              {/* Real luxury product image / 真实奢侈品产品图片 */}
+              {/* Real luxury product image */}
               <div className="relative w-full h-full overflow-hidden rounded-lg">
                 <img
                   src={`https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent("Luxury boutique interior dark background gold chandelier marble velvet furniture elegant cinematic wide angle editorial")}&image_size=landscape_16_9`}
-                  alt="Luxury Collection - Watches, Jewelry & Handbags / 奢华系列 - 腕表、珠宝与手袋"
+                  alt={t('hero.imageAlt')}
                   className="w-full h-full object-cover"
                   loading="eager"
                   referrerPolicy="no-referrer"

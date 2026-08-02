@@ -21,6 +21,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { CategoryRepository, Category } from '@/data/products'
+import { useTranslation } from '@/i18n/useTranslation'
 
 // ============================================================================
 // CATEGORY IMAGE MAPPING
@@ -124,6 +125,7 @@ const CategoryIcon = ({ categoryId }: { categoryId: string }): JSX.Element | nul
  * product count. Supports search filtering for quick category discovery.
  */
 export default function CategoriesPage() {
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
 
   const categories: Category[] = useMemo(() => {
@@ -151,12 +153,10 @@ export default function CategoriesPage() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold font-montserrat mb-4">
-            <span className="text-gradient">Product Categories</span>
+            <span className="text-gradient">{t('categories.pageTitle')}</span>
           </h1>
           <p className="text-zl-text-muted text-lg max-w-2xl">
-            Explore our curated selection of luxury categories. From haute
-            horlogerie to fine art, discover the finest pieces from the
-            world&apos;s most prestigious houses.
+            {t('categories.pageSubtitle')}
           </p>
         </motion.div>
       </section>
@@ -169,7 +169,7 @@ export default function CategoriesPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search categories, brands, or styles..."
+              placeholder={t('categories.searchPlaceholder')}
               className="input-luxury w-full pl-12"
             />
             <svg
@@ -187,7 +187,7 @@ export default function CategoriesPage() {
             </svg>
           </div>
           <div className="mt-4 text-sm text-zl-text-muted">
-            Showing {filteredCategories.length} of {categories.length} categories
+            {t('categories.showing', { filtered: filteredCategories.length, total: categories.length })}
           </div>
         </div>
       </section>
@@ -256,7 +256,7 @@ export default function CategoriesPage() {
 
                     {/* Product count badge */}
                     <div className="absolute top-3 right-3 bg-zl-accent/90 text-zl-dark px-3 py-1 rounded-full text-xs font-semibold">
-                      {category.count} items
+                      {t('categories.itemsCount', { count: category.count })}
                     </div>
                   </div>
 
@@ -281,14 +281,14 @@ export default function CategoriesPage() {
                       ))}
                       {category.brands.length > 4 && (
                         <span className="text-xs px-2 py-1 text-zl-accent">
-                          +{category.brands.length - 4} more
+                          {t('categories.moreBrands', { count: category.brands.length - 4 })}
                         </span>
                       )}
                     </div>
 
                     <div className="flex items-center justify-between pt-3 border-t border-zl-gray">
                       <span className="text-xs text-zl-accent font-semibold uppercase tracking-wide">
-                        Explore
+                        {t('categories.explore')}
                       </span>
                       <svg
                         className="w-4 h-4 text-zl-text-muted group-hover:text-zl-accent group-hover:translate-x-1 transition-all"
@@ -315,13 +315,13 @@ export default function CategoriesPage() {
         {filteredCategories.length === 0 && (
           <div className="text-center py-20">
             <p className="text-zl-text-muted text-lg mb-4">
-              No categories found matching &quot;{searchQuery}&quot;.
+              {t('categories.noCategories', { query: searchQuery })}
             </p>
             <button
               onClick={() => setSearchQuery('')}
               className="premium-button px-6 py-2 rounded-lg"
             >
-              Clear Search
+              {t('categories.clearSearch')}
             </button>
           </div>
         )}

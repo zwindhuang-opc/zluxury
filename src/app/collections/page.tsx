@@ -31,8 +31,9 @@ import { ProductRepository } from '@/data/products'
 interface Collection {
   id: string;
   name: string;
-  nameKey: string; // Translation key for i18n
+  nameKey: string;
   description: string;
+  descriptionKey: string;
   image: string;
   productCount: number;
   brands: string[];
@@ -65,7 +66,8 @@ const collectionsData: Collection[] = [
     id: 'timeless-elegance',
     name: 'Timeless Elegance',
     nameKey: 'collections.timelessElegance',
-    description: 'Classic pieces that transcend seasons and trends. Enduring designs from heritage houses.',
+    description: '',
+    descriptionKey: 'collections.descriptions.timelessElegance',
     image: '/images/collections/timeless.jpg',
     productCount: 156,
     brands: ['Cartier', 'Tiffany & Co.', 'Van Cleef & Arpels', 'Bulgari'],
@@ -75,7 +77,8 @@ const collectionsData: Collection[] = [
     id: 'modern-luxe',
     name: 'Modern Luxury',
     nameKey: 'collections.modernLuxe',
-    description: 'Contemporary designs pushing boundaries of luxury fashion and accessories.',
+    description: '',
+    descriptionKey: 'collections.descriptions.modernLuxe',
     image: '/images/collections/modern.jpg',
     productCount: 234,
     brands: ['Louis Vuitton', 'Gucci', 'Dior', 'Prada'],
@@ -85,7 +88,8 @@ const collectionsData: Collection[] = [
     id: 'haute-horlogerie',
     name: 'Haute Horlogerie',
     nameKey: 'collections.hauteHorlogerie',
-    description: 'Exceptional timepieces showcasing the pinnacle of watchmaking artistry.',
+    description: '',
+    descriptionKey: 'collections.descriptions.hauteHorlogerie',
     image: '/images/collections/watches.jpg',
     productCount: 89,
     brands: ['Patek Philippe', 'Audemars Piguet', 'Vacheron Constantin', 'Breguet'],
@@ -95,7 +99,8 @@ const collectionsData: Collection[] = [
     id: 'rare-gems',
     name: 'Rare Gems & Jewelry',
     nameKey: 'collections.rareGems',
-    description: 'Extraordinary gemstones and jewelry pieces for discerning collectors.',
+    description: '',
+    descriptionKey: 'collections.descriptions.rareGems',
     image: '/images/collections/jewelry.jpg',
     productCount: 67,
     brands: ['Graff Diamonds', 'Harry Winston', 'Cartier High Jewelry'],
@@ -105,7 +110,8 @@ const collectionsData: Collection[] = [
     id: 'leather-craftsmanship',
     name: 'Leather Craftsmanship',
     nameKey: 'collections.leatherCraftsmanship',
-    description: 'Master leather goods showcasing exceptional artisanal skills.',
+    description: '',
+    descriptionKey: 'collections.descriptions.leatherCraftsmanship',
     image: '/images/collections/leather.jpg',
     productCount: 198,
     brands: ['Hermès', 'Bottega Veneta', 'Moynat'],
@@ -115,7 +121,8 @@ const collectionsData: Collection[] = [
     id: 'limited-editions',
     name: 'Limited Editions',
     nameKey: 'collections.limitedEditions',
-    description: 'Exclusive pieces available in limited quantities for true connoisseurs.',
+    description: '',
+    descriptionKey: 'collections.descriptions.limitedEditions',
     image: '/images/collections/limited.jpg',
     productCount: 45,
     brands: ['Rolex', 'Chanel', 'Supreme collaborations'],
@@ -288,10 +295,10 @@ export default function CollectionsPage() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold font-montserrat mb-4">
-            <span className="text-gradient">{t('categories.title')}</span>
+            <span className="text-gradient">{t('collections.title')}</span>
           </h1>
           <p className="text-zl-text-muted text-lg max-w-2xl">
-            Explore our meticulously curated collections, each telling a unique story of luxury, craftsmanship, and timeless elegance.
+            {t('collections.pageSubtitle')}
           </p>
         </motion.div>
       </section>
@@ -306,7 +313,7 @@ export default function CollectionsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search collections, brands, or styles..."
+                placeholder={t('collections.searchPlaceholder')}
                 className="input-luxury w-full pl-12"
               />
               <svg
@@ -326,9 +333,9 @@ export default function CollectionsPage() {
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 className="bg-zl-dark-3 border border-zl-gray rounded-lg px-4 py-2 text-sm focus:border-zl-accent outline-none"
               >
-                <option value="name">Sort by Name</option>
-                <option value="products">Sort by Products</option>
-                <option value="brands">Sort by Brands</option>
+                <option value="name">{t('collections.sortByName')}</option>
+                <option value="products">{t('collections.sortByProducts')}</option>
+                <option value="brands">{t('collections.sortByBrands')}</option>
               </select>
 
               {/* View Mode Toggle / 视图模式切换 */}
@@ -360,7 +367,7 @@ export default function CollectionsPage() {
 
           {/* Results count / 结果计数 */}
           <div className="mt-4 text-sm text-zl-text-muted">
-            Showing {filteredCollections.length} of {collectionsData.length} collections
+            {t('collections.showing', { filtered: filteredCollections.length, total: collectionsData.length })}
           </div>
         </div>
       </section>
@@ -397,18 +404,18 @@ export default function CollectionsPage() {
 
                   {/* Product count badge / 产品数量徽章 */}
                   <div className="absolute top-4 right-4 bg-zl-accent/90 text-zl-dark px-3 py-1 rounded-full text-xs font-semibold">
-                    {collection.productCount} Items
+                    {t('collections.itemsCount', { count: collection.productCount })}
                   </div>
                 </div>
 
                 {/* Collection Info / 收藏信息 */}
                 <div className="p-6">
                   <h3 className="text-xl font-semibold font-montserrat mb-2 group-hover:text-zl-accent transition-colors">
-                    {collection.name}
+                    {t(collection.nameKey)}
                   </h3>
 
                   <p className="text-sm text-zl-text-muted mb-4 line-clamp-2">
-                    {collection.description}
+                    {t((collection as any).descriptionKey)}
                   </p>
 
                   {/* Brand Tags / 品牌标签 */}
@@ -420,7 +427,7 @@ export default function CollectionsPage() {
                     ))}
                     {collection.brands.length > 3 && (
                       <span className="text-xs px-2 py-1 text-zl-accent">
-                        +{collection.brands.length - 3} more
+                        {t('collections.moreBrands', { count: collection.brands.length - 3 })}
                       </span>
                     )}
                   </div>
@@ -436,7 +443,7 @@ export default function CollectionsPage() {
 
                   {/* Action button / 操作按钮 */}
                   <button className="mt-4 w-full py-2 border border-zl-accent text-zl-accent rounded-lg hover:bg-zl-accent hover:text-zl-dark transition-all text-sm font-medium">
-                    Explore Collection →
+                    {t('collections.exploreCollection')}
                   </button>
                 </div>
               </div>
@@ -447,12 +454,12 @@ export default function CollectionsPage() {
         {/* Empty state / 空状态 */}
         {filteredCollections.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-zl-text-muted text-lg mb-4">No collections found matching your criteria.</p>
+            <p className="text-zl-text-muted text-lg mb-4">{t('collections.noCollections')}</p>
             <button
               onClick={() => setSearchQuery('')}
               className="premium-button px-6 py-2 rounded-lg"
             >
-              Clear Filters
+              {t('collections.clearFilters')}
             </button>
           </div>
         )}
@@ -463,7 +470,7 @@ export default function CollectionsPage() {
         <section id="products-section" className="container">
           <div className="border-t border-zl-gray pt-12">
             <h2 className="text-2xl font-bold font-montserrat mb-8">
-              Products in Selected Collection
+              {t('collections.productsInCollection')}
             </h2>
 
             {loadingProducts ? (
@@ -492,7 +499,7 @@ export default function CollectionsPage() {
               </div>
             ) : (
               <p className="text-center text-zl-text-muted py-8">
-                Loading products...
+                {t('collections.loadingProducts')}
               </p>
             )}
           </div>
@@ -510,17 +517,17 @@ export default function CollectionsPage() {
 
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-              Can&apos;t Find What You&apos;re Looking For?
+              {t('collections.ctaTitle')}
             </h2>
             <p className="text-zl-text-muted max-w-2xl mx-auto mb-8">
-              Our AI-powered concierge service can help you source rare and exclusive pieces from our global network of partners.
+              {t('collections.ctaSubtitle')}
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/ai-assistant" className="premium-button px-8 py-3 rounded-xl text-lg">
-                Ask AI Assistant
+                {t('collections.askAI')}
               </Link>
               <Link href="/concierge" className="px-8 py-3 border border-zl-accent text-zl-accent rounded-xl hover:bg-zl-accent/10 transition text-lg">
-                Contact Concierge
+                {t('collections.contactConcierge')}
               </Link>
             </div>
           </div>

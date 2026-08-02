@@ -21,6 +21,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslation } from '@/i18n/useTranslation'
 
 /**
  * Trust indicator statistic data structure
@@ -145,16 +146,18 @@ const testimonials: Testimonial[] = [
 ]
 
 export default function TestimonialsSection() {
+  const { t } = useTranslation()
+  const trustStatKeys = ['satisfaction', 'brands', 'transactions', 'members']
   return (
     <section className="py-20">
       <div className="container">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-            Client <span className="text-gradient">Testimonials</span>
+            {t('testimonials.title').split(' ')[0]} <span className="text-gradient">{t('testimonials.title').split(' ').slice(1).join(' ')}</span>
           </h2>
           <p className="text-zl-text-muted max-w-2xl mx-auto">
-            Real experiences from our discerning clients worldwide
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -217,10 +220,10 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.5, delay: 0.6 }}
         >
           <div className="grid md:grid-cols-4 gap-6 text-center">
-            {trustStats.map((stat) => (
+            {trustStats.map((stat, index) => (
               <div key={stat.label}>
                 <div className={`text-3xl font-bold font-montserrat mb-2 ${stat.colorClass}`}>{stat.value}</div>
-                <div className="text-sm text-zl-text-muted">{stat.label}</div>
+                <div className="text-sm text-zl-text-muted">{t(`testimonials.trustStats.${trustStatKeys[index]}`)}</div>
               </div>
             ))}
           </div>

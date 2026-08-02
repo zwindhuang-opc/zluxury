@@ -20,71 +20,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-
-// ============================================================================
-// DATA
-// ============================================================================
-
-const coreValues = [
-  {
-    title: 'Authenticity',
-    description:
-      'Every piece is meticulously authenticated through our network of trusted experts and auction house partnerships.',
-    icon: '🛡️',
-  },
-  {
-    title: 'AI-Personalized',
-    description:
-      'Our Unicorn AI engine learns your preferences to recommend pieces that match your unique taste and lifestyle.',
-    icon: '🤖',
-  },
-  {
-    title: 'Global Sourcing',
-    description:
-      'Direct channels from Hong Kong, Japan, Europe, and bonded warehouses ensure the best prices and fastest delivery.',
-    icon: '🌐',
-  },
-  {
-    title: 'VIP Concierge',
-    description:
-      'Dedicated personal shoppers for our premium members, providing white-glove service from selection to delivery.',
-    icon: '💎',
-  },
-]
-
-const businessModel = [
-  {
-    step: '01',
-    title: 'Sourcing',
-    description:
-      'We procure luxury items through multiple channels: Hong Kong direct, Japan auctions, European boutiques, and Shanghai FTZ bonded warehouses.',
-  },
-  {
-    step: '02',
-    title: 'Authentication',
-    description:
-      'Every item undergoes rigorous authentication by certified appraisers. Serial numbers, condition grading, and provenance are all verified.',
-  },
-  {
-    step: '03',
-    title: 'AI Matching',
-    description:
-      'Our Unicorn AI engine analyzes your browsing, purchase history, and preferences to recommend pieces tailored to your taste and lifestyle.',
-  },
-  {
-    step: '04',
-    title: 'Delivery',
-    description:
-      'Choose from four shipping modes including personal carry (0-1 day), bonded warehouse (2-5 days), direct mail (7-14 days), and express courier (3-7 days).',
-  },
-]
-
-const stats = [
-  { value: '500+', label: 'Authenticated Products' },
-  { value: '15+', label: 'Luxury Brands' },
-  { value: '4', label: 'Sourcing Channels' },
-  { value: '30%', label: 'Average Savings vs Retail' },
-]
+import { useTranslation } from '@/i18n/useTranslation'
 
 // ============================================================================
 // ABOUT PAGE COMPONENT
@@ -97,6 +33,7 @@ const stats = [
  * Uses animated sections and a professional luxury aesthetic.
  */
 export default function AboutPage() {
+  const { t } = useTranslation()
   return (
     <main className="min-h-screen pt-24 pb-20">
       {/* Hero Section */}
@@ -108,23 +45,20 @@ export default function AboutPage() {
           className="text-center max-w-4xl mx-auto"
         >
           <h1 className="text-4xl md:text-6xl font-bold font-montserrat mb-6">
-            About <span className="text-gradient">ZLuxury</span>
+            {t('about.title')}
           </h1>
           <p className="text-xl text-zl-text-muted leading-relaxed mb-8">
-            Redefining luxury commerce through the fusion of artificial
-            intelligence and timeless elegance. We connect discerning
-            collectors with the world&apos;s finest pieces, authenticated and
-            delivered with unparalleled care.
+            {t('about.subtitle')}
           </p>
           <div className="flex justify-center gap-4">
             <Link href="/products" className="premium-button px-8 py-3 rounded-xl">
-              Explore Collection
+              {t('about.exploreCollection')}
             </Link>
             <Link
               href="/collections"
               className="px-8 py-3 border border-zl-accent text-zl-accent rounded-xl hover:bg-zl-accent/10 transition"
             >
-              View Collections
+              {t('about.viewCollections')}
             </Link>
           </div>
         </motion.div>
@@ -141,13 +75,9 @@ export default function AboutPage() {
             className="glass-card rounded-2xl p-8"
           >
             <div className="text-4xl mb-4">🎯</div>
-            <h2 className="text-2xl font-bold font-montserrat mb-4">Our Mission</h2>
+            <h2 className="text-2xl font-bold font-montserrat mb-4">{t('about.mission.title')}</h2>
             <p className="text-zl-text-muted leading-relaxed">
-              To democratize luxury by making authentic, high-end pieces
-              accessible to collectors worldwide through transparent pricing,
-              AI-driven personalization, and a seamless cross-border shopping
-              experience. We believe luxury should be inclusive, intelligent,
-              and deeply personal.
+              {t('about.mission.description')}
             </p>
           </motion.div>
 
@@ -159,13 +89,9 @@ export default function AboutPage() {
             className="glass-card rounded-2xl p-8"
           >
             <div className="text-4xl mb-4">✨</div>
-            <h2 className="text-2xl font-bold font-montserrat mb-4">Our Vision</h2>
+            <h2 className="text-2xl font-bold font-montserrat mb-4">{t('about.vision.title')}</h2>
             <p className="text-zl-text-muted leading-relaxed">
-              To become the world&apos;s leading AI-powered luxury marketplace
-              by 2030, connecting collectors with rare and exclusive pieces
-              from every corner of the globe. We envision a future where
-              technology enhances the human experience of acquiring and
-              cherishing beautiful objects.
+              {t('about.vision.description')}
             </p>
           </motion.div>
         </div>
@@ -181,18 +107,22 @@ export default function AboutPage() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-            Core <span className="text-gradient">Values</span>
+            {t('about.coreValues.title')}
           </h2>
           <p className="text-zl-text-muted max-w-2xl mx-auto">
-            The principles that guide everything we do — from sourcing to
-            customer service.
+            {t('about.coreValues.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {coreValues.map((value, index) => (
+          {[
+            { key: 'authenticity', icon: '🛡️' },
+            { key: 'aiPersonalized', icon: '🤖' },
+            { key: 'globalSourcing', icon: '🌐' },
+            { key: 'vipConcierge', icon: '💎' },
+          ].map((item, index) => (
             <motion.div
-              key={value.title}
+              key={item.key}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -200,13 +130,13 @@ export default function AboutPage() {
               className="luxury-card rounded-xl p-6 text-center group"
             >
               <div className="text-4xl mb-4 transition-transform duration-300 group-hover:scale-110">
-                {value.icon}
+                {item.icon}
               </div>
               <h3 className="text-lg font-semibold font-montserrat mb-2 group-hover:text-zl-accent transition">
-                {value.title}
+                {t(`about.coreValues.${item.key}`)}
               </h3>
               <p className="text-sm text-zl-text-muted leading-relaxed">
-                {value.description}
+                {t(`about.coreValues.${item.key}Desc`)}
               </p>
             </motion.div>
           ))}
@@ -223,18 +153,22 @@ export default function AboutPage() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-            How It <span className="text-gradient">Works</span>
+            {t('about.howItWorks.title')}
           </h2>
           <p className="text-zl-text-muted max-w-2xl mx-auto">
-            Our unique business model combines global sourcing with
-            AI-powered personalization to deliver unmatched value.
+            {t('about.howItWorks.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {businessModel.map((step, index) => (
+          {[
+            { key: 'sourcing', step: '01' },
+            { key: 'authentication', step: '02' },
+            { key: 'aiMatching', step: '03' },
+            { key: 'delivery', step: '04' },
+          ].map((item, index) => (
             <motion.div
-              key={step.step}
+              key={item.step}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -243,13 +177,13 @@ export default function AboutPage() {
             >
               <div className="luxury-card rounded-xl p-6 h-full">
                 <div className="text-5xl font-bold text-zl-accent/30 mb-4">
-                  {step.step}
+                  {item.step}
                 </div>
                 <h3 className="text-xl font-semibold font-montserrat mb-3">
-                  {step.title}
+                  {t(`about.howItWorks.steps.${item.key}.title`)}
                 </h3>
                 <p className="text-sm text-zl-text-muted leading-relaxed">
-                  {step.description}
+                  {t(`about.howItWorks.steps.${item.key}.description`)}
                 </p>
               </div>
             </motion.div>
@@ -267,9 +201,14 @@ export default function AboutPage() {
           className="glass-card rounded-2xl p-12"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, index) => (
+            {[
+              { value: '500+', labelKey: 'authenticatedProducts' },
+              { value: '15+', labelKey: 'luxuryBrands' },
+              { value: '4', labelKey: 'sourcingChannels' },
+              { value: '30%', labelKey: 'averageSavings' },
+            ].map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -279,7 +218,7 @@ export default function AboutPage() {
                   {stat.value}
                 </div>
                 <div className="text-sm text-zl-text-muted uppercase tracking-wide">
-                  {stat.label}
+                  {t(`about.stats.${stat.labelKey}`)}
                 </div>
               </motion.div>
             ))}
@@ -303,22 +242,20 @@ export default function AboutPage() {
 
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4">
-              Ready to Experience Luxury Differently?
+              {t('about.cta.title')}
             </h2>
             <p className="text-zl-text-muted max-w-2xl mx-auto mb-8">
-              Join ZLuxury today and discover a new paradigm in luxury
-              shopping — where artificial intelligence meets timeless
-              craftsmanship.
+              {t('about.cta.subtitle')}
             </p>
             <div className="flex justify-center gap-4">
               <Link href="/products" className="premium-button px-8 py-3 rounded-xl text-lg">
-                Shop Now
+                {t('about.cta.shopNow')}
               </Link>
               <Link
                 href="/collections"
                 className="px-8 py-3 border border-zl-accent text-zl-accent rounded-xl hover:bg-zl-accent/10 transition text-lg"
               >
-                Browse Collections
+                {t('about.cta.browseCollections')}
               </Link>
             </div>
           </div>

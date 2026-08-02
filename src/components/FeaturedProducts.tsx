@@ -17,10 +17,8 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useTranslation } from '@/i18n/useTranslation'
 import { Product, ProductRepository } from '@/data/products'
-import { PricingResult, PricingEngine } from '@/data/pricing'
-import { SourcingService, SourcingChannelType } from '@/data/sourcing'
 
 // Helper function to get emoji based on category
 const getCategoryEmoji = (category: string): string => {
@@ -35,6 +33,18 @@ const getCategoryEmoji = (category: string): string => {
     'Yachts': '⛵'
   }
   return emojis[category] || '✨'
+}
+
+// Map raw product.category slug → i18n translation key
+const CATEGORY_I18N_KEY: Record<string, string> = {
+  'Watches': 'categories.watches',
+  'Bags': 'categories.handbags',
+  'Jewelry': 'categories.jewelry',
+  'Fashion': 'categories.fashion',
+  'Art': 'categories.art',
+  'Cars': 'categories.cars',
+  'Real Estate': 'categories.realEstate',
+  'Yachts': 'categories.yachts'
 }
 
 // Real brand-matched Unsplash images for each luxury product
@@ -62,29 +72,12 @@ const BRAND_MATCHED_IMAGES: Record<string, string> = {
  * Shows products with pricing, savings, and sourcing info
  */
 export default function FeaturedProducts() {
-  const [products, setProducts] = useState<Array<Product & { pricing?: PricingResult; savings?: any; sourcing?: any }>>([])
-  const [loading, setLoading] = useState(true)
+  const { t } = useTranslation()
 
-  useEffect(() => {
-    // Load products with live pricing
-    loadProducts()
-  }, [])
-
-  const loadProducts = () => {
-    try {
-      const featured = ProductRepository.getFeatured(6)
-      const mapped = featured.map((p) => ({
-        ...p,
-        imageUrl: BRAND_MATCHED_IMAGES[p.id] || p.imageUrl
-      }))
-      setProducts(mapped)
-    } catch (err) {
-      console.error('Failed to load products:', err)
-      setProducts([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  const products = ProductRepository.getFeatured(6).map((p) => ({
+    ...p,
+    imageUrl: BRAND_MATCHED_IMAGES[p.id] || p.imageUrl
+  }))
 
   const formatPrice = (price: number, currency: string = 'CNY') => {
     return new Intl.NumberFormat('zh-CN', {
@@ -94,49 +87,20 @@ export default function FeaturedProducts() {
     }).format(price)
   }
 
-  if (loading) {
-    return (
-      <section className="py-20 bg-zl-dark-2">
-        <div className="container">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-2">
-                Featured <span className="text-gradient">Products</span>
-              </h2>
-              <p className="text-zl-text-muted">Loading premium selection...</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="luxury-card rounded-xl overflow-hidden animate-pulse">
-                <div className="h-64 bg-zl-dark-3"></div>
-                <div className="p-6 space-y-3">
-                  <div className="h-4 bg-zl-dark-3 rounded w-1/3"></div>
-                  <div className="h-5 bg-zl-dark-3 rounded w-3/4"></div>
-                  <div className="h-4 bg-zl-dark-3 rounded w-full"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
   return (
     <section className="py-20 bg-zl-dark-2">
       <div className="container">
         <div className="flex items-center justify-between mb-12">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-2">
-              Featured <span className="text-gradient">Products</span>
+              {t('products.featured').split(' ')[0]} <span className="text-gradient">{t('products.featured').split(' ').slice(1).join(' ')}</span>
             </h2>
             <p className="text-zl-text-muted">
-              Curated selection with HK/Europe/Japan sourcing • Save up to 30% vs China retail
+              {t('products.featuredSubtitle')}
             </p>
           </div>
           <Link href="/collections" className="hidden md:flex items-center gap-2 text-zl-accent hover:text-zl-accent-light transition">
-            <span className="text-sm font-semibold uppercase tracking-wide">View All</span>
+            <span className="text-sm font-semibold uppercase tracking-wide">{t('products.viewAll')}</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
@@ -157,7 +121,7 @@ export default function FeaturedProducts() {
                     {/* Brand-matched real product image */}
                     <img
                       src={product.imageUrl}
-                      alt={`${product.brand} ${product.name} - Luxury ${product.category}`}
+                      alt={`${product.brand} ${product.name} - ${t(CATEGORY_I18N_KEY[product.category] || 'common.collection')}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       referrerPolicy="no-referrer"
@@ -185,12 +149,12 @@ export default function FeaturedProducts() {
                     <div className="absolute top-4 left-4 flex gap-2">
                       {product.isNew && (
                         <span className="px-3 py-1 bg-zl-accent text-zl-dark text-xs font-semibold rounded-full uppercase">
-                          New
+                          {t('products.newBadge')}
                         </span>
                       )}
                       {product.isLimited && (
                         <span className="px-3 py-1 bg-zl-gold text-zl-dark text-xs font-semibold rounded-full uppercase">
-                          Limited
+                          {t('products.limitedBadge')}
                         </span>
                       )}
                       {product.savings && product.savings.percent > 0 && (
@@ -202,7 +166,7 @@ export default function FeaturedProducts() {
 
                     <div className="absolute top-4 right-4">
                       <span className={`px-2 py-1 text-xs rounded ${(product.stock || 0) <= 5 ? 'bg-zl-error/20 text-zl-error' : 'bg-zl-success/20 text-zl-success'}`}>
-                        {(product.stock || 0) <= 5 ? `Only ${product.stock} left` : 'In Stock'}
+                        {(product.stock || 0) <= 5 ? t('products.stockOnly', { count: product.stock }) : t('products.stockInStock')}
                       </span>
                     </div>
 
@@ -233,15 +197,15 @@ export default function FeaturedProducts() {
                     {/* Sourcing channel info - new backend feature */}
                     {product.sourcing && (
                       <div className="pt-3 mb-3 border-t border-zl-gray">
-                        <div className="text-xs text-zl-text-muted mb-1">Best Sourcing Channel</div>
+                        <div className="text-xs text-zl-text-muted mb-1">{t('products.bestSourcingChannel')}</div>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-zl-accent">📦</span>
                           <span className="text-zl-text-muted">
-                            {product.sourcing.bestChannel === 'HK_DIRECT' ? 'Hong Kong Direct' :
-                              product.sourcing.bestChannel === 'JAPAN_AUCTION' ? 'Japan Auction' :
-                                product.sourcing.bestChannel === 'EUROPE_BOUTIQUE' ? 'Europe Boutique' :
-                                  product.sourcing.bestChannel === 'BONDED_WAREHOUSE' ? 'Shanghai FTZ Bonded' :
-                                    'Personal Carry'}
+                            {product.sourcing.bestChannel === 'HK_DIRECT' ? t('products.sourcingChannels.hkDirect') :
+                              product.sourcing.bestChannel === 'JAPAN_AUCTION' ? t('products.sourcingChannels.japanAuction') :
+                                product.sourcing.bestChannel === 'EUROPE_BOUTIQUE' ? t('products.sourcingChannels.europeBoutique') :
+                                  product.sourcing.bestChannel === 'BONDED_WAREHOUSE' ? t('products.sourcingChannels.bondedWarehouse') :
+                                    t('products.sourcingChannels.personalCarry')}
                           </span>
                         </div>
                       </div>
@@ -252,9 +216,9 @@ export default function FeaturedProducts() {
                         <div className="text-xl font-bold font-montserrat text-zl-text">
                           {product.pricing ? product.pricing.formattedPrice : formatPrice(product.priceCny || product.price * parseFloat(process.env.FALLBACK_EXCHANGE_RATE_USD_CNY || '7.24'), 'CNY')}
                         </div>
-                        {product.savings && product.savings.amount > 0 && (
+                        {product.savings && (product.savings.amount ?? 0) > 0 && (
                           <div className="text-xs text-zl-success">
-                            Save ¥{product.savings.amount.toLocaleString()}
+                            Save ¥{(product.savings.amount ?? 0).toLocaleString()}
                           </div>
                         )}
                       </div>
@@ -274,7 +238,7 @@ export default function FeaturedProducts() {
 
         <div className="mt-8 text-center md:hidden">
           <Link href="/collections" className="inline-flex items-center gap-2 text-zl-accent">
-            <span className="text-sm font-semibold uppercase tracking-wide">View All Products</span>
+            <span className="text-sm font-semibold uppercase tracking-wide">{t('products.viewAllProducts')}</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

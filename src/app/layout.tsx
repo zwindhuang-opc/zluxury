@@ -73,17 +73,31 @@ const notoSerifSC = Noto_Serif_SC({
 /**
  * Application metadata for SEO optimization
  * Optimized for luxury commerce platform
+ * 
+ * Note: Static metadata uses clean English defaults for universal SEO.
+ * Client-side i18n (react-i18next) handles all visible UI text translation.
  */
 export const metadata: Metadata = {
-  title: 'ZLuxury | 臻享奢华 · AI智能奢华购物平台',
-  description: '融合人工智能与顶级奢华，为您呈现独一无二的购物体验。独享专属顾问服务、限量臻品收藏，Unicorn AI智能推荐。',
-  keywords: '奢华, 奢侈品, AI, 购物, 珠宝, 腕表, 手袋, 香氛, Hermes, OpenClaw, Unicorn, 限量款, VIP会员',
+  title: {
+    default: 'ZLuxury | AI-Powered Luxury Commerce Platform',
+    template: '%s | ZLuxury',
+  },
+  description: 'Experience extraordinary luxury commerce. AI-powered concierge, authentic limited-edition collections, and personalized recommendations by Hermes Agent & Unicorn AI.',
+  keywords: [
+    'ZLuxury', 'luxury', 'authentic luxury', 'limited edition',
+    'Rolex', 'Patek Philippe', 'Hermes', 'Birkin', 'Cartier',
+    'high jewelry', 'luxury watches', 'designer handbags', 'fine art',
+    'AI shopping', 'Hermes Agent', 'Unicorn AI', 'OpenClaw',
+    'VIP luxury', 'white-glove concierge', 'exclusive collectibles',
+    '奢华', '奢侈品', '臻品收藏', '限量款', 'VIP会员',
+  ],
   authors: [{ name: 'ZLuxury Team' }],
   openGraph: {
-    title: 'ZLuxury | 臻享奢华 · AI智能奢华购物平台',
-    description: '融合人工智能与顶级奢华，为您呈现独一无二的购物体验。',
+    title: 'ZLuxury | AI-Powered Luxury Commerce Platform',
+    description: 'Curated authentic luxury collections, AI-driven recommendations, and white-glove concierge service.',
     type: 'website',
-    locale: 'zh_CN',
+    locale: 'en_US',
+    alternateLocale: ['zh_CN', 'zh_TW'],
     siteName: 'ZLuxury',
   },
 }

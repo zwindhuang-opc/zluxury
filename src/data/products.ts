@@ -109,6 +109,23 @@ export interface Product {
     diamond?: number;
   };
 
+  /** Savings/discount info / 折扣信息 */
+  savings?: {
+    percent: number;
+    amount?: number;
+    originalPrice?: number;
+  };
+
+  /** Sourcing channel information / 采购渠道信息 */
+  sourcing?: {
+    bestChannel: 'HK_DIRECT' | 'JAPAN_AUCTION' | 'EUROPE_BOUTIQUE' | 'BONDED_WAREHOUSE' | 'PERSONAL_CARRY';
+  };
+
+  /** Formatted pricing display / 格式化价格 */
+  pricing?: {
+    formattedPrice: string;
+  };
+
   /** Product reference number (SKU/Serial) / 产品参考号 */
   reference?: string;
 

@@ -49,7 +49,7 @@ const categories = [
   {
     id: 'watches',
     nameKey: 'categories.watches',
-    description: 'Timepieces from Rolex, Patek Philippe, Omega, and more',
+    descriptionKey: 'categories.descriptions.watches',
     color: '#00B4D8',
     count: 2500,
     brands: ['Rolex', 'Patek Philippe', 'Omega', 'Cartier', 'IWC'],
@@ -58,7 +58,7 @@ const categories = [
   {
     id: 'jewelry',
     nameKey: 'categories.jewelry',
-    description: 'Diamonds, gemstones, and precious metals',
+    descriptionKey: 'categories.descriptions.jewelry',
     color: '#D4AF37',
     count: 3200,
     brands: ['Tiffany', 'Cartier', 'Van Cleef', 'Bulgari', 'Harry Winston'],
@@ -67,7 +67,7 @@ const categories = [
   {
     id: 'fashion',
     nameKey: 'categories.fashion',
-    description: 'Haute couture and luxury apparel',
+    descriptionKey: 'categories.descriptions.fashion',
     color: '#00B4D8',
     count: 8000,
     brands: ['Louis Vuitton', 'Gucci', 'Chanel', 'Dior', 'Prada'],
@@ -76,7 +76,7 @@ const categories = [
   {
     id: 'bags',
     nameKey: 'categories.handbags',
-    description: 'Handbags and accessories from top designers',
+    descriptionKey: 'categories.descriptions.handbags',
     color: '#D4AF37',
     count: 4500,
     brands: ['Hermès', 'Louis Vuitton', 'Chanel', 'Gucci', 'Bottega Veneta'],
@@ -85,7 +85,7 @@ const categories = [
   {
     id: 'art',
     nameKey: 'categories.art',
-    description: 'Original artworks and limited editions',
+    descriptionKey: 'categories.descriptions.art',
     color: '#00B4D8',
     count: 1200,
     brands: ["Sotheby's", "Christie's", 'Gallery Partners'],
@@ -94,7 +94,7 @@ const categories = [
   {
     id: 'cars',
     nameKey: 'categories.cars',
-    description: 'Premium automobiles and exotic cars',
+    descriptionKey: 'categories.descriptions.cars',
     color: '#D4AF37',
     count: 800,
     brands: ['Ferrari', 'Lamborghini', 'Porsche', 'Bentley', 'Rolls-Royce'],
@@ -103,7 +103,7 @@ const categories = [
   {
     id: 'real-estate',
     nameKey: 'categories.realEstate',
-    description: 'Exclusive properties worldwide',
+    descriptionKey: 'categories.descriptions.realEstate',
     color: '#00B4D8',
     count: 500,
     brands: ["Sotheby's Realty", "Christie's Realty"],
@@ -112,7 +112,7 @@ const categories = [
   {
     id: 'yachts',
     nameKey: 'categories.yachts',
-    description: 'Superyachts and sailing vessels',
+    descriptionKey: 'categories.descriptions.yachts',
     color: '#D4AF37',
     count: 150,
     brands: ['Azimut', 'Benetti', 'Sunseeker', 'Feadship'],
@@ -220,7 +220,7 @@ export default function CategoriesSection() {
                   <div className="relative h-32 -mx-6 -mt-6 mb-4 overflow-hidden">
                     <img
                       src={category.imageUrl}
-                      alt={`${t(category.nameKey)} - Luxury ${category.id} / ${t(category.nameKey)} - 奢华${category.id}`}
+                      alt={`${t(category.nameKey)} - ${t('categories.imageAltSuffix')}`}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       referrerPolicy="no-referrer"
@@ -263,12 +263,12 @@ export default function CategoriesSection() {
                   </h3>
 
                   <p className="text-sm text-zl-text-muted mb-4 line-clamp-2">
-                    {category.description}
+                    {t((category as any).descriptionKey)}
                   </p>
 
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-zl-accent font-semibold">
-                      {category.count.toLocaleString()} items
+                      {t('categories.itemsCount', { count: category.count.toLocaleString() })}
                     </span>
                     <svg className="w-4 h-4 text-zl-text-muted group-hover:text-zl-accent transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

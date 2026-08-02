@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Product, ProductRepository } from '@/data/products'
+import { useTranslation } from '@/i18n/useTranslation'
 
 // Brand-matched images for fallback
 const BRAND_IMAGES: Record<string, string> = {
@@ -38,6 +39,7 @@ export default function CategoryPageClient({
   categoryId,
   categoryName
 }: CategoryPageClientProps) {
+  const { t } = useTranslation()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -107,15 +109,15 @@ export default function CategoryPageClient({
       <section className="py-20">
         <div className="container text-center">
           <div className="text-6xl mb-4">🔍</div>
-          <h2 className="text-2xl font-bold font-montserrat mb-4">No products found</h2>
+          <h2 className="text-2xl font-bold font-montserrat mb-4">{t('categoryPage.noProductsTitle')}</h2>
           <p className="text-zl-text-muted mb-8">
-            We don't have any products in this category yet.
+            {t('categoryPage.noProductsDesc')}
           </p>
           <Link
             href="/collections"
             className="inline-flex items-center gap-2 px-6 py-3 bg-zl-accent text-zl-dark rounded-lg font-semibold hover:bg-zl-accent-light transition"
           >
-            Browse All Collections
+            {t('categoryPage.browseAll')}
           </Link>
         </div>
       </section>
@@ -128,7 +130,7 @@ export default function CategoryPageClient({
         {/* Results count */}
         <div className="mb-8 flex items-center justify-between">
           <p className="text-zl-text-muted">
-            Showing <span className="text-zl-text font-semibold">{products.length}</span> products in <span className="text-zl-accent">{categoryName}</span>
+            {t('categoryPage.showing')} <span className="text-zl-text font-semibold">{products.length}</span> {t('categoryPage.productsIn')} <span className="text-zl-accent">{categoryName}</span>
           </p>
         </div>
 
@@ -172,17 +174,17 @@ export default function CategoryPageClient({
 
                     <div className="absolute top-4 left-4 flex gap-2">
                       {product.isNew && (
-                        <span className="px-3 py-1 bg-zl-accent text-zl-dark text-xs font-semibold rounded-full uppercase">New</span>
+                        <span className="px-3 py-1 bg-zl-accent text-zl-dark text-xs font-semibold rounded-full uppercase">{t('categoryPage.newBadge')}</span>
                       )}
                       {product.isLimited && (
-                        <span className="px-3 py-1 bg-zl-gold text-zl-dark text-xs font-semibold rounded-full uppercase">Limited</span>
+                        <span className="px-3 py-1 bg-zl-gold text-zl-dark text-xs font-semibold rounded-full uppercase">{t('categoryPage.limitedBadge')}</span>
                       )}
                     </div>
 
                     {(product.stock || 0) <= 5 && (
                       <div className="absolute top-4 right-4">
                         <span className="px-2 py-1 text-xs rounded bg-zl-error/20 text-zl-error">
-                          Only {product.stock} left
+                          {t('categoryPage.onlyLeft', { count: product.stock })}
                         </span>
                       </div>
                     )}

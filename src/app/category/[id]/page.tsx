@@ -6,104 +6,51 @@
  */
 
 import { Metadata } from 'next'
-import Link from 'next/link'
 import CategoryPageClient from './CategoryPageClient'
-import { products } from '@/data/products'
+import CategoryPageHeader from './CategoryPageHeader'
 
-// Category metadata configuration
-const CATEGORY_META: Record<string, { name: string; nameCn: string; description: string }> = {
-  watches: {
-    name: 'Luxury Watches',
-    nameCn: '奢华腕表',
-    description: 'Timepieces from Rolex, Patek Philippe, Omega, Cartier and more'
-  },
-  jewelry: {
-    name: 'Fine Jewelry',
-    nameCn: '珠宝首饰',
-    description: 'Diamonds, gemstones, and precious metals from Tiffany, Cartier, Van Cleef & Arpels'
-  },
-  fashion: {
-    name: 'Luxury Fashion',
-    nameCn: '时尚服饰',
-    description: 'Haute couture and luxury apparel from Louis Vuitton, Gucci, Chanel, Dior'
-  },
-  bags: {
-    name: 'Designer Handbags',
-    nameCn: '设计师手袋',
-    description: 'Handbags and accessories from Hermès, Louis Vuitton, Chanel, Prada'
-  },
-  art: {
-    name: 'Fine Art & Collectibles',
-    nameCn: '艺术收藏',
-    description: 'Original artworks and limited editions from Sotheby\'s, Christie\'s'
-  },
-  cars: {
-    name: 'Exotic Cars',
-    nameCn: '豪华汽车',
-    description: 'Premium automobiles from Ferrari, Lamborghini, Porsche, Bentley'
-  },
-  'real-estate': {
-    name: 'Luxury Real Estate',
-    nameCn: '豪宅地产',
-    description: 'Exclusive properties worldwide'
-  },
-  yachts: {
-    name: 'Superyachts',
-    nameCn: '超级游艇',
-    description: 'Superyachts and sailing vessels from Azimut, Benetti, Sunseeker'
-  }
+// Category key mapping for i18n lookup (maps URL slug to translation keys)
+const CATEGORY_KEY_MAP: Record<string, { nameKey: string; descKey: string }> = {
+  watches: { nameKey: 'categories.watches', descKey: 'categories.descriptions.watches' },
+  jewelry: { nameKey: 'categories.jewelry', descKey: 'categories.descriptions.jewelry' },
+  fashion: { nameKey: 'categories.fashion', descKey: 'categories.descriptions.fashion' },
+  bags: { nameKey: 'categories.handbags', descKey: 'categories.descriptions.handbags' },
+  art: { nameKey: 'categories.art', descKey: 'categories.descriptions.art' },
+  cars: { nameKey: 'categories.cars', descKey: 'categories.descriptions.cars' },
+  'real-estate': { nameKey: 'categories.realEstate', descKey: 'categories.descriptions.realEstate' },
+  yachts: { nameKey: 'categories.yachts', descKey: 'categories.descriptions.yachts' }
 }
 
 export function generateStaticParams() {
-  return Object.keys(CATEGORY_META).map((id) => ({ id }))
+  return Object.keys(CATEGORY_KEY_MAP).map((id) => ({ id }))
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const categoryId = params.id
-  const meta = CATEGORY_META[categoryId] || {
-    name: categoryId,
-    nameCn: categoryId,
-    description: 'Luxury products from ZLuxury'
-  }
-
+  const defaultMeta = CATEGORY_KEY_MAP[params.id]
+  const title = defaultMeta ? params.id.charAt(0).toUpperCase() + params.id.slice(1) : params.id
   return {
-    title: `${meta.name} | ZLuxury`,
-    description: meta.description,
+    title: `${title} | ZLuxury`,
+    description: 'Luxury products from ZLuxury',
   }
 }
 
 export default function CategoryPage({ params }: { params: { id: string } }) {
   const categoryId = params.id
-  const meta = CATEGORY_META[categoryId] || {
-    name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
-    nameCn: categoryId,
-    description: 'Explore our curated selection'
-  }
+  const keys = CATEGORY_KEY_MAP[categoryId]
+  const defaultNameKey = keys?.nameKey || 'categories.watches'
+  const defaultDescKey = keys?.descKey || 'categories.descriptions.watches'
 
   return (
     <main className="min-h-screen bg-zl-dark">
-      {/* Header */}
-      <div className="bg-gradient-to-b from-zl-dark-2 to-zl-dark py-16">
-        <div className="container">
-          <nav className="flex items-center gap-2 text-sm text-zl-text-muted mb-6">
-            <Link href="/" className="hover:text-zl-accent transition">Home</Link>
-            <span>/</span>
-            <Link href="/collections" className="hover:text-zl-accent transition">Collections</Link>
-            <span>/</span>
-            <span className="text-zl-text">{meta.name}</span>
-          </nav>
-
-          <h1 className="text-4xl md:text-5xl font-bold font-montserrat mb-4">
-            {meta.name} <span className="text-gradient">{meta.nameCn}</span>
-          </h1>
-          <p className="text-zl-text-muted max-w-2xl text-lg">
-            {meta.description}
-          </p>
-        </div>
-      </div>
+      {/* Header - rendered via client component for i18n */}
+      <CategoryPageHeader
+        categoryId={categoryId}
+        nameKey={defaultNameKey}
+        descKey={defaultDescKey}
+      />
 
       {/* Products */}
-      <CategoryPageClient categoryId={categoryId} categoryName={meta.name} />
+      <CategoryPageClient categoryId={categoryId} categoryName="" />
     </main>
   )
 }
