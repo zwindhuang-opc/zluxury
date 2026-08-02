@@ -7,13 +7,8 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
+import CategoryPageClient from './CategoryPageClient'
 import { products } from '@/data/products'
-
-const CategoryPageClient = dynamic(
-  () => import('./CategoryPageClient').then(mod => mod.default),
-  { ssr: false }
-)
 
 // Category metadata configuration
 const CATEGORY_META: Record<string, { name: string; nameCn: string; description: string }> = {
